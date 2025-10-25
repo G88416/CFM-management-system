@@ -118,6 +118,13 @@
             padding: 10px;
             border-radius: 5px;
         }
+        .total {
+            font-weight: bold;
+            background-color: #e8f5e8;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
         .bulk-upload {
             margin-bottom: 20px;
         }
@@ -243,6 +250,10 @@
                 <h3>Easter Conference Contribution Directory</h3>
                 <form id="easterForm">
                     <input type="text" id="easterMember" placeholder="Member Name" required>
+                    <select id="easterCurrency">
+                        <option value="ZAR">ZAR</option>
+                        <option value="USD">USD</option>
+                    </select>
                     <input type="number" id="easterAmount" placeholder="Amount" step="0.01" required>
                     <input type="date" id="easterDate" required>
                     <textarea id="easterNotes" placeholder="Notes"></textarea>
@@ -251,11 +262,16 @@
                 <ul id="easterList" class="tithe-list">
                     <!-- Easter contributions will be added here -->
                 </ul>
+                <div id="easterTotal" class="total"></div>
             </div>
             <div class="events-section">
                 <h3>September Conference Contribution Directory</h3>
                 <form id="septemberForm">
                     <input type="text" id="septemberMember" placeholder="Member Name" required>
+                    <select id="septemberCurrency">
+                        <option value="ZAR">ZAR</option>
+                        <option value="USD">USD</option>
+                    </select>
                     <input type="number" id="septemberAmount" placeholder="Amount" step="0.01" required>
                     <input type="date" id="septemberDate" required>
                     <textarea id="septemberNotes" placeholder="Notes"></textarea>
@@ -264,6 +280,7 @@
                 <ul id="septemberList" class="tithe-list">
                     <!-- September contributions will be added here -->
                 </ul>
+                <div id="septemberTotal" class="total"></div>
             </div>
         </div>
     </div>
@@ -272,6 +289,10 @@
         <h2>Tithe and Offering Tracking</h2>
         <form id="titheForm">
             <input type="text" id="memberName" placeholder="Member Name" required>
+            <select id="titheCurrency">
+                <option value="ZAR">ZAR</option>
+                <option value="USD">USD</option>
+            </select>
             <input type="number" id="amount" placeholder="Amount" step="0.01" required>
             <input type="date" id="titheDate" required>
             <select id="titheType">
@@ -285,6 +306,7 @@
         <ul id="titheList" class="tithe-list">
             <!-- Tithes/Offerings will be added here -->
         </ul>
+        <div id="titheTotal" class="total"></div>
     </div>
     
     <div id="leaders" class="content">
@@ -561,11 +583,13 @@
                 const li = document.createElement('li');
                 li.classList.add('tithe-item');
                 li.innerHTML = `
-                    <strong>${contrib.member}</strong>: $${contrib.amount} on ${contrib.date}<br>
+                    <strong>${contrib.member}</strong>: ${contrib.currency} ${contrib.amount} on ${contrib.date}<br>
                     ${contrib.notes}
                 `;
                 list.appendChild(li);
             });
+            const total = easterContributions.reduce((sum, contrib) => sum + parseFloat(contrib.amount || 0), 0);
+            document.getElementById('easterTotal').innerHTML = `Total: ${total.toFixed(2)}`;
         }
 
         function renderSeptemberContributions() {
@@ -575,11 +599,13 @@
                 const li = document.createElement('li');
                 li.classList.add('tithe-item');
                 li.innerHTML = `
-                    <strong>${contrib.member}</strong>: $${contrib.amount} on ${contrib.date}<br>
+                    <strong>${contrib.member}</strong>: ${contrib.currency} ${contrib.amount} on ${contrib.date}<br>
                     ${contrib.notes}
                 `;
                 list.appendChild(li);
             });
+            const total = septemberContributions.reduce((sum, contrib) => sum + parseFloat(contrib.amount || 0), 0);
+            document.getElementById('septemberTotal').innerHTML = `Total: ${total.toFixed(2)}`;
         }
 
         function renderTithes() {
@@ -589,10 +615,12 @@
                 const li = document.createElement('li');
                 li.classList.add('tithe-item');
                 li.innerHTML = `
-                    <strong>${tithe.member}</strong>: $${tithe.amount} (${tithe.type}) on ${tithe.date}
+                    <strong>${tithe.member}</strong>: ${tithe.currency} ${tithe.amount} (${tithe.type}) on ${tithe.date}
                 `;
                 list.appendChild(li);
             });
+            const total = tithes.reduce((sum, tithe) => sum + parseFloat(tithe.amount || 0), 0);
+            document.getElementById('titheTotal').innerHTML = `Total: ${total.toFixed(2)}`;
         }
 
         function renderLeaders() {
@@ -769,6 +797,7 @@
             e.preventDefault();
             const contrib = {
                 member: document.getElementById('easterMember').value,
+                currency: document.getElementById('easterCurrency').value,
                 amount: document.getElementById('easterAmount').value,
                 date: document.getElementById('easterDate').value,
                 notes: document.getElementById('easterNotes').value
@@ -783,6 +812,7 @@
             e.preventDefault();
             const contrib = {
                 member: document.getElementById('septemberMember').value,
+                currency: document.getElementById('septemberCurrency').value,
                 amount: document.getElementById('septemberAmount').value,
                 date: document.getElementById('septemberDate').value,
                 notes: document.getElementById('septemberNotes').value
@@ -797,6 +827,7 @@
             e.preventDefault();
             const tithe = {
                 member: document.getElementById('memberName').value,
+                currency: document.getElementById('titheCurrency').value,
                 amount: document.getElementById('amount').value,
                 date: document.getElementById('titheDate').value,
                 type: document.getElementById('titheType').value
