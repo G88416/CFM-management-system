@@ -108,11 +108,11 @@
         a.whatsapp-link:hover {
             text-decoration: underline;
         }
-        .event-list, .tithe-list, .assignment-list, .employee-list, .leave-list, .leader-list, .pastor-list, .cell-list, .elder-list {
+        .event-list, .tithe-list, .assignment-list, .employee-list, .leave-list, .leader-list, .pastor-list, .cell-list, .elder-list, .report-list {
             list-style: none;
             padding: 0;
         }
-        .event-item, .tithe-item, .assignment-item, .employee-item, .leave-item, .leader-item, .pastor-item, .cell-item, .elder-item {
+        .event-item, .tithe-item, .assignment-item, .employee-item, .leave-item, .leader-item, .pastor-item, .cell-item, .elder-item, .report-item {
             background-color: #f9f9f9;
             margin: 10px 0;
             padding: 10px;
@@ -121,9 +121,10 @@
         .total {
             font-weight: bold;
             background-color: #e8f5e8;
-            padding: 10px;
+            padding: 8px;
             border-radius: 5px;
             margin-top: 10px;
+            font-size: 1em;
         }
         .bulk-upload {
             margin-bottom: 20px;
@@ -156,6 +157,131 @@
             flex: 1;
             min-width: 300px;
         }
+        details {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        summary {
+            padding: 10px;
+            background-color: #f2f2f2;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .folder-content {
+            padding: 10px;
+        }
+        .folder-actions {
+            margin-top: 10px;
+            text-align: right;
+        }
+        .folder-actions button {
+            margin-left: 5px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .folder-actions .print-btn {
+            background-color: #f39c12;
+            color: white;
+        }
+        .folder-actions .export-btn {
+            background-color: #3498db;
+            color: white;
+        }
+        .folder-actions .email-btn {
+            background-color: #27ae60;
+            color: white;
+        }
+        .folder-actions .minimize-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .transport-table input, .essentials-table input, .sunday-school-table input {
+            width: 100px;
+        }
+        .budget-date {
+            margin-bottom: 10px;
+        }
+        .budget-total {
+            font-weight: bold;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #e8f5e8;
+            border: 1px solid #27ae60;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1em;
+            color: #27ae60;
+        }
+        .grand-total {
+            font-weight: bold;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #d4edda;
+            border: 2px solid #28a745;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.1em;
+            color: #155724;
+        }
+        .generate-report-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .generate-report-btn:hover {
+            background-color: #2980b9;
+        }
+        .report-download-btn {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .report-delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .history-icon {
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            margin: 10px;
+            display: inline-block;
+        }
+        .history-section {
+            display: none;
+            margin-top: 20px;
+        }
+        .history-section.active {
+            display: block;
+        }
+        .history-report-item {
+            background-color: #f9f9f9;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -172,6 +298,7 @@
         <button onclick="showSection('pastors')">Pastors</button>
         <button onclick="showSection('employees')">Employees</button>
         <button onclick="showSection('whatsapp')">WhatsApp Interactions</button>
+        <button onclick="showSection('vault')">Vault</button>
     </nav>
     
     <div id="members" class="content active">
@@ -188,52 +315,64 @@
             <h3>Search Members</h3>
             <input type="text" id="memberSearch" placeholder="Search by name, email, cell, address, or role..." onkeyup="searchMembers()">
         </div>
-        <form id="memberForm">
-            <input type="text" id="name" placeholder="Full Name" required>
-            <select id="branch">
-                <option value="">Select Branch</option>
-                <option value="Khutsong">Khutsong</option>
-                <option value="Mamelodi EXT5">Mamelodi EXT5</option>
-                <option value="Mahube">Mahube</option>
-                <option value="Phase 5">Phase 5</option>
-                <option value="Kwamhlanga">Kwamhlanga</option>
-                <option value="Kameel port">Kameel port</option>
-                <option value="Nelmaphius ext4">Nelmaphius ext4</option>
-                <option value="Nelmaphius ext 6">Nelmaphius ext 6</option>
-            </select>
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="tel" id="cell" placeholder="Cell Number (e.g., +1234567890)" required>
-            <input type="text" id="address" placeholder="Address" required>
-            <input type="date" id="joinDate" required>
-            <select id="role">
-                <option value="Member">Member</option>
-                <option value="Volunteer">Volunteer</option>
-                <option value="Leader">Leader</option>
-            </select>
-            <button type="submit">Add Member</button>
-        </form>
-        <table id="memberTable">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Branch</th>
-                    <th>Email</th>
-                    <th>Cell Number</th>
-                    <th>Address</th>
-                    <th>Join Date</th>
-                    <th>Role</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Members will be added here -->
-            </tbody>
-        </table>
+        <details id="mdf-folder">
+            <summary>MDF</summary>
+            <div class="folder-content">
+                <form id="memberForm">
+                    <input type="text" id="name" placeholder="Full Name" required>
+                    <select id="branch">
+                        <option value="">Select Branch</option>
+                        <option value="Khutsong">Khutsong</option>
+                        <option value="Mamelodi EXT5">Mamelodi EXT5</option>
+                        <option value="Mahube">Mahube</option>
+                        <option value="Phase 5">Phase 5</option>
+                        <option value="Kwamhlanga">Kwamhlanga</option>
+                        <option value="Kameel port">Kameel port</option>
+                        <option value="Nelmaphius ext4">Nelmaphius ext4</option>
+                        <option value="Nelmaphius ext 6">Nelmaphius ext 6</option>
+                    </select>
+                    <input type="email" id="email" placeholder="Email" required>
+                    <input type="tel" id="cell" placeholder="Cell Number (e.g., +1234567890)" required>
+                    <input type="text" id="address" placeholder="Address" required>
+                    <input type="date" id="joinDate" required>
+                    <select id="role">
+                        <option value="Member">Member</option>
+                        <option value="Volunteer">Volunteer</option>
+                        <option value="Leader">Leader</option>
+                    </select>
+                    <button type="submit">Add Member</button>
+                </form>
+                <table id="memberTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Branch</th>
+                            <th>Email</th>
+                            <th>Cell Number</th>
+                            <th>Address</th>
+                            <th>Join Date</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Members will be added here -->
+                    </tbody>
+                </table>
+                <div class="folder-actions">
+                    <button class="print-btn" onclick="printFolder('mdf')">Print</button>
+                    <button class="export-btn" onclick="exportMembers()">Export</button>
+                    <button class="email-btn" onclick="emailMembers()">Email</button>
+                    <button class="minimize-btn" onclick="toggleFolder('mdf')">Minimize</button>
+                </div>
+            </div>
+        </details>
     </div>
     
     <div id="events" class="content">
         <h2>Events</h2>
-        <div class="events-container">
-            <div class="events-section">
+        <details id="events-folder">
+            <summary>Events Folder</summary>
+            <div class="folder-content">
                 <h3>Event Calendar</h3>
                 <form id="eventForm">
                     <input type="text" id="eventTitle" placeholder="Event Title" required>
@@ -245,8 +384,17 @@
                 <ul id="eventList" class="event-list">
                     <!-- Events will be added here -->
                 </ul>
+                <div class="folder-actions">
+                    <button class="print-btn" onclick="printFolder('events')">Print</button>
+                    <button class="export-btn" onclick="exportEvents()">Download</button>
+                    <button class="email-btn" onclick="emailEvents()">Email</button>
+                    <button class="minimize-btn" onclick="toggleFolder('events')">Minimize</button>
+                </div>
             </div>
-            <div class="events-section">
+        </details>
+        <details id="easter-conference-folder">
+            <summary>Easter Conference Folder</summary>
+            <div class="folder-content">
                 <h3>Easter Conference Contribution Directory</h3>
                 <form id="easterForm">
                     <input type="text" id="easterMember" placeholder="Member Name" required>
@@ -263,8 +411,17 @@
                     <!-- Easter contributions will be added here -->
                 </ul>
                 <div id="easterTotal" class="total"></div>
+                <div class="folder-actions">
+                    <button class="print-btn" onclick="printFolder('easter-conference')">Print</button>
+                    <button class="export-btn" onclick="exportEaster()">Download</button>
+                    <button class="email-btn" onclick="emailEaster()">Email</button>
+                    <button class="minimize-btn" onclick="toggleFolder('easter-conference')">Minimize</button>
+                </div>
             </div>
-            <div class="events-section">
+        </details>
+        <details id="september-conference-folder">
+            <summary>September conference folder</summary>
+            <div class="folder-content">
                 <h3>September Conference Contribution Directory</h3>
                 <form id="septemberForm">
                     <input type="text" id="septemberMember" placeholder="Member Name" required>
@@ -281,38 +438,272 @@
                     <!-- September contributions will be added here -->
                 </ul>
                 <div id="septemberTotal" class="total"></div>
+                <div class="budget-date">
+                    <label for="septemberDateBudget">Date:</label>
+                    <input type="date" id="septemberDateBudget" onchange="saveSeptemberDate(this.value)">
+                </div>
+                <h4>Transport budget</h4>
+                <table id="septemberTransportTable" class="transport-table">
+                    <thead>
+                        <tr>
+                            <th>Branch</th>
+                            <th>Amount Due</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Mahube</td>
+                            <td><input type="number" step="0.01" id="septemberMahubeAmount" onchange="saveSeptemberTransportAmount('mahube', this.value); updateSeptemberAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Nelmaphius ext 4</td>
+                            <td><input type="number" step="0.01" id="septemberNelmaphiusExt4Amount" onchange="saveSeptemberTransportAmount('nelmaphiusExt4', this.value); updateSeptemberAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Nelmaphius ext 6</td>
+                            <td><input type="number" step="0.01" id="septemberNelmaphiusExt6Amount" onchange="saveSeptemberTransportAmount('nelmaphiusExt6', this.value); updateSeptemberAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Phase 5</td>
+                            <td><input type="number" step="0.01" id="septemberPhase5Amount" onchange="saveSeptemberTransportAmount('phase5', this.value); updateSeptemberAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Mamelodi Ext5</td>
+                            <td><input type="number" step="0.01" id="septemberMamelodiExt5Amount" onchange="saveSeptemberTransportAmount('mamelodiExt5', this.value); updateSeptemberAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Kwamhlanga/kameel poort</td>
+                            <td><input type="number" step="0.01" id="septemberKwamhlangaKameelAmount" onchange="saveSeptemberTransportAmount('kwamhlangaKameel', this.value); updateSeptemberAllTotals();"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="septemberTransportTotal" class="budget-total">Total Transport Budget: 0.00</div>
+                <h4>Sunday Essentials</h4>
+                <table id="septemberEssentialsTable" class="essentials-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Amount Due</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Water Bottles</td>
+                            <td><input type="number" step="0.01" id="septemberWaterBottlesAmount" onchange="saveSeptemberEssentialsAmount('waterBottles', this.value); updateSeptemberAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Juices</td>
+                            <td><input type="number" step="0.01" id="septemberJuicesAmount" onchange="saveSeptemberEssentialsAmount('juices', this.value); updateSeptemberAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Sweets</td>
+                            <td><input type="number" step="0.01" id="septemberSweetsAmount" onchange="saveSeptemberEssentialsAmount('sweets', this.value); updateSeptemberAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Toilet Paper</td>
+                            <td><input type="number" step="0.01" id="septemberToiletPaperAmount" onchange="saveSeptemberEssentialsAmount('toiletPaper', this.value); updateSeptemberAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Drumsticks</td>
+                            <td><input type="number" step="0.01" id="septemberDrumsticksAmount" onchange="saveSeptemberEssentialsAmount('drumsticks', this.value); updateSeptemberAllTotals();"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="septemberEssentialsTotal" class="budget-total">Total Sunday Essentials: 0.00</div>
+                <h4>Sunday School Essentials</h4>
+                <table id="septemberSundaySchoolTable" class="sunday-school-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Amount Due</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Jumping Castle</td>
+                            <td><input type="number" step="0.01" id="septemberJumpingCastleAmount" onchange="saveSeptemberSundaySchoolAmount('jumpingCastle', this.value); updateSeptemberAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Snacks</td>
+                            <td><input type="number" step="0.01" id="septemberSnacksAmount" onchange="saveSeptemberSundaySchoolAmount('snacks', this.value); updateSeptemberAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>First Aid</td>
+                            <td><input type="number" step="0.01" id="septemberFirstAidAmount" onchange="saveSeptemberSundaySchoolAmount('firstAid', this.value); updateSeptemberAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Security</td>
+                            <td><input type="number" step="0.01" id="septemberSecurityAmount" onchange="saveSeptemberSundaySchoolAmount('security', this.value); updateSeptemberAllTotals();"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="septemberSundaySchoolTotal" class="budget-total">Total Sunday School Essentials: 0.00</div>
+                <div id="septemberGrandTotal" class="grand-total">Grand Total: 0.00</div>
+                <button id="septemberGenerateReportBtn" class="generate-report-btn">Generate Report 📊</button>
+                <div class="folder-actions">
+                    <button class="print-btn" onclick="printFolder('september-conference')">Print</button>
+                    <button class="export-btn" onclick="exportSeptember()">Download</button>
+                    <button class="email-btn" onclick="emailSeptember()">Email</button>
+                    <button class="minimize-btn" onclick="toggleFolder('september-conference')">Minimize</button>
+                </div>
             </div>
-        </div>
+        </details>
+        <details id="combined-service-folder">
+            <summary>Combined Service</summary>
+            <div class="folder-content">
+                <h3>Combined Service expense</h3>
+                <div class="budget-date">
+                    <label for="combinedDate">Date:</label>
+                    <input type="date" id="combinedDate" onchange="saveCombinedDate(this.value)">
+                </div>
+                <h4>Transport budget</h4>
+                <table id="transportTable" class="transport-table">
+                    <thead>
+                        <tr>
+                            <th>Branch</th>
+                            <th>Amount Due</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Mahube</td>
+                            <td><input type="number" step="0.01" id="mahubeAmount" onchange="saveTransportAmount('mahube', this.value); updateAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Nelmaphius ext 4</td>
+                            <td><input type="number" step="0.01" id="nelmaphiusExt4Amount" onchange="saveTransportAmount('nelmaphiusExt4', this.value); updateAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Nelmaphius ext 6</td>
+                            <td><input type="number" step="0.01" id="nelmaphiusExt6Amount" onchange="saveTransportAmount('nelmaphiusExt6', this.value); updateAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Phase 5</td>
+                            <td><input type="number" step="0.01" id="phase5Amount" onchange="saveTransportAmount('phase5', this.value); updateAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Mamelodi Ext5</td>
+                            <td><input type="number" step="0.01" id="mamelodiExt5Amount" onchange="saveTransportAmount('mamelodiExt5', this.value); updateAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Kwamhlanga/kameel poort</td>
+                            <td><input type="number" step="0.01" id="kwamhlangaKameelAmount" onchange="saveTransportAmount('kwamhlangaKameel', this.value); updateAllTotals();"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="transportTotal" class="budget-total">Total Transport Budget: 0.00</div>
+                <h4>Sunday Essentials</h4>
+                <table id="essentialsTable" class="essentials-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Amount Due</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Water Bottles</td>
+                            <td><input type="number" step="0.01" id="waterBottlesAmount" onchange="saveEssentialsAmount('waterBottles', this.value); updateAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Juices</td>
+                            <td><input type="number" step="0.01" id="juicesAmount" onchange="saveEssentialsAmount('juices', this.value); updateAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Sweets</td>
+                            <td><input type="number" step="0.01" id="sweetsAmount" onchange="saveEssentialsAmount('sweets', this.value); updateAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Toilet Paper</td>
+                            <td><input type="number" step="0.01" id="toiletPaperAmount" onchange="saveEssentialsAmount('toiletPaper', this.value); updateAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Drumsticks</td>
+                            <td><input type="number" step="0.01" id="drumsticksAmount" onchange="saveEssentialsAmount('drumsticks', this.value); updateAllTotals();"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="essentialsTotal" class="budget-total">Total Sunday Essentials: 0.00</div>
+                <h4>Sunday School Essentials</h4>
+                <table id="sundaySchoolTable" class="sunday-school-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Amount Due</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Jumping Castle</td>
+                            <td><input type="number" step="0.01" id="jumpingCastleAmount" onchange="saveSundaySchoolAmount('jumpingCastle', this.value); updateAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Snacks</td>
+                            <td><input type="number" step="0.01" id="snacksAmount" onchange="saveSundaySchoolAmount('snacks', this.value); updateAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>First Aid</td>
+                            <td><input type="number" step="0.01" id="firstAidAmount" onchange="saveSundaySchoolAmount('firstAid', this.value); updateAllTotals();"></td>
+                        </tr>
+                        <tr>
+                            <td>Security</td>
+                            <td><input type="number" step="0.01" id="securityAmount" onchange="saveSundaySchoolAmount('security', this.value); updateAllTotals();"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="sundaySchoolTotal" class="budget-total">Total Sunday School Essentials: 0.00</div>
+                <div id="grandTotal" class="grand-total">Grand Total: 0.00</div>
+                <button id="generateReportBtn" class="generate-report-btn">Generate Report 📊</button>
+                <div class="folder-actions">
+                    <button class="print-btn" onclick="printFolder('combined-service')">Print</button>
+                    <button class="export-btn" onclick="exportCombinedBudget()">Download</button>
+                    <button class="email-btn" onclick="emailCombinedBudget()">Email</button>
+                    <button class="minimize-btn" onclick="toggleFolder('combined-service')">Minimize</button>
+                </div>
+            </div>
+        </details>
     </div>
     
     <div id="tithe" class="content">
         <h2>Tithe and Offering Tracking</h2>
-        <form id="titheForm">
-            <input type="text" id="memberName" placeholder="Member Name" required>
-            <select id="titheCurrency">
-                <option value="ZAR">ZAR</option>
-                <option value="USD">USD</option>
-            </select>
-            <input type="number" id="amount" placeholder="Amount" step="0.01" required>
-            <input type="date" id="titheDate" required>
-            <select id="titheType">
-                <option value="Tithe">Tithe</option>
-                <option value="Offering">Offering</option>
-                <option value="Missions">Missions</option>
-                <option value="Pastors Appreciation">Pastors Appreciation</option>
-            </select>
-            <button type="submit">Record Tithe/Offering</button>
-        </form>
-        <ul id="titheList" class="tithe-list">
-            <!-- Tithes/Offerings will be added here -->
-        </ul>
-        <div id="titheTotal" class="total"></div>
+        <details id="tithe-folder">
+            <summary>Tithe/Offering Folder</summary>
+            <div class="folder-content">
+                <form id="titheForm">
+                    <input type="text" id="memberName" placeholder="Member Name" required>
+                    <select id="titheCurrency">
+                        <option value="ZAR">ZAR</option>
+                        <option value="USD">USD</option>
+                    </select>
+                    <input type="number" id="amount" placeholder="Amount" step="0.01" required>
+                    <input type="date" id="titheDate" required>
+                    <select id="titheType">
+                        <option value="Tithe">Tithe</option>
+                        <option value="Offering">Offering</option>
+                        <option value="Missions">Missions</option>
+                        <option value="Pastors Appreciation">Pastors Appreciation</option>
+                    </select>
+                    <button type="submit">Record Tithe/Offering</button>
+                </form>
+                <ul id="titheList" class="tithe-list">
+                    <!-- Tithes/Offerings will be added here -->
+                </ul>
+                <div id="titheTotal" class="total"></div>
+                <div class="folder-actions">
+                    <button class="print-btn" onclick="printFolder('tithe')">Print</button>
+                    <button class="export-btn" onclick="exportTithes()">Download</button>
+                    <button class="email-btn" onclick="emailTithes()">Email</button>
+                    <button class="minimize-btn" onclick="toggleFolder('tithe')">Minimize</button>
+                </div>
+            </div>
+        </details>
     </div>
     
     <div id="leaders" class="content">
         <h2>Ministry Leaders</h2>
-        <div class="leaders-container">
-            <div class="leaders-section">
+        <details id="mld-folder">
+            <summary>MLD</summary>
+            <div class="folder-content">
                 <h3>Ministry Leaders Directory</h3>
                 <form id="leaderForm">
                     <input type="text" id="leaderName" placeholder="Full Name" required>
@@ -325,8 +716,17 @@
                 <ul id="leaderList" class="leader-list">
                     <!-- Leaders will be added here -->
                 </ul>
+                <div class="folder-actions">
+                    <button class="print-btn" onclick="printFolder('mld')">Print</button>
+                    <button class="export-btn" onclick="exportLeaders()">Download</button>
+                    <button class="email-btn" onclick="emailLeaders()">Email</button>
+                    <button class="minimize-btn" onclick="toggleFolder('mld')">Minimize</button>
+                </div>
             </div>
-            <div class="leaders-section">
+        </details>
+        <details id="ed-folder">
+            <summary>ED</summary>
+            <div class="folder-content">
                 <h3>Elders Directory</h3>
                 <form id="elderForm">
                     <input type="text" id="elderName" placeholder="Full Name" required>
@@ -339,8 +739,17 @@
                 <ul id="elderList" class="elder-list">
                     <!-- Elders will be added here -->
                 </ul>
+                <div class="folder-actions">
+                    <button class="print-btn" onclick="printFolder('ed')">Print</button>
+                    <button class="export-btn" onclick="exportElders()">Download</button>
+                    <button class="email-btn" onclick="emailElders()">Email</button>
+                    <button class="minimize-btn" onclick="toggleFolder('ed')">Minimize</button>
+                </div>
             </div>
-            <div class="leaders-section">
+        </details>
+        <details id="cld-folder">
+            <summary>CLD</summary>
+            <div class="folder-content">
                 <h3>Cell Leaders Directory</h3>
                 <form id="cellLeaderForm">
                     <input type="text" id="cellLeaderName" placeholder="Full Name" required>
@@ -353,40 +762,58 @@
                 <ul id="cellLeaderList" class="cell-list">
                     <!-- Cell Leaders will be added here -->
                 </ul>
+                <div class="folder-actions">
+                    <button class="print-btn" onclick="printFolder('cld')">Print</button>
+                    <button class="export-btn" onclick="exportCellLeaders()">Download</button>
+                    <button class="email-btn" onclick="emailCellLeaders()">Email</button>
+                    <button class="minimize-btn" onclick="toggleFolder('cld')">Minimize</button>
+                </div>
             </div>
-        </div>
+        </details>
     </div>
 
     <div id="pastors" class="content">
         <h2>Pastors Directory</h2>
-        <form id="pastorForm">
-            <input type="text" id="pastorName" placeholder="Full Name" required>
-            <input type="email" id="pastorEmail" placeholder="Email">
-            <input type="tel" id="pastorCell" placeholder="Cell Number (e.g., +1234567890)" required>
-            <input type="text" id="pastorAddress" placeholder="Address" required>
-            <input type="text" id="pastorSpouse" placeholder="Spouse Name">
-            <button type="submit">Add Pastor</button>
-        </form>
-        <table id="pastorTable">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Cell Number</th>
-                    <th>Address</th>
-                    <th>Spouse</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Pastors will be added here -->
-            </tbody>
-        </table>
+        <details id="pastors-folder">
+            <summary>Pastors Directory Folder</summary>
+            <div class="folder-content">
+                <form id="pastorForm">
+                    <input type="text" id="pastorName" placeholder="Full Name" required>
+                    <input type="email" id="pastorEmail" placeholder="Email">
+                    <input type="tel" id="pastorCell" placeholder="Cell Number (e.g., +1234567890)" required>
+                    <input type="text" id="pastorAddress" placeholder="Address" required>
+                    <input type="text" id="pastorSpouse" placeholder="Spouse Name">
+                    <button type="submit">Add Pastor</button>
+                </form>
+                <table id="pastorTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Cell Number</th>
+                            <th>Address</th>
+                            <th>Spouse</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Pastors will be added here -->
+                    </tbody>
+                </table>
+                <div class="folder-actions">
+                    <button class="print-btn" onclick="printFolder('pastors')">Print</button>
+                    <button class="export-btn" onclick="exportPastors()">Download</button>
+                    <button class="email-btn" onclick="emailPastors()">Email</button>
+                    <button class="minimize-btn" onclick="toggleFolder('pastors')">Minimize</button>
+                </div>
+            </div>
+        </details>
     </div>
 
     <div id="employees" class="content">
         <h2>Employee Management</h2>
-        <div style="display: flex; gap: 20px;">
-            <div style="flex: 1;">
+        <details id="emp-folder">
+            <summary>Add Employee Folder</summary>
+            <div class="folder-content">
                 <h3>Add Employee</h3>
                 <form id="employeeForm">
                     <input type="text" id="empName" placeholder="Full Name" required>
@@ -396,8 +823,32 @@
                     <input type="file" id="empCV" accept=".pdf" class="file-input">
                     <button type="submit">Add Employee</button>
                 </form>
+                <h3>Employees List</h3>
+                <table id="employeeTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Position</th>
+                            <th>Hire Date</th>
+                            <th>CV</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Employees will be added here -->
+                    </tbody>
+                </table>
+                <div class="folder-actions">
+                    <button class="print-btn" onclick="printFolder('emp')">Print</button>
+                    <button class="export-btn" onclick="exportEmployees()">Download</button>
+                    <button class="email-btn" onclick="emailEmployees()">Email</button>
+                    <button class="minimize-btn" onclick="toggleFolder('emp')">Minimize</button>
+                </div>
             </div>
-            <div style="flex: 1;">
+        </details>
+        <details id="leave-folder">
+            <summary>Leave Request Folder</summary>
+            <div class="folder-content">
                 <h3>Leave Request</h3>
                 <form id="leaveForm">
                     <select id="empSelectForLeave" required>
@@ -414,27 +865,18 @@
                     <textarea id="leaveReason" placeholder="Reason"></textarea>
                     <button type="submit">Submit Leave Request</button>
                 </form>
+                <h3>Leave Requests</h3>
+                <ul id="leaveList" class="leave-list">
+                    <!-- Leave requests will be added here -->
+                </ul>
+                <div class="folder-actions">
+                    <button class="print-btn" onclick="printFolder('leave')">Print</button>
+                    <button class="export-btn" onclick="exportLeaves()">Download</button>
+                    <button class="email-btn" onclick="emailLeaves()">Email</button>
+                    <button class="minimize-btn" onclick="toggleFolder('leave')">Minimize</button>
+                </div>
             </div>
-        </div>
-        <h3>Employees List</h3>
-        <table id="employeeTable">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Position</th>
-                    <th>Hire Date</th>
-                    <th>CV</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Employees will be added here -->
-            </tbody>
-        </table>
-        <h3>Leave Requests</h3>
-        <ul id="leaveList" class="leave-list">
-            <!-- Leave requests will be added here -->
-        </ul>
+        </details>
     </div>
 
     <div id="whatsapp" class="content">
@@ -474,6 +916,20 @@
         <p><em>Note: Replace placeholder links with actual WhatsApp group invite links. Phone numbers should be in international format for wa.me links.</em></p>
     </div>
 
+    <div id="vault" class="content">
+        <h2>Report Vault</h2>
+        <ul id="reportsList" class="report-list">
+            <!-- Reports will be added here -->
+        </ul>
+        <button class="history-icon" onclick="toggleHistory()">📜</button>
+        <div id="historySection" class="history-section">
+            <h3>History</h3>
+            <ul id="historyList" class="report-list">
+                <!-- History reports will be added here -->
+            </ul>
+        </div>
+    </div>
+
     <script>
         let members = JSON.parse(localStorage.getItem('members')) || [];
         let events = JSON.parse(localStorage.getItem('events')) || [];
@@ -486,6 +942,53 @@
         let pastors = JSON.parse(localStorage.getItem('pastors')) || [];
         let employees = JSON.parse(localStorage.getItem('employees')) || [];
         let leaves = JSON.parse(localStorage.getItem('leaves')) || [];
+        let transportBudget = JSON.parse(localStorage.getItem('transportBudget')) || {
+            mahube: 0,
+            nelmaphiusExt4: 0,
+            nelmaphiusExt6: 0,
+            phase5: 0,
+            mamelodiExt5: 0,
+            kwamhlangaKameel: 0
+        };
+        let sundayEssentials = JSON.parse(localStorage.getItem('sundayEssentials')) || {
+            waterBottles: 0,
+            juices: 0,
+            sweets: 0,
+            toiletPaper: 0,
+            drumsticks: 0
+        };
+        let sundaySchoolEssentials = JSON.parse(localStorage.getItem('sundaySchoolEssentials')) || {
+            jumpingCastle: 0,
+            snacks: 0,
+            firstAid: 0,
+            security: 0
+        };
+        let combinedDate = localStorage.getItem('combinedDate') || '';
+        let reports = JSON.parse(localStorage.getItem('reports')) || [];
+        let historyReports = JSON.parse(localStorage.getItem('historyReports')) || [];
+
+        let septemberTransportBudget = JSON.parse(localStorage.getItem('septemberTransportBudget')) || {
+            mahube: 0,
+            nelmaphiusExt4: 0,
+            nelmaphiusExt6: 0,
+            phase5: 0,
+            mamelodiExt5: 0,
+            kwamhlangaKameel: 0
+        };
+        let septemberSundayEssentials = JSON.parse(localStorage.getItem('septemberSundayEssentials')) || {
+            waterBottles: 0,
+            juices: 0,
+            sweets: 0,
+            toiletPaper: 0,
+            drumsticks: 0
+        };
+        let septemberSundaySchoolEssentials = JSON.parse(localStorage.getItem('septemberSundaySchoolEssentials')) || {
+            jumpingCastle: 0,
+            snacks: 0,
+            firstAid: 0,
+            security: 0
+        };
+        let septemberDate = localStorage.getItem('septemberDate') || '';
 
         function formatPhone(phone) {
             return phone.replace(/[+-\s]/g, '');
@@ -496,6 +999,26 @@
             document.getElementById(section).classList.add('active');
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
+            if (section === 'vault') {
+                renderReports();
+                renderHistoryReports();
+            }
+        }
+
+        function toggleHistory() {
+            const historySection = document.getElementById('historySection');
+            historySection.classList.toggle('active');
+        }
+
+        function isDuplicateReport(report) {
+            return historyReports.some(h => h.name === report.name && h.content === report.content);
+        }
+
+        function addToHistory(report) {
+            if (!isDuplicateReport(report)) {
+                historyReports.push(report);
+                localStorage.setItem('historyReports', JSON.stringify(historyReports));
+            }
         }
 
         function parseCSV(text) {
@@ -530,6 +1053,441 @@
                 }
                 tr[i].style.display = visible ? '' : 'none';
             }
+        }
+
+        function downloadCSV(data, filename, headers) {
+            const csvRows = [headers.join(','), ...data.map(row => headers.map(h => row[h] || '').join(','))];
+            const csv = csvRows.join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadReport(index) {
+            const report = reports[index];
+            const blob = new Blob([report.content], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = report.name.replace(/ /g, '_') + '.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadHistoryReport(index) {
+            const report = historyReports[index];
+            const blob = new Blob([report.content], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = report.name.replace(/ /g, '_') + '.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function deleteReport(index) {
+            reports.splice(index, 1);
+            localStorage.setItem('reports', JSON.stringify(reports));
+            renderReports();
+        }
+
+        function renderReports() {
+            const list = document.getElementById('reportsList');
+            list.innerHTML = '';
+            reports.forEach((report, index) => {
+                const li = document.createElement('li');
+                li.classList.add('report-item');
+                li.innerHTML = `
+                    <strong>${report.name}</strong> - ${new Date(report.date).toLocaleDateString()}<br>
+                    <button class="report-download-btn" onclick="downloadReport(${index})">Download</button>
+                    <button class="report-delete-btn" onclick="deleteReport(${index})">Delete</button>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function renderHistoryReports() {
+            const list = document.getElementById('historyList');
+            list.innerHTML = '';
+            historyReports.forEach((report, index) => {
+                const li = document.createElement('li');
+                li.classList.add('history-report-item');
+                li.innerHTML = `
+                    <strong>${report.name}</strong> - ${new Date(report.date).toLocaleDateString()}<br>
+                    <button class="report-download-btn" onclick="downloadHistoryReport(${index})">Download</button>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function emailData(subject, body) {
+            window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        }
+
+        function printFolder(folderId) {
+            window.print();
+        }
+
+        function toggleFolder(folderId) {
+            const details = document.getElementById(folderId + '-folder');
+            details.open = false;
+        }
+
+        function saveTransportAmount(branch, amount) {
+            transportBudget[branch] = parseFloat(amount) || 0;
+            localStorage.setItem('transportBudget', JSON.stringify(transportBudget));
+        }
+
+        function saveEssentialsAmount(item, amount) {
+            sundayEssentials[item] = parseFloat(amount) || 0;
+            localStorage.setItem('sundayEssentials', JSON.stringify(sundayEssentials));
+        }
+
+        function saveSundaySchoolAmount(item, amount) {
+            sundaySchoolEssentials[item] = parseFloat(amount) || 0;
+            localStorage.setItem('sundaySchoolEssentials', JSON.stringify(sundaySchoolEssentials));
+        }
+
+        function saveCombinedDate(date) {
+            combinedDate = date;
+            localStorage.setItem('combinedDate', combinedDate);
+        }
+
+        function updateTransportTotal() {
+            const total = Object.values(transportBudget).reduce((sum, val) => sum + val, 0);
+            document.getElementById('transportTotal').innerHTML = `Total Transport Budget: ${total.toFixed(2)}`;
+        }
+
+        function updateEssentialsTotal() {
+            const total = Object.values(sundayEssentials).reduce((sum, val) => sum + val, 0);
+            document.getElementById('essentialsTotal').innerHTML = `Total Sunday Essentials: ${total.toFixed(2)}`;
+        }
+
+        function updateSundaySchoolTotal() {
+            const total = Object.values(sundaySchoolEssentials).reduce((sum, val) => sum + val, 0);
+            document.getElementById('sundaySchoolTotal').innerHTML = `Total Sunday School Essentials: ${total.toFixed(2)}`;
+        }
+
+        function updateGrandTotal() {
+            const transportTotal = Object.values(transportBudget).reduce((sum, val) => sum + val, 0);
+            const essentialsTotal = Object.values(sundayEssentials).reduce((sum, val) => sum + val, 0);
+            const sundaySchoolTotal = Object.values(sundaySchoolEssentials).reduce((sum, val) => sum + val, 0);
+            const grandTotal = transportTotal + essentialsTotal + sundaySchoolTotal;
+            document.getElementById('grandTotal').innerHTML = `Grand Total: ${grandTotal.toFixed(2)}`;
+        }
+
+        function updateAllTotals() {
+            updateTransportTotal();
+            updateEssentialsTotal();
+            updateSundaySchoolTotal();
+            updateGrandTotal();
+        }
+
+        function saveSeptemberTransportAmount(branch, amount) {
+            septemberTransportBudget[branch] = parseFloat(amount) || 0;
+            localStorage.setItem('septemberTransportBudget', JSON.stringify(septemberTransportBudget));
+        }
+
+        function saveSeptemberEssentialsAmount(item, amount) {
+            septemberSundayEssentials[item] = parseFloat(amount) || 0;
+            localStorage.setItem('septemberSundayEssentials', JSON.stringify(septemberSundayEssentials));
+        }
+
+        function saveSeptemberSundaySchoolAmount(item, amount) {
+            septemberSundaySchoolEssentials[item] = parseFloat(amount) || 0;
+            localStorage.setItem('septemberSundaySchoolEssentials', JSON.stringify(septemberSundaySchoolEssentials));
+        }
+
+        function saveSeptemberDate(date) {
+            septemberDate = date;
+            localStorage.setItem('septemberDate', septemberDate);
+        }
+
+        function updateSeptemberTransportTotal() {
+            const total = Object.values(septemberTransportBudget).reduce((sum, val) => sum + val, 0);
+            document.getElementById('septemberTransportTotal').innerHTML = `Total Transport Budget: ${total.toFixed(2)}`;
+        }
+
+        function updateSeptemberEssentialsTotal() {
+            const total = Object.values(septemberSundayEssentials).reduce((sum, val) => sum + val, 0);
+            document.getElementById('septemberEssentialsTotal').innerHTML = `Total Sunday Essentials: ${total.toFixed(2)}`;
+        }
+
+        function updateSeptemberSundaySchoolTotal() {
+            const total = Object.values(septemberSundaySchoolEssentials).reduce((sum, val) => sum + val, 0);
+            document.getElementById('septemberSundaySchoolTotal').innerHTML = `Total Sunday School Essentials: ${total.toFixed(2)}`;
+        }
+
+        function updateSeptemberGrandTotal() {
+            const transportTotal = Object.values(septemberTransportBudget).reduce((sum, val) => sum + val, 0);
+            const essentialsTotal = Object.values(septemberSundayEssentials).reduce((sum, val) => sum + val, 0);
+            const sundaySchoolTotal = Object.values(septemberSundaySchoolEssentials).reduce((sum, val) => sum + val, 0);
+            const grandTotal = transportTotal + essentialsTotal + sundaySchoolTotal;
+            document.getElementById('septemberGrandTotal').innerHTML = `Grand Total: ${grandTotal.toFixed(2)}`;
+        }
+
+        function updateSeptemberAllTotals() {
+            updateSeptemberTransportTotal();
+            updateSeptemberEssentialsTotal();
+            updateSeptemberSundaySchoolTotal();
+            updateSeptemberGrandTotal();
+        }
+
+        function renderTransportBudget() {
+            document.getElementById('mahubeAmount').value = transportBudget.mahube;
+            document.getElementById('nelmaphiusExt4Amount').value = transportBudget.nelmaphiusExt4;
+            document.getElementById('nelmaphiusExt6Amount').value = transportBudget.nelmaphiusExt6;
+            document.getElementById('phase5Amount').value = transportBudget.phase5;
+            document.getElementById('mamelodiExt5Amount').value = transportBudget.mamelodiExt5;
+            document.getElementById('kwamhlangaKameelAmount').value = transportBudget.kwamhlangaKameel;
+        }
+
+        function renderEssentialsBudget() {
+            document.getElementById('waterBottlesAmount').value = sundayEssentials.waterBottles;
+            document.getElementById('juicesAmount').value = sundayEssentials.juices;
+            document.getElementById('sweetsAmount').value = sundayEssentials.sweets;
+            document.getElementById('toiletPaperAmount').value = sundayEssentials.toiletPaper;
+            document.getElementById('drumsticksAmount').value = sundayEssentials.drumsticks;
+        }
+
+        function renderSundaySchoolBudget() {
+            document.getElementById('jumpingCastleAmount').value = sundaySchoolEssentials.jumpingCastle;
+            document.getElementById('snacksAmount').value = sundaySchoolEssentials.snacks;
+            document.getElementById('firstAidAmount').value = sundaySchoolEssentials.firstAid;
+            document.getElementById('securityAmount').value = sundaySchoolEssentials.security;
+        }
+
+        function renderCombinedDate() {
+            document.getElementById('combinedDate').value = combinedDate;
+        }
+
+        function renderSeptemberTransportBudget() {
+            document.getElementById('septemberMahubeAmount').value = septemberTransportBudget.mahube;
+            document.getElementById('septemberNelmaphiusExt4Amount').value = septemberTransportBudget.nelmaphiusExt4;
+            document.getElementById('septemberNelmaphiusExt6Amount').value = septemberTransportBudget.nelmaphiusExt6;
+            document.getElementById('septemberPhase5Amount').value = septemberTransportBudget.phase5;
+            document.getElementById('septemberMamelodiExt5Amount').value = septemberTransportBudget.mamelodiExt5;
+            document.getElementById('septemberKwamhlangaKameelAmount').value = septemberTransportBudget.kwamhlangaKameel;
+        }
+
+        function renderSeptemberEssentialsBudget() {
+            document.getElementById('septemberWaterBottlesAmount').value = septemberSundayEssentials.waterBottles;
+            document.getElementById('septemberJuicesAmount').value = septemberSundayEssentials.juices;
+            document.getElementById('septemberSweetsAmount').value = septemberSundayEssentials.sweets;
+            document.getElementById('septemberToiletPaperAmount').value = septemberSundayEssentials.toiletPaper;
+            document.getElementById('septemberDrumsticksAmount').value = septemberSundayEssentials.drumsticks;
+        }
+
+        function renderSeptemberSundaySchoolBudget() {
+            document.getElementById('septemberJumpingCastleAmount').value = septemberSundaySchoolEssentials.jumpingCastle;
+            document.getElementById('septemberSnacksAmount').value = septemberSundaySchoolEssentials.snacks;
+            document.getElementById('septemberFirstAidAmount').value = septemberSundaySchoolEssentials.firstAid;
+            document.getElementById('septemberSecurityAmount').value = septemberSundaySchoolEssentials.security;
+        }
+
+        function renderSeptemberDate() {
+            document.getElementById('septemberDateBudget').value = septemberDate;
+        }
+
+        function exportCombinedBudget() {
+            const transportData = Object.entries(transportBudget).map(([branch, amount]) => ({ branch: branch.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()), amountDue: amount }));
+            const essentialsData = Object.entries(sundayEssentials).map(([item, amount]) => ({ item: item.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()), amountDue: amount }));
+            const sundaySchoolData = Object.entries(sundaySchoolEssentials).map(([item, amount]) => ({ item: item.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()), amountDue: amount }));
+            const transportHeaders = ['branch', 'amountDue'];
+            const essentialsHeaders = ['item', 'amountDue'];
+            const sundaySchoolHeaders = ['item', 'amountDue'];
+            downloadCSV(transportData, 'transport_budget.csv', transportHeaders);
+            downloadCSV(essentialsData, 'sunday_essentials.csv', essentialsHeaders);
+            downloadCSV(sundaySchoolData, 'sunday_school_essentials.csv', sundaySchoolHeaders);
+        }
+
+        function generateCombinedReport() {
+            const transportTotal = Object.values(transportBudget).reduce((sum, val) => sum + val, 0);
+            const essentialsTotal = Object.values(sundayEssentials).reduce((sum, val) => sum + val, 0);
+            const sundaySchoolTotal = Object.values(sundaySchoolEssentials).reduce((sum, val) => sum + val, 0);
+            const grandTotal = transportTotal + essentialsTotal + sundaySchoolTotal;
+            const csvContent = `Combined Service Budget Report\nDate: ${combinedDate || new Date().toLocaleDateString()}\n\nTransport Budget:\nBranch,Amount\n${Object.entries(transportBudget).map(([branch, amount]) => `${branch.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())},${amount.toFixed(2)}`).join('\n')}\n\nSunday Essentials:\nItem,Amount\n${Object.entries(sundayEssentials).map(([item, amount]) => `${item.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())},${amount.toFixed(2)}`).join('\n')}\n\nSunday School Essentials:\nItem,Amount\n${Object.entries(sundaySchoolEssentials).map(([item, amount]) => `${item.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())},${amount.toFixed(2)}`).join('\n')}\n\nTotals:\nTransport Total: ${transportTotal.toFixed(2)}\nSunday Essentials Total: ${essentialsTotal.toFixed(2)}\nSunday School Total: ${sundaySchoolTotal.toFixed(2)}\nGrand Total: ${grandTotal.toFixed(2)}`;
+            const report = {
+                name: `Combined Budget Report ${combinedDate || new Date().toLocaleDateString()}`,
+                date: new Date().toISOString(),
+                content: csvContent
+            };
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Combined_Budget_Report_${combinedDate || new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            reports.push(report);
+            localStorage.setItem('reports', JSON.stringify(reports));
+            addToHistory(report);
+        }
+
+        function generateSeptemberReport() {
+            const transportTotal = Object.values(septemberTransportBudget).reduce((sum, val) => sum + val, 0);
+            const essentialsTotal = Object.values(septemberSundayEssentials).reduce((sum, val) => sum + val, 0);
+            const sundaySchoolTotal = Object.values(septemberSundaySchoolEssentials).reduce((sum, val) => sum + val, 0);
+            const grandTotal = transportTotal + essentialsTotal + sundaySchoolTotal;
+            const csvContent = `September Conference Budget Report\nDate: ${septemberDate || new Date().toLocaleDateString()}\n\nTransport Budget:\nBranch,Amount\n${Object.entries(septemberTransportBudget).map(([branch, amount]) => `${branch.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())},${amount.toFixed(2)}`).join('\n')}\n\nSunday Essentials:\nItem,Amount\n${Object.entries(septemberSundayEssentials).map(([item, amount]) => `${item.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())},${amount.toFixed(2)}`).join('\n')}\n\nSunday School Essentials:\nItem,Amount\n${Object.entries(septemberSundaySchoolEssentials).map(([item, amount]) => `${item.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())},${amount.toFixed(2)}`).join('\n')}\n\nTotals:\nTransport Total: ${transportTotal.toFixed(2)}\nSunday Essentials Total: ${essentialsTotal.toFixed(2)}\nSunday School Total: ${sundaySchoolTotal.toFixed(2)}\nGrand Total: ${grandTotal.toFixed(2)}`;
+            const report = {
+                name: `September Budget Report ${septemberDate || new Date().toLocaleDateString()}`,
+                date: new Date().toISOString(),
+                content: csvContent
+            };
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `September_Budget_Report_${septemberDate || new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            reports.push(report);
+            localStorage.setItem('reports', JSON.stringify(reports));
+            addToHistory(report);
+        }
+
+        function emailCombinedBudget() {
+            const dateStr = combinedDate ? `Date: ${combinedDate}\n` : '';
+            const transportBody = dateStr + 'Transport Budget:\n' + Object.entries(transportBudget).map(([branch, amount]) => `${branch}: ${amount}`).join('\n') + '\n\n';
+            const essentialsBody = 'Sunday Essentials:\n' + Object.entries(sundayEssentials).map(([item, amount]) => `${item}: ${amount}`).join('\n') + '\n\n';
+            const sundaySchoolBody = 'Sunday School Essentials:\n' + Object.entries(sundaySchoolEssentials).map(([item, amount]) => `${item}: ${amount}`).join('\n') + '\n\n';
+            const transportTotal = Object.values(transportBudget).reduce((sum, val) => sum + val, 0);
+            const essentialsTotal = Object.values(sundayEssentials).reduce((sum, val) => sum + val, 0);
+            const sundaySchoolTotal = Object.values(sundaySchoolEssentials).reduce((sum, val) => sum + val, 0);
+            const grandTotal = transportTotal + essentialsTotal + sundaySchoolTotal;
+            const totalsBody = `Totals:\nTransport: ${transportTotal.toFixed(2)}\nSunday Essentials: ${essentialsTotal.toFixed(2)}\nSunday School Essentials: ${sundaySchoolTotal.toFixed(2)}\nGrand Total: ${grandTotal.toFixed(2)}`;
+            const subject = 'Combined Service Budget';
+            const body = transportBody + essentialsBody + sundaySchoolBody + totalsBody;
+            emailData(subject, body);
+        }
+
+        function exportMembers() {
+            const headers = ['name', 'branch', 'email', 'cell', 'address', 'joinDate', 'role'];
+            downloadCSV(members, 'members.csv', headers);
+        }
+
+        function emailMembers() {
+            const subject = 'Members Directory';
+            const body = members.map(m => `${m.name} - ${m.branch} - ${m.email} - ${m.cell} - ${m.address} - ${m.joinDate} - ${m.role}`).join('\n');
+            emailData(subject, body);
+        }
+
+        function exportEvents() {
+            const headers = ['title', 'date', 'time', 'desc'];
+            downloadCSV(events, 'events.csv', headers);
+        }
+
+        function emailEvents() {
+            const subject = 'Events List';
+            const body = events.map(e => `${e.title} - ${e.date} - ${e.time} - ${e.desc}`).join('\n');
+            emailData(subject, body);
+        }
+
+        function exportEaster() {
+            const headers = ['member', 'currency', 'amount', 'date', 'notes'];
+            downloadCSV(easterContributions, 'easter.csv', headers);
+        }
+
+        function emailEaster() {
+            const subject = 'Easter Conference Contributions';
+            const total = easterContributions.reduce((sum, c) => sum + parseFloat(c.amount || 0), 0).toFixed(2);
+            const body = `Total: ${total}\n\n` + easterContributions.map(c => `${c.member} - ${c.currency} ${c.amount} - ${c.date} - ${c.notes}`).join('\n');
+            emailData(subject, body);
+        }
+
+        function exportSeptember() {
+            const headers = ['member', 'currency', 'amount', 'date', 'notes'];
+            downloadCSV(septemberContributions, 'september.csv', headers);
+        }
+
+        function emailSeptember() {
+            const subject = 'September Conference Contributions';
+            const total = septemberContributions.reduce((sum, c) => sum + parseFloat(c.amount || 0), 0).toFixed(2);
+            const body = `Total: ${total}\n\n` + septemberContributions.map(c => `${c.member} - ${c.currency} ${c.amount} - ${c.date} - ${c.notes}`).join('\n');
+            emailData(subject, body);
+        }
+
+        function exportTithes() {
+            const headers = ['member', 'currency', 'amount', 'date', 'type'];
+            downloadCSV(tithes, 'tithes.csv', headers);
+        }
+
+        function emailTithes() {
+            const subject = 'Tithes and Offerings';
+            const total = tithes.reduce((sum, t) => sum + parseFloat(t.amount || 0), 0).toFixed(2);
+            const body = `Total: ${total}\n\n` + tithes.map(t => `${t.member} - ${t.currency} ${t.amount} - ${t.type} - ${t.date}`).join('\n');
+            emailData(subject, body);
+        }
+
+        function exportLeaders() {
+            const headers = ['name', 'ministry', 'email', 'cell', 'notes'];
+            downloadCSV(leaders, 'ministry_leaders.csv', headers);
+        }
+
+        function emailLeaders() {
+            const subject = 'Ministry Leaders Directory';
+            const body = leaders.map(l => `${l.name} - ${l.ministry} - ${l.email} - ${l.cell} - ${l.notes}`).join('\n');
+            emailData(subject, body);
+        }
+
+        function exportElders() {
+            const headers = ['name', 'role', 'email', 'cell', 'notes'];
+            downloadCSV(elders, 'elders.csv', headers);
+        }
+
+        function emailElders() {
+            const subject = 'Elders Directory';
+            const body = elders.map(e => `${e.name} - ${e.role} - ${e.email} - ${e.cell} - ${e.notes}`).join('\n');
+            emailData(subject, body);
+        }
+
+        function exportCellLeaders() {
+            const headers = ['name', 'cell', 'email', 'cellNum', 'notes'];
+            downloadCSV(cellLeaders, 'cell_leaders.csv', headers);
+        }
+
+        function emailCellLeaders() {
+            const subject = 'Cell Leaders Directory';
+            const body = cellLeaders.map(cl => `${cl.name} - ${cl.cell} - ${cl.email} - ${cl.cellNum} - ${cl.notes}`).join('\n');
+            emailData(subject, body);
+        }
+
+        function exportPastors() {
+            const headers = ['name', 'email', 'cell', 'address', 'spouse'];
+            downloadCSV(pastors, 'pastors.csv', headers);
+        }
+
+        function emailPastors() {
+            const subject = 'Pastors Directory';
+            const body = pastors.map(p => `${p.name} - ${p.email} - ${p.cell} - ${p.address} - ${p.spouse}`).join('\n');
+            emailData(subject, body);
+        }
+
+        function exportEmployees() {
+            const headers = ['name', 'email', 'position', 'hireDate', 'cvFile'];
+            downloadCSV(employees, 'employees.csv', headers);
+        }
+
+        function emailEmployees() {
+            const subject = 'Employees List';
+            const body = employees.map(emp => `${emp.name} - ${emp.email} - ${emp.position} - ${emp.hireDate} - ${emp.cvFile}`).join('\n');
+            emailData(subject, body);
+        }
+
+        function exportLeaves() {
+            const headers = ['employee', 'start', 'end', 'type', 'reason'];
+            downloadCSV(leaves, 'leaves.csv', headers);
+        }
+
+        function emailLeaves() {
+            const subject = 'Leave Requests';
+            const body = leaves.map(l => `${l.employee} - ${l.type} - ${l.start} to ${l.end} - ${l.reason}`).join('\n');
+            emailData(subject, body);
         }
 
         function renderMembers() {
@@ -948,6 +1906,9 @@
             e.target.reset();
         });
 
+        document.getElementById('generateReportBtn').addEventListener('click', generateCombinedReport);
+        document.getElementById('septemberGenerateReportBtn').addEventListener('click', generateSeptemberReport);
+
         // Initial render
         renderMembers();
         renderEvents();
@@ -960,6 +1921,16 @@
         renderPastors();
         renderEmployees();
         renderLeaves();
+        renderTransportBudget();
+        renderEssentialsBudget();
+        renderSundaySchoolBudget();
+        renderCombinedDate();
+        renderSeptemberTransportBudget();
+        renderSeptemberEssentialsBudget();
+        renderSeptemberSundaySchoolBudget();
+        renderSeptemberDate();
+        updateAllTotals();
+        updateSeptemberAllTotals();
     </script>
 </body>
 </html>
