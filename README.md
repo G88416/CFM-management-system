@@ -1,2 +1,934 @@
-# CFM-management-system
-its our church management system
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charity And Faith Mission Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        nav {
+            background-color: #34495e;
+            padding: 10px;
+            text-align: center;
+        }
+        nav button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        nav button:hover {
+            background-color: #2980b9;
+        }
+        nav button.active {
+            background-color: #e74c3c;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .content.active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 400px;
+        }
+        input, select, button, textarea, .file-input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        input[readonly] {
+            background-color: #f9f9f9;
+        }
+        .file-input {
+            border: none;
+            background-color: #f9f9f9;
+        }
+        button[type="submit"] {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #229954;
+        }
+        .whatsapp-btn {
+            background-color: #25D366;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        .whatsapp-btn:hover {
+            background-color: #128C7E;
+        }
+        a.whatsapp-link {
+            color: #25D366;
+            text-decoration: none;
+        }
+        a.whatsapp-link:hover {
+            text-decoration: underline;
+        }
+        .event-list, .tithe-list, .assignment-list, .employee-list, .leave-list, .leader-list, .pastor-list, .cell-list, .elder-list {
+            list-style: none;
+            padding: 0;
+        }
+        .event-item, .tithe-item, .assignment-item, .employee-item, .leave-item, .leader-item, .pastor-item, .cell-item, .elder-item {
+            background-color: #f9f9f9;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .bulk-upload {
+            margin-bottom: 20px;
+        }
+        .bulk-upload input[type="file"] {
+            max-width: 300px;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        .search-container input {
+            width: 100%;
+            max-width: 300px;
+        }
+        .leaders-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .leaders-section {
+            flex: 1;
+            min-width: 300px;
+        }
+        .events-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .events-section {
+            flex: 1;
+            min-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Charity And Faith Mission Management System</h1>
+        <p>Welcome to your church dashboard</p>
+    </header>
+    
+    <nav>
+        <button onclick="showSection('members')" class="active">Members</button>
+        <button onclick="showSection('events')">Events</button>
+        <button onclick="showSection('tithe')">Tithe & Offering</button>
+        <button onclick="showSection('leaders')">Ministry Leaders</button>
+        <button onclick="showSection('pastors')">Pastors</button>
+        <button onclick="showSection('employees')">Employees</button>
+        <button onclick="showSection('whatsapp')">WhatsApp Interactions</button>
+    </nav>
+    
+    <div id="members" class="content active">
+        <h2>Member Directory</h2>
+        <div class="bulk-upload">
+            <h3>Bulk Upload Members (CSV)</h3>
+            <p>CSV format: name,email,cell,address,joinDate,role,branch (joinDate optional, defaults to today)</p>
+            <form id="bulkMemberForm">
+                <input type="file" id="bulkCsv" accept=".csv" required>
+                <button type="submit">Upload CSV</button>
+            </form>
+        </div>
+        <div class="search-container">
+            <h3>Search Members</h3>
+            <input type="text" id="memberSearch" placeholder="Search by name, email, cell, address, or role..." onkeyup="searchMembers()">
+        </div>
+        <form id="memberForm">
+            <input type="text" id="name" placeholder="Full Name" required>
+            <select id="branch">
+                <option value="">Select Branch</option>
+                <option value="Khutsong">Khutsong</option>
+                <option value="Mamelodi EXT5">Mamelodi EXT5</option>
+                <option value="Mahube">Mahube</option>
+                <option value="Phase 5">Phase 5</option>
+                <option value="Kwamhlanga">Kwamhlanga</option>
+                <option value="Kameel port">Kameel port</option>
+                <option value="Nelmaphius ext4">Nelmaphius ext4</option>
+                <option value="Nelmaphius ext 6">Nelmaphius ext 6</option>
+            </select>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="tel" id="cell" placeholder="Cell Number (e.g., +1234567890)" required>
+            <input type="text" id="address" placeholder="Address" required>
+            <input type="date" id="joinDate" required>
+            <select id="role">
+                <option value="Member">Member</option>
+                <option value="Volunteer">Volunteer</option>
+                <option value="Leader">Leader</option>
+            </select>
+            <button type="submit">Add Member</button>
+        </form>
+        <table id="memberTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Branch</th>
+                    <th>Email</th>
+                    <th>Cell Number</th>
+                    <th>Address</th>
+                    <th>Join Date</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Members will be added here -->
+            </tbody>
+        </table>
+    </div>
+    
+    <div id="events" class="content">
+        <h2>Events</h2>
+        <div class="events-container">
+            <div class="events-section">
+                <h3>Event Calendar</h3>
+                <form id="eventForm">
+                    <input type="text" id="eventTitle" placeholder="Event Title" required>
+                    <input type="date" id="eventDate" required>
+                    <input type="time" id="eventTime" required>
+                    <textarea id="eventDesc" placeholder="Description"></textarea>
+                    <button type="submit">Add Event</button>
+                </form>
+                <ul id="eventList" class="event-list">
+                    <!-- Events will be added here -->
+                </ul>
+            </div>
+            <div class="events-section">
+                <h3>Easter Conference Contribution Directory</h3>
+                <form id="easterForm">
+                    <input type="text" id="easterMember" placeholder="Member Name" required>
+                    <input type="number" id="easterAmount" placeholder="Amount" step="0.01" required>
+                    <input type="date" id="easterDate" required>
+                    <textarea id="easterNotes" placeholder="Notes"></textarea>
+                    <button type="submit">Add Contribution</button>
+                </form>
+                <ul id="easterList" class="tithe-list">
+                    <!-- Easter contributions will be added here -->
+                </ul>
+            </div>
+            <div class="events-section">
+                <h3>September Conference Contribution Directory</h3>
+                <form id="septemberForm">
+                    <input type="text" id="septemberMember" placeholder="Member Name" required>
+                    <input type="number" id="septemberAmount" placeholder="Amount" step="0.01" required>
+                    <input type="date" id="septemberDate" required>
+                    <textarea id="septemberNotes" placeholder="Notes"></textarea>
+                    <button type="submit">Add Contribution</button>
+                </form>
+                <ul id="septemberList" class="tithe-list">
+                    <!-- September contributions will be added here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div id="tithe" class="content">
+        <h2>Tithe and Offering Tracking</h2>
+        <form id="titheForm">
+            <input type="text" id="memberName" placeholder="Member Name" required>
+            <input type="number" id="amount" placeholder="Amount" step="0.01" required>
+            <input type="date" id="titheDate" required>
+            <select id="titheType">
+                <option value="Tithe">Tithe</option>
+                <option value="Offering">Offering</option>
+                <option value="Missions">Missions</option>
+                <option value="Pastors Appreciation">Pastors Appreciation</option>
+            </select>
+            <button type="submit">Record Tithe/Offering</button>
+        </form>
+        <ul id="titheList" class="tithe-list">
+            <!-- Tithes/Offerings will be added here -->
+        </ul>
+    </div>
+    
+    <div id="leaders" class="content">
+        <h2>Ministry Leaders</h2>
+        <div class="leaders-container">
+            <div class="leaders-section">
+                <h3>Ministry Leaders Directory</h3>
+                <form id="leaderForm">
+                    <input type="text" id="leaderName" placeholder="Full Name" required>
+                    <input type="text" id="leaderMinistry" placeholder="Ministry Role" required>
+                    <input type="email" id="leaderEmail" placeholder="Email" required>
+                    <input type="tel" id="leaderCell" placeholder="Cell Number (e.g., +1234567890)" required>
+                    <textarea id="leaderNotes" placeholder="Additional Notes"></textarea>
+                    <button type="submit">Add Leader</button>
+                </form>
+                <ul id="leaderList" class="leader-list">
+                    <!-- Leaders will be added here -->
+                </ul>
+            </div>
+            <div class="leaders-section">
+                <h3>Elders Directory</h3>
+                <form id="elderForm">
+                    <input type="text" id="elderName" placeholder="Full Name" required>
+                    <input type="text" id="elderRole" placeholder="Elder Role" required>
+                    <input type="email" id="elderEmail" placeholder="Email" required>
+                    <input type="tel" id="elderCell" placeholder="Cell Number (e.g., +1234567890)" required>
+                    <textarea id="elderNotes" placeholder="Additional Notes"></textarea>
+                    <button type="submit">Add Elder</button>
+                </form>
+                <ul id="elderList" class="elder-list">
+                    <!-- Elders will be added here -->
+                </ul>
+            </div>
+            <div class="leaders-section">
+                <h3>Cell Leaders Directory</h3>
+                <form id="cellLeaderForm">
+                    <input type="text" id="cellLeaderName" placeholder="Full Name" required>
+                    <input type="text" id="cellLeaderCell" placeholder="Cell Group Name" required>
+                    <input type="email" id="cellLeaderEmail" placeholder="Email" required>
+                    <input type="tel" id="cellLeaderCellNum" placeholder="Cell Number (e.g., +1234567890)" required>
+                    <textarea id="cellLeaderNotes" placeholder="Additional Notes"></textarea>
+                    <button type="submit">Add Cell Leader</button>
+                </form>
+                <ul id="cellLeaderList" class="cell-list">
+                    <!-- Cell Leaders will be added here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="pastors" class="content">
+        <h2>Pastors Directory</h2>
+        <form id="pastorForm">
+            <input type="text" id="pastorName" placeholder="Full Name" required>
+            <input type="email" id="pastorEmail" placeholder="Email">
+            <input type="tel" id="pastorCell" placeholder="Cell Number (e.g., +1234567890)" required>
+            <input type="text" id="pastorAddress" placeholder="Address" required>
+            <input type="text" id="pastorSpouse" placeholder="Spouse Name">
+            <button type="submit">Add Pastor</button>
+        </form>
+        <table id="pastorTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Cell Number</th>
+                    <th>Address</th>
+                    <th>Spouse</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Pastors will be added here -->
+            </tbody>
+        </table>
+    </div>
+
+    <div id="employees" class="content">
+        <h2>Employee Management</h2>
+        <div style="display: flex; gap: 20px;">
+            <div style="flex: 1;">
+                <h3>Add Employee</h3>
+                <form id="employeeForm">
+                    <input type="text" id="empName" placeholder="Full Name" required>
+                    <input type="email" id="empEmail" placeholder="Email" required>
+                    <input type="text" id="empPosition" placeholder="Position" required>
+                    <input type="date" id="empHireDate" required>
+                    <input type="file" id="empCV" accept=".pdf" class="file-input">
+                    <button type="submit">Add Employee</button>
+                </form>
+            </div>
+            <div style="flex: 1;">
+                <h3>Leave Request</h3>
+                <form id="leaveForm">
+                    <select id="empSelectForLeave" required>
+                        <option value="">Select Employee</option>
+                        <!-- Options populated from employees -->
+                    </select>
+                    <input type="date" id="leaveStart" required>
+                    <input type="date" id="leaveEnd" required>
+                    <select id="leaveType">
+                        <option value="Vacation">Vacation</option>
+                        <option value="Sick">Sick</option>
+                        <option value="Personal">Personal</option>
+                    </select>
+                    <textarea id="leaveReason" placeholder="Reason"></textarea>
+                    <button type="submit">Submit Leave Request</button>
+                </form>
+            </div>
+        </div>
+        <h3>Employees List</h3>
+        <table id="employeeTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Position</th>
+                    <th>Hire Date</th>
+                    <th>CV</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Employees will be added here -->
+            </tbody>
+        </table>
+        <h3>Leave Requests</h3>
+        <ul id="leaveList" class="leave-list">
+            <!-- Leave requests will be added here -->
+        </ul>
+    </div>
+
+    <div id="whatsapp" class="content">
+        <h2>WhatsApp Interactions</h2>
+        <p>Connect with church members, leaders, and groups dynamically.</p>
+        
+        <h3>Church WhatsApp Groups</h3>
+        <div>
+            <h4>Main Church Group</h4>
+            <a href="https://chat.whatsapp.com/placeholder-invite-link-main" class="whatsapp-btn" target="_blank">Join Main Group</a>
+            <p>General announcements and fellowship.</p>
+        </div>
+        <div>
+            <h4>Prayer Warriors Group</h4>
+            <a href="https://chat.whatsapp.com/placeholder-invite-link-prayer" class="whatsapp-btn" target="_blank">Join Prayer Group</a>
+            <p>Daily prayers and intercession.</p>
+        </div>
+        <div>
+            <h4>Youth Ministry Group</h4>
+            <a href="https://chat.whatsapp.com/placeholder-invite-link-youth" class="whatsapp-btn" target="_blank">Join Youth Group</a>
+            <p>Youth events and discussions.</p>
+        </div>
+        
+        <h3>Send Message to Member</h3>
+        <form id="whatsappForm">
+            <select id="whatsappMemberSelect" required>
+                <option value="">Select Member</option>
+                <!-- Options populated from members -->
+            </select>
+            <textarea id="whatsappMessage" placeholder="Enter your message..." required></textarea>
+            <button type="submit">Open WhatsApp Chat</button>
+        </form>
+        
+        <h3>Quick Message to Admin</h3>
+        <a href="https://wa.me/1234567890?text=Hello%20from%20Charity%20And%20Faith%20Mission" class="whatsapp-btn" target="_blank">Send Message</a>
+        <p>Direct message to church admin.</p>
+        <p><em>Note: Replace placeholder links with actual WhatsApp group invite links. Phone numbers should be in international format for wa.me links.</em></p>
+    </div>
+
+    <script>
+        let members = JSON.parse(localStorage.getItem('members')) || [];
+        let events = JSON.parse(localStorage.getItem('events')) || [];
+        let easterContributions = JSON.parse(localStorage.getItem('easterContributions')) || [];
+        let septemberContributions = JSON.parse(localStorage.getItem('septemberContributions')) || [];
+        let tithes = JSON.parse(localStorage.getItem('tithes')) || [];
+        let leaders = JSON.parse(localStorage.getItem('leaders')) || [];
+        let cellLeaders = JSON.parse(localStorage.getItem('cellLeaders')) || [];
+        let elders = JSON.parse(localStorage.getItem('elders')) || [];
+        let pastors = JSON.parse(localStorage.getItem('pastors')) || [];
+        let employees = JSON.parse(localStorage.getItem('employees')) || [];
+        let leaves = JSON.parse(localStorage.getItem('leaves')) || [];
+
+        function formatPhone(phone) {
+            return phone.replace(/[+-\s]/g, '');
+        }
+
+        function showSection(section) {
+            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+            document.getElementById(section).classList.add('active');
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
+            const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+            const data = [];
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(v => v.trim().replace(/"/g, ''));
+                const row = {};
+                headers.forEach((header, idx) => {
+                    row[header] = values[idx] || '';
+                });
+                data.push(row);
+            }
+            return data;
+        }
+
+        function searchMembers() {
+            const input = document.getElementById('memberSearch');
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById('memberTable');
+            const tr = table.getElementsByTagName('tr');
+            for (let i = 1; i < tr.length; i++) {
+                let visible = false;
+                const td = tr[i].getElementsByTagName('td');
+                for (let j = 0; j < td.length; j++) {
+                    const cellText = td[j].textContent || td[j].innerText;
+                    if (cellText.toLowerCase().indexOf(filter) > -1) {
+                        visible = true;
+                        break;
+                    }
+                }
+                tr[i].style.display = visible ? '' : 'none';
+            }
+        }
+
+        function renderMembers() {
+            const tbody = document.querySelector('#memberTable tbody');
+            tbody.innerHTML = '';
+            members.forEach(member => {
+                const row = tbody.insertRow();
+                row.insertCell(0).textContent = member.name;
+                row.insertCell(1).textContent = member.branch || '';
+                row.insertCell(2).textContent = member.email;
+                const cellCell = row.insertCell();
+                cellCell.innerHTML = `<a href="https://wa.me/${formatPhone(member.cell)}?text=Hello%20${encodeURIComponent(member.name)}%20from%20Charity%20And%20Faith%20Mission" target="_blank" class="whatsapp-link">${member.cell}</a>`;
+                row.insertCell(4).textContent = member.address;
+                row.insertCell(5).textContent = member.joinDate;
+                row.insertCell(6).textContent = member.role;
+            });
+            updateWhatsappMemberSelect();
+        }
+
+        function updateWhatsappMemberSelect() {
+            const select = document.getElementById('whatsappMemberSelect');
+            if (select) {
+                select.innerHTML = '<option value="">Select Member</option>';
+                members.forEach(member => {
+                    const option = document.createElement('option');
+                    option.value = member.cell;
+                    option.textContent = `${member.name} (${member.cell})`;
+                    select.appendChild(option);
+                });
+            }
+        }
+
+        function renderEvents() {
+            const list = document.getElementById('eventList');
+            list.innerHTML = '';
+            events.forEach(event => {
+                const li = document.createElement('li');
+                li.classList.add('event-item');
+                li.innerHTML = `
+                    <strong>${event.title}</strong> - ${event.date} at ${event.time}<br>
+                    ${event.desc}
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function renderEasterContributions() {
+            const list = document.getElementById('easterList');
+            list.innerHTML = '';
+            easterContributions.forEach(contrib => {
+                const li = document.createElement('li');
+                li.classList.add('tithe-item');
+                li.innerHTML = `
+                    <strong>${contrib.member}</strong>: $${contrib.amount} on ${contrib.date}<br>
+                    ${contrib.notes}
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function renderSeptemberContributions() {
+            const list = document.getElementById('septemberList');
+            list.innerHTML = '';
+            septemberContributions.forEach(contrib => {
+                const li = document.createElement('li');
+                li.classList.add('tithe-item');
+                li.innerHTML = `
+                    <strong>${contrib.member}</strong>: $${contrib.amount} on ${contrib.date}<br>
+                    ${contrib.notes}
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function renderTithes() {
+            const list = document.getElementById('titheList');
+            list.innerHTML = '';
+            tithes.forEach(tithe => {
+                const li = document.createElement('li');
+                li.classList.add('tithe-item');
+                li.innerHTML = `
+                    <strong>${tithe.member}</strong>: $${tithe.amount} (${tithe.type}) on ${tithe.date}
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function renderLeaders() {
+            const list = document.getElementById('leaderList');
+            list.innerHTML = '';
+            leaders.forEach(leader => {
+                const li = document.createElement('li');
+                li.classList.add('leader-item');
+                const cellHtml = `<a href="https://wa.me/${formatPhone(leader.cell)}?text=Hello%20${encodeURIComponent(leader.name)}%20from%20Charity%20And%20Faith%20Mission" target="_blank" class="whatsapp-link">${leader.cell}</a>`;
+                li.innerHTML = `
+                    <strong>${leader.name}</strong> - ${leader.ministry}<br>
+                    Email: ${leader.email} | Cell: ${cellHtml}<br>
+                    ${leader.notes}
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function renderCellLeaders() {
+            const list = document.getElementById('cellLeaderList');
+            list.innerHTML = '';
+            cellLeaders.forEach(cellLeader => {
+                const li = document.createElement('li');
+                li.classList.add('cell-item');
+                const cellHtml = `<a href="https://wa.me/${formatPhone(cellLeader.cellNum)}?text=Hello%20${encodeURIComponent(cellLeader.name)}%20from%20Charity%20And%20Faith%20Mission" target="_blank" class="whatsapp-link">${cellLeader.cellNum}</a>`;
+                li.innerHTML = `
+                    <strong>${cellLeader.name}</strong> - ${cellLeader.cell}<br>
+                    Email: ${cellLeader.email} | Cell: ${cellHtml}<br>
+                    ${cellLeader.notes}
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function renderElders() {
+            const list = document.getElementById('elderList');
+            list.innerHTML = '';
+            elders.forEach(elder => {
+                const li = document.createElement('li');
+                li.classList.add('elder-item');
+                const cellHtml = `<a href="https://wa.me/${formatPhone(elder.cell)}?text=Hello%20${encodeURIComponent(elder.name)}%20from%20Charity%20And%20Faith%20Mission" target="_blank" class="whatsapp-link">${elder.cell}</a>`;
+                li.innerHTML = `
+                    <strong>${elder.name}</strong> - ${elder.role}<br>
+                    Email: ${elder.email} | Cell: ${cellHtml}<br>
+                    ${elder.notes}
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function renderPastors() {
+            const tbody = document.querySelector('#pastorTable tbody');
+            tbody.innerHTML = '';
+            pastors.forEach(pastor => {
+                const row = tbody.insertRow();
+                row.insertCell(0).textContent = pastor.name;
+                row.insertCell(1).textContent = pastor.email || '';
+                const cellCell = row.insertCell();
+                cellCell.innerHTML = `<a href="https://wa.me/${formatPhone(pastor.cell)}?text=Hello%20${encodeURIComponent(pastor.name)}%20from%20Charity%20And%20Faith%20Mission" target="_blank" class="whatsapp-link">${pastor.cell}</a>`;
+                row.insertCell(3).textContent = pastor.address;
+                row.insertCell(4).textContent = pastor.spouse || '';
+            });
+        }
+
+        function updateEmployeeSelectForLeave() {
+            const select = document.getElementById('empSelectForLeave');
+            if (select) {
+                select.innerHTML = '<option value="">Select Employee</option>';
+                employees.forEach(emp => {
+                    const option = document.createElement('option');
+                    option.value = emp.name;
+                    option.textContent = emp.name;
+                    select.appendChild(option);
+                });
+            }
+        }
+
+        function renderEmployees() {
+            const tbody = document.querySelector('#employeeTable tbody');
+            tbody.innerHTML = '';
+            employees.forEach(emp => {
+                const row = tbody.insertRow();
+                row.insertCell(0).textContent = emp.name;
+                row.insertCell(1).textContent = emp.email;
+                row.insertCell(2).textContent = emp.position;
+                row.insertCell(3).textContent = emp.hireDate;
+                row.insertCell(4).textContent = emp.cvFile || 'No CV';
+            });
+            updateEmployeeSelectForLeave();
+        }
+
+        function renderLeaves() {
+            const list = document.getElementById('leaveList');
+            list.innerHTML = '';
+            leaves.forEach(leave => {
+                const li = document.createElement('li');
+                li.classList.add('leave-item');
+                li.innerHTML = `
+                    <strong>${leave.employee}</strong>: ${leave.type} Leave from ${leave.start} to ${leave.end} (${leave.reason})
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        document.getElementById('bulkMemberForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const file = document.getElementById('bulkCsv').files[0];
+            if (!file) {
+                alert('Please select a CSV file.');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const csvData = parseCSV(event.target.result);
+                    const today = new Date().toISOString().split('T')[0];
+                    const newMembers = csvData.map(row => ({
+                        name: row.name || '',
+                        branch: row.branch || '',
+                        email: row.email || '',
+                        cell: row.cell || '',
+                        address: row.address || '',
+                        joinDate: row.joindate || today,
+                        role: row.role || 'Member'
+                    })).filter(member => member.name && member.email); // Filter out invalid rows
+                    if (newMembers.length === 0) {
+                        alert('No valid members found in CSV.');
+                        return;
+                    }
+                    members.push(...newMembers);
+                    localStorage.setItem('members', JSON.stringify(members));
+                    renderMembers();
+                    alert(`${newMembers.length} members added successfully.`);
+                    e.target.reset();
+                } catch (error) {
+                    alert('Error parsing CSV: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        document.getElementById('memberForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const member = {
+                name: document.getElementById('name').value,
+                branch: document.getElementById('branch').value,
+                email: document.getElementById('email').value,
+                cell: document.getElementById('cell').value,
+                address: document.getElementById('address').value,
+                joinDate: document.getElementById('joinDate').value,
+                role: document.getElementById('role').value
+            };
+            members.push(member);
+            localStorage.setItem('members', JSON.stringify(members));
+            renderMembers();
+            e.target.reset();
+        });
+
+        document.getElementById('eventForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const event = {
+                title: document.getElementById('eventTitle').value,
+                date: document.getElementById('eventDate').value,
+                time: document.getElementById('eventTime').value,
+                desc: document.getElementById('eventDesc').value
+            };
+            events.push(event);
+            localStorage.setItem('events', JSON.stringify(events));
+            renderEvents();
+            e.target.reset();
+        });
+
+        document.getElementById('easterForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const contrib = {
+                member: document.getElementById('easterMember').value,
+                amount: document.getElementById('easterAmount').value,
+                date: document.getElementById('easterDate').value,
+                notes: document.getElementById('easterNotes').value
+            };
+            easterContributions.push(contrib);
+            localStorage.setItem('easterContributions', JSON.stringify(easterContributions));
+            renderEasterContributions();
+            e.target.reset();
+        });
+
+        document.getElementById('septemberForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const contrib = {
+                member: document.getElementById('septemberMember').value,
+                amount: document.getElementById('septemberAmount').value,
+                date: document.getElementById('septemberDate').value,
+                notes: document.getElementById('septemberNotes').value
+            };
+            septemberContributions.push(contrib);
+            localStorage.setItem('septemberContributions', JSON.stringify(septemberContributions));
+            renderSeptemberContributions();
+            e.target.reset();
+        });
+
+        document.getElementById('titheForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const tithe = {
+                member: document.getElementById('memberName').value,
+                amount: document.getElementById('amount').value,
+                date: document.getElementById('titheDate').value,
+                type: document.getElementById('titheType').value
+            };
+            tithes.push(tithe);
+            localStorage.setItem('tithes', JSON.stringify(tithes));
+            renderTithes();
+            e.target.reset();
+        });
+
+        document.getElementById('leaderForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const leader = {
+                name: document.getElementById('leaderName').value,
+                ministry: document.getElementById('leaderMinistry').value,
+                email: document.getElementById('leaderEmail').value,
+                cell: document.getElementById('leaderCell').value,
+                notes: document.getElementById('leaderNotes').value
+            };
+            leaders.push(leader);
+            localStorage.setItem('leaders', JSON.stringify(leaders));
+            renderLeaders();
+            e.target.reset();
+        });
+
+        document.getElementById('elderForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const elder = {
+                name: document.getElementById('elderName').value,
+                role: document.getElementById('elderRole').value,
+                email: document.getElementById('elderEmail').value,
+                cell: document.getElementById('elderCell').value,
+                notes: document.getElementById('elderNotes').value
+            };
+            elders.push(elder);
+            localStorage.setItem('elders', JSON.stringify(elders));
+            renderElders();
+            e.target.reset();
+        });
+
+        document.getElementById('cellLeaderForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const cellLeader = {
+                name: document.getElementById('cellLeaderName').value,
+                cell: document.getElementById('cellLeaderCell').value,
+                email: document.getElementById('cellLeaderEmail').value,
+                cellNum: document.getElementById('cellLeaderCellNum').value,
+                notes: document.getElementById('cellLeaderNotes').value
+            };
+            cellLeaders.push(cellLeader);
+            localStorage.setItem('cellLeaders', JSON.stringify(cellLeaders));
+            renderCellLeaders();
+            e.target.reset();
+        });
+
+        document.getElementById('pastorForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const pastor = {
+                name: document.getElementById('pastorName').value,
+                email: document.getElementById('pastorEmail').value,
+                cell: document.getElementById('pastorCell').value,
+                address: document.getElementById('pastorAddress').value,
+                spouse: document.getElementById('pastorSpouse').value
+            };
+            pastors.push(pastor);
+            localStorage.setItem('pastors', JSON.stringify(pastors));
+            renderPastors();
+            e.target.reset();
+        });
+
+        document.getElementById('employeeForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const cvFile = document.getElementById('empCV').files[0];
+            const cvFileName = cvFile ? cvFile.name : null;
+            // Note: In a real app, upload the file to a server; here we just store the filename
+            const employee = {
+                name: document.getElementById('empName').value,
+                email: document.getElementById('empEmail').value,
+                position: document.getElementById('empPosition').value,
+                hireDate: document.getElementById('empHireDate').value,
+                cvFile: cvFileName
+            };
+            employees.push(employee);
+            localStorage.setItem('employees', JSON.stringify(employees));
+            renderEmployees();
+            e.target.reset();
+        });
+
+        document.getElementById('leaveForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const leave = {
+                employee: document.getElementById('empSelectForLeave').value,
+                start: document.getElementById('leaveStart').value,
+                end: document.getElementById('leaveEnd').value,
+                type: document.getElementById('leaveType').value,
+                reason: document.getElementById('leaveReason').value
+            };
+            if (!leave.employee || !leave.start || !leave.end) {
+                alert('Please select employee and leave dates.');
+                return;
+            }
+            leaves.push(leave);
+            localStorage.setItem('leaves', JSON.stringify(leaves));
+            renderLeaves();
+            e.target.reset();
+        });
+
+        document.getElementById('whatsappForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const phone = document.getElementById('whatsappMemberSelect').value;
+            const message = document.getElementById('whatsappMessage').value;
+            if (!phone || !message) {
+                alert('Please select a member and enter a message.');
+                return;
+            }
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://wa.me/${formatPhone(phone)}?text=${encodedMessage}`, '_blank');
+            e.target.reset();
+        });
+
+        // Initial render
+        renderMembers();
+        renderEvents();
+        renderEasterContributions();
+        renderSeptemberContributions();
+        renderTithes();
+        renderLeaders();
+        renderElders();
+        renderCellLeaders();
+        renderPastors();
+        renderEmployees();
+        renderLeaves();
+    </script>
+</body>
+</html>
