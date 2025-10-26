@@ -73,6 +73,9 @@
             border: 1px solid #ddd;
             border-radius: 4px;
         }
+        select[multiple] {
+            height: 150px;
+        }
         input[readonly] {
             background-color: #f9f9f9;
         }
@@ -108,11 +111,11 @@
         a.whatsapp-link:hover {
             text-decoration: underline;
         }
-        .event-list, .tithe-list, .assignment-list, .employee-list, .leave-list, .leader-list, .pastor-list, .cell-list, .elder-list, .report-list {
+        .event-list, .tithe-list, .assignment-list, .employee-list, .leave-list, .leader-list, .pastor-list, .cell-list, .elder-list, .report-list, .whatsapp-list {
             list-style: none;
             padding: 0;
         }
-        .event-item, .tithe-item, .assignment-item, .employee-item, .leave-item, .leader-item, .pastor-item, .cell-item, .elder-item, .report-item {
+        .event-item, .tithe-item, .assignment-item, .employee-item, .leave-item, .leader-item, .pastor-item, .cell-item, .elder-item, .report-item, .whatsapp-item {
             background-color: #f9f9f9;
             margin: 10px 0;
             padding: 10px;
@@ -308,6 +311,57 @@
             padding: 8px 16px;
             border-radius: 4px;
             cursor: pointer;
+        }
+        .template-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        .template-btn {
+            background-color: #25D366;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .template-btn:hover {
+            background-color: #128C7E;
+        }
+        .whatsapp-history {
+            margin-top: 20px;
+        }
+        .whatsapp-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .whatsapp-item-details {
+            flex: 1;
+        }
+        .broadcast-form {
+            max-width: 600px;
+        }
+        .broadcast-select {
+            height: 200px;
+        }
+        .broadcast-actions {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .broadcast-btn {
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .broadcast-btn:hover {
+            background-color: #d35400;
         }
     </style>
 </head>
@@ -1333,11 +1387,60 @@
 
     <div id="whatsapp" class="content">
         <h2>WhatsApp Interactions</h2>
-        <form id="whatsappForm">
-            <select id="whatsappMemberSelect" required></select>
-            <textarea id="whatsappMessage" placeholder="Enter your message..." required></textarea>
-            <button type="submit">Send Message</button>
-        </form>
+        <details id="whatsapp-folder">
+            <summary>Send Individual Messages</summary>
+            <div class="folder-content">
+                <form id="whatsappForm">
+                    <label for="whatsappMemberSelect">Select Member:</label>
+                    <select id="whatsappMemberSelect" required></select>
+                    <label for="whatsappMessage">Message:</label>
+                    <textarea id="whatsappMessage" placeholder="Enter your message..." required></textarea>
+                    <button type="submit">Send via WhatsApp</button>
+                </form>
+                <div class="template-buttons">
+                    <button type="button" class="template-btn" onclick="fillTemplate('Dear [Name], join us for Sunday service at 9 AM. God bless!')">Service Reminder</button>
+                    <button type="button" class="template-btn" onclick="fillTemplate('Hello [Name], you are invited to the Easter Conference on [Date]. RSVP soon!')">Event Invite</button>
+                    <button type="button" class="template-btn" onclick="fillTemplate('Thank you [Name] for your tithe. Your support is appreciated!')">Thank You Note</button>
+                    <button type="button" class="template-btn" onclick="fillTemplate('Prayer request: [Details]. Let us pray together.')">Prayer Request</button>
+                </div>
+            </div>
+        </details>
+        <details id="whatsapp-broadcast-folder">
+            <summary>Group Broadcasts</summary>
+            <div class="folder-content">
+                <form id="broadcastForm" class="broadcast-form">
+                    <label for="broadcastMembers">Select Members (Hold Ctrl/Cmd to select multiple):</label>
+                    <select id="broadcastMembers" class="broadcast-select" multiple required></select>
+                    <label for="broadcastMessage">Broadcast Message:</label>
+                    <textarea id="broadcastMessage" placeholder="Enter your broadcast message..." required></textarea>
+                    <div class="template-buttons">
+                        <button type="button" class="template-btn" onclick="fillBroadcastTemplate('Join us for Sunday service at 9 AM. God bless!')">Service Reminder</button>
+                        <button type="button" class="template-btn" onclick="fillBroadcastTemplate('You are all invited to the Easter Conference on [Date]. RSVP soon!')">Event Invite</button>
+                        <button type="button" class="template-btn" onclick="fillBroadcastTemplate('Thank you for your continued support and tithes. Blessings!')">Thank You Note</button>
+                        <button type="button" class="template-btn" onclick="fillBroadcastTemplate('Let us unite in prayer for [Details].')">Prayer Request</button>
+                    </div>
+                    <div class="broadcast-actions">
+                        <button type="button" class="broadcast-btn" onclick="selectAllMembers()">Select All</button>
+                        <button type="submit">Send Broadcast</button>
+                    </div>
+                    <p><small>Note: This will open WhatsApp links sequentially with a short delay. Ensure you have WhatsApp open.</small></p>
+                </form>
+            </div>
+        </details>
+        <details id="whatsapp-history-folder">
+            <summary>Interaction History</summary>
+            <div class="folder-content">
+                <ul id="whatsappList" class="whatsapp-list whatsapp-history">
+                    <!-- WhatsApp interactions will be added here -->
+                </ul>
+            </div>
+        </details>
+        <div class="folder-actions">
+            <button class="print-btn" onclick="printFolder('whatsapp')">Print History</button>
+            <button class="export-btn" onclick="exportWhatsAppInteractions()">Export History</button>
+            <button class="email-btn" onclick="emailWhatsAppInteractions()">Email History</button>
+            <button class="minimize-btn" onclick="toggleFolder('whatsapp-history')">Minimize History</button>
+        </div>
     </div>
 
     <div id="vault" class="content">
@@ -1428,6 +1531,9 @@
             }
             if (!db.objectStoreNames.contains('historyReports')) {
                 db.createObjectStore('historyReports', { keyPath: 'id', autoIncrement: true });
+            }
+            if (!db.objectStoreNames.contains('whatsappInteractions')) {
+                db.createObjectStore('whatsappInteractions', { keyPath: 'id', autoIncrement: true });
             }
             if (!db.objectStoreNames.contains('transportBudget')) {
                 db.createObjectStore('transportBudget', { keyPath: 'key' });
@@ -1538,7 +1644,7 @@
         }
 
         async function loadAllData() {
-            const stores = ['members', 'events', 'easterContributions', 'septemberContributions', 'tithes', 'leaders', 'elders', 'cellLeaders', 'pastors', 'employees', 'leaves', 'reports', 'titheReports', 'historyReports', 'easterGrocery', 'easterSoundMedia', 'easterStageDeco', 'easterGuestPastor', 'septemberGrocery', 'septemberSoundMedia', 'septemberStageDeco', 'septemberGuestPastor'];
+            const stores = ['members', 'events', 'easterContributions', 'septemberContributions', 'tithes', 'leaders', 'elders', 'cellLeaders', 'pastors', 'employees', 'leaves', 'reports', 'titheReports', 'historyReports', 'whatsappInteractions', 'easterGrocery', 'easterSoundMedia', 'easterStageDeco', 'easterGuestPastor', 'septemberGrocery', 'septemberSoundMedia', 'septemberStageDeco', 'septemberGuestPastor'];
             for (const store of stores) {
                 await loadData(store);
             }
@@ -1567,6 +1673,9 @@
             renderTitheReports();
             renderReports();
             renderHistory();
+            renderWhatsAppInteractions();
+            populateWhatsAppSelect();
+            populateBroadcastSelect();
             updateAllTotals();
             updateEasterAllTotals();
             updateSeptemberAllTotals();
@@ -1587,6 +1696,7 @@
         let reports = [];
         let titheReports = [];
         let historyReports = [];
+        let whatsappInteractions = [];
         let transportBudget = {};
         let sundayEssentials = {};
         let sundaySchoolEssentials = {};
@@ -1617,7 +1727,8 @@
         }
 
         function formatPhone(phone) {
-            return phone.replace(/\D/g, '');
+            // Format for WhatsApp: remove non-digits except leading +, assume international
+            return phone.replace(/[\s\-\(\)]/g, '').replace(/^0/, '+');
         }
 
         function parseCSV(csv) {
@@ -1650,6 +1761,187 @@
             const mailto = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             window.open(mailto, '_blank');
         }
+
+        // WhatsApp specific functions
+        function populateWhatsAppSelect() {
+            const select = document.getElementById('whatsappMemberSelect');
+            select.innerHTML = '<option value="">Select a member</option>';
+            members.forEach(member => {
+                const option = document.createElement('option');
+                option.value = member.cell;
+                option.textContent = `${member.name} - ${member.cell}`;
+                select.appendChild(option);
+            });
+        }
+
+        function populateBroadcastSelect() {
+            const select = document.getElementById('broadcastMembers');
+            select.innerHTML = '';
+            members.forEach(member => {
+                const option = document.createElement('option');
+                option.value = member.cell;
+                option.textContent = `${member.name} - ${member.cell}`;
+                select.appendChild(option);
+            });
+        }
+
+        function selectAllMembers() {
+            const select = document.getElementById('broadcastMembers');
+            for (let option of select.options) {
+                option.selected = true;
+            }
+        }
+
+        function fillTemplate(template) {
+            const messageTextarea = document.getElementById('whatsappMessage');
+            const selectedOption = document.getElementById('whatsappMemberSelect').selectedOptions[0];
+            let personalized = template.replace(/\[Name\]/g, selectedOption ? selectedOption.textContent.split(' - ')[0] : '[Name]');
+            // For date placeholders, you can enhance further if needed
+            messageTextarea.value = personalized;
+        }
+
+        function fillBroadcastTemplate(template) {
+            const messageTextarea = document.getElementById('broadcastMessage');
+            messageTextarea.value = template.replace(/\[Name\]/g, 'Dear Member');
+        }
+
+        function sendWhatsAppMessage(phone, message) {
+            const formattedPhone = formatPhone(phone);
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${formattedPhone.replace('+', '')}?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        function sendBroadcast(phones, message) {
+            let delay = 0;
+            phones.forEach(phone => {
+                setTimeout(() => {
+                    sendWhatsAppMessage(phone, message);
+                }, delay);
+                delay += 1000; // 1 second delay between opens
+            });
+        }
+
+        function renderWhatsAppInteractions() {
+            const list = document.getElementById('whatsappList');
+            list.innerHTML = '';
+            whatsappInteractions.sort((a, b) => new Date(b.date) - new Date(a.date)); // Latest first
+            whatsappInteractions.forEach(interaction => {
+                const li = document.createElement('li');
+                li.classList.add('whatsapp-item');
+                if (interaction.type === 'broadcast') {
+                    li.innerHTML = `
+                        <div class="whatsapp-item-details">
+                            <strong>Broadcast to ${interaction.phones.length} members</strong><br>
+                            <small>${interaction.date}</small><br>
+                            <em>${interaction.message.substring(0, 50)}...</em>
+                        </div>
+                        <button class="delete-btn" onclick="deleteWhatsAppInteraction(${interaction.id})">Delete</button>
+                    `;
+                } else {
+                    const member = members.find(m => m.cell === interaction.phone) || { name: 'Unknown' };
+                    li.innerHTML = `
+                        <div class="whatsapp-item-details">
+                            <strong>To: ${member.name}</strong><br>
+                            <small>${interaction.date}</small><br>
+                            <em>${interaction.message.substring(0, 50)}...</em>
+                        </div>
+                        <button class="delete-btn" onclick="deleteWhatsAppInteraction(${interaction.id})">Delete</button>
+                    `;
+                }
+                list.appendChild(li);
+            });
+        }
+
+        function deleteWhatsAppInteraction(id) {
+            if (confirm('Delete this interaction?')) {
+                const transaction = db.transaction(['whatsappInteractions'], 'readwrite');
+                const store = transaction.objectStore('whatsappInteractions');
+                store.delete(id);
+                loadData('whatsappInteractions');
+            }
+        }
+
+        function exportWhatsAppInteractions() {
+            const headers = ['type', 'memberName', 'phone', 'message', 'date'];
+            const exportData = whatsappInteractions.map(inter => {
+                let memberName = '', phone = '';
+                if (inter.type === 'broadcast') {
+                    memberName = `${inter.phones.length} members`;
+                    phone = inter.phones.join(',');
+                } else {
+                    const member = members.find(m => m.cell === inter.phone) || { name: 'Unknown' };
+                    memberName = member.name;
+                    phone = inter.phone;
+                }
+                return {
+                    type: inter.type || 'individual',
+                    memberName,
+                    phone,
+                    message: inter.message,
+                    date: inter.date
+                };
+            });
+            downloadCSV(exportData, 'whatsapp_interactions.csv', headers);
+        }
+
+        function emailWhatsAppInteractions() {
+            const body = whatsappInteractions.map(inter => {
+                let details = '';
+                if (inter.type === 'broadcast') {
+                    details = `Broadcast to ${inter.phones.length} members (${inter.phones.join(', ')})\n`;
+                } else {
+                    const member = members.find(m => m.cell === inter.phone) || { name: 'Unknown' };
+                    details = `To: ${member.name} (${inter.phone})\n`;
+                }
+                return `${details}Date: ${inter.date}\nMessage: ${inter.message}\n\n`;
+            }).join('');
+            emailData('WhatsApp Interactions History', body);
+        }
+
+        // Event listener for WhatsApp form
+        document.getElementById('whatsappForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const phone = document.getElementById('whatsappMemberSelect').value;
+            const message = document.getElementById('whatsappMessage').value;
+            if (!phone || !message) {
+                alert('Please select a member and enter a message.');
+                return;
+            }
+            sendWhatsAppMessage(phone, message);
+            const interaction = {
+                type: 'individual',
+                phone: phone,
+                message: message,
+                date: new Date().toISOString().split('T')[0]
+            };
+            addData('whatsappInteractions', interaction);
+            e.target.reset();
+            document.getElementById('whatsappMemberSelect').selectedIndex = 0;
+        });
+
+        // Event listener for Broadcast form
+        document.getElementById('broadcastForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const phones = Array.from(document.getElementById('broadcastMembers').selectedOptions).map(option => option.value);
+            const message = document.getElementById('broadcastMessage').value;
+            if (phones.length === 0 || !message) {
+                alert('Please select at least one member and enter a message.');
+                return;
+            }
+            if (confirm(`Send broadcast to ${phones.length} members? This will open multiple WhatsApp tabs.`)) {
+                sendBroadcast(phones, message);
+                const interaction = {
+                    type: 'broadcast',
+                    phones: phones,
+                    message: message,
+                    date: new Date().toISOString().split('T')[0]
+                };
+                addData('whatsappInteractions', interaction);
+                e.target.reset();
+                document.getElementById('broadcastMembers').selectedIndex = -1;
+            }
+        });
 
         // Budget save and update functions
         function saveTransportAmount(branch, amount) {
@@ -1884,8 +2176,6 @@
             }
         }
 
-        // Similar delete functions for other stores...
-
         // Bulk upload event listeners (update to use addData)
         document.getElementById('bulkEasterContribForm').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -1957,8 +2247,6 @@
             addData('tithes', tithe);
             e.target.reset();
         });
-
-        // Similar for other forms...
 
         document.getElementById('generateTitheReportBtn').addEventListener('click', generateTitheReport);
 
