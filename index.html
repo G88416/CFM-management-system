@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Charity And Faith Mission Management System</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -111,15 +112,23 @@
         a.whatsapp-link:hover {
             text-decoration: underline;
         }
-        .event-list, .tithe-list, .assignment-list, .employee-list, .leave-list, .leader-list, .pastor-list, .cell-list, .elder-list, .report-list, .whatsapp-list, .follow-up-list {
+        .event-list, .tithe-list, .assignment-list, .employee-list, .leave-list, .leader-list, .pastor-list, .cell-list, .elder-list, .report-list, .whatsapp-list, .follow-up-list, .reminder-list {
             list-style: none;
             padding: 0;
         }
-        .event-item, .tithe-item, .assignment-item, .employee-item, .leave-item, .leader-item, .pastor-item, .cell-item, .elder-item, .report-item, .whatsapp-item, .follow-up-item {
+        .event-item, .tithe-item, .assignment-item, .employee-item, .leave-item, .leader-item, .pastor-item, .cell-item, .elder-item, .report-item, .whatsapp-item, .follow-up-item, .reminder-item {
             background-color: #f9f9f9;
             margin: 10px 0;
             padding: 10px;
             border-radius: 5px;
+        }
+        .reminder-item.due {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+        .reminder-item.overdue {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
         }
         .total {
             font-weight: bold;
@@ -376,6 +385,55 @@
             background-color: #d4edda;
             font-style: italic;
         }
+        .analytics-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .chart-container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background-color: #e8f5e8;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #27ae60;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #c3e6cb;
+            z-index: 1000;
+            display: none;
+        }
+        .notification.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
     </style>
 </head>
 <body>
@@ -387,6 +445,7 @@
     <nav>
         <button onclick="showSection('members')" class="active">Members</button>
         <button onclick="showSection('visitors')">Visitors</button>
+        <button onclick="showSection('analytics')">Analytics</button>
         <button onclick="showSection('events')">Events</button>
         <button onclick="showSection('tithe')">Tithe & Offering</button>
         <button onclick="showSection('leaders')">Ministry Leaders</button>
@@ -538,6 +597,7 @@
                         <option value="Not Interested">Not Interested</option>
                     </select>
                     <input type="date" id="followUpDate">
+                    <input type="date" id="followUpReminderDate" placeholder="Reminder Date">
                     <textarea id="followUpNotes" placeholder="Notes"></textarea>
                     <button type="submit">Log Follow-up</button>
                 </form>
@@ -549,6 +609,20 @@
                     <button class="export-btn" onclick="exportFollowUps()">Export</button>
                     <button class="email-btn" onclick="emailFollowUps()">Email</button>
                     <button class="minimize-btn" onclick="toggleFolder('follow-ups')">Minimize</button>
+                </div>
+            </div>
+        </details>
+        <details id="follow-up-reminders-folder">
+            <summary>Follow-up Reminders</summary>
+            <div class="folder-content">
+                <ul id="reminderList" class="reminder-list">
+                    <!-- Reminders will be added here -->
+                </ul>
+                <div class="folder-actions">
+                    <button class="print-btn" onclick="printFolder('follow-up-reminders')">Print</button>
+                    <button class="export-btn" onclick="exportReminders()">Export</button>
+                    <button class="email-btn" onclick="emailReminders()">Email</button>
+                    <button class="minimize-btn" onclick="toggleFolder('follow-up-reminders')">Minimize</button>
                 </div>
             </div>
         </details>
@@ -571,6 +645,38 @@
             </div>
         </details>
         <button id="generateVisitorReportBtn" class="generate-report-btn">Generate Visitors Report 📊</button>
+    </div>
+
+    <div id="analytics" class="content">
+        <h2>Visitors Analytics Dashboard</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalVisitors">0</div>
+                <div>Total Visitors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalConverted">0</div>
+                <div>Converted to Members</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="conversionRate">0%</div>
+                <div>Conversion Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendingFollowUps">0</div>
+                <div>Pending Follow-ups</div>
+            </div>
+        </div>
+        <div class="analytics-container">
+            <div class="chart-container">
+                <h3>Visitors Over Time</h3>
+                <canvas id="visitorsChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Conversion Status</h3>
+                <canvas id="conversionChart"></canvas>
+            </div>
+        </div>
     </div>
     
     <div id="events" class="content">
@@ -1206,11 +1312,11 @@
                         <div id="transportTotal" class="budget-total">Total Transport Budget: 0.00</div>
                     </div>
                 </details>
-                <details id="sunday-essentials-folder">
-                    <summary>Sunday Essentials</summary>
+                <details id="conference-essentials-folder">
+                    <summary>Conference Essentials</summary>
                     <div class="folder-content">
-                        <h4>Sunday Essentials</h4>
-                        <table id="essentialsTable" class="essentials-table">
+                        <h4>Conference Essentials</h4>
+                        <table id="conferenceEssentialsTable" class="essentials-table">
                             <thead>
                                 <tr>
                                     <th>Item</th>
@@ -1220,30 +1326,30 @@
                             <tbody>
                                 <tr>
                                     <td>Water Bottles</td>
-                                    <td><input type="number" step="0.01" id="waterBottlesAmount" onchange="saveEssentialsAmount('waterBottles', this.value); updateAllTotals();"></td>
+                                    <td><input type="number" step="0.01" id="waterBottlesAmount" onchange="saveConferenceEssentialsAmount('waterBottles', this.value); updateAllTotals();"></td>
                                 </tr>
                                 <tr>
                                     <td>Juices</td>
-                                    <td><input type="number" step="0.01" id="juicesAmount" onchange="saveEssentialsAmount('juices', this.value); updateAllTotals();"></td>
+                                    <td><input type="number" step="0.01" id="juicesAmount" onchange="saveConferenceEssentialsAmount('juices', this.value); updateAllTotals();"></td>
                                 </tr>
                                 <tr>
                                     <td>Sweets</td>
-                                    <td><input type="number" step="0.01" id="sweetsAmount" onchange="saveEssentialsAmount('sweets', this.value); updateAllTotals();"></td>
+                                    <td><input type="number" step="0.01" id="sweetsAmount" onchange="saveConferenceEssentialsAmount('sweets', this.value); updateAllTotals();"></td>
                                 </tr>
                                 <tr>
                                     <td>Toilet Paper</td>
-                                    <td><input type="number" step="0.01" id="toiletPaperAmount" onchange="saveEssentialsAmount('toiletPaper', this.value); updateAllTotals();"></td>
+                                    <td><input type="number" step="0.01" id="toiletPaperAmount" onchange="saveConferenceEssentialsAmount('toiletPaper', this.value); updateAllTotals();"></td>
                                 </tr>
                                 <tr>
                                     <td>Drumsticks</td>
-                                    <td><input type="number" step="0.01" id="drumsticksAmount" onchange="saveEssentialsAmount('drumsticks', this.value); updateAllTotals();"></td>
+                                    <td><input type="number" step="0.01" id="drumsticksAmount" onchange="saveConferenceEssentialsAmount('drumsticks', this.value); updateAllTotals();"></td>
                                 </tr>
                             </tbody>
                         </table>
-                        <div id="essentialsTotal" class="budget-total">Total Sunday Essentials: 0.00</div>
+                        <div id="conferenceEssentialsTotal" class="budget-total">Total Conference Essentials: 0.00</div>
                     </div>
                 </details>
-                <details id="sunday-school-essentials-folder">
+                <details id="sunday-school-folder">
                     <summary>Sunday School Essentials</summary>
                     <div class="folder-content">
                         <h4>Sunday School Essentials</h4>
@@ -1601,10 +1707,12 @@
         </div>
     </div>
 
+    <div id="notification" class="notification"></div>
+
     <script>
         // IndexedDB Setup
         const DB_NAME = 'ChurchManagementDB';
-        const DB_VERSION = 2; // Incremented for new stores
+        const DB_VERSION = 3; // Incremented for new stores
         let db;
 
         const request = indexedDB.open(DB_NAME, DB_VERSION);
@@ -1630,6 +1738,9 @@
             }
             if (!db.objectStoreNames.contains('visitorFollowUps')) {
                 db.createObjectStore('visitorFollowUps', { keyPath: 'id', autoIncrement: true });
+            }
+            if (!db.objectStoreNames.contains('visitorReminders')) {
+                db.createObjectStore('visitorReminders', { keyPath: 'id', autoIncrement: true });
             }
             if (!db.objectStoreNames.contains('visitorReports')) {
                 db.createObjectStore('visitorReports', { keyPath: 'id', autoIncrement: true });
@@ -1792,7 +1903,7 @@
         }
 
         async function loadAllData() {
-            const stores = ['members', 'visitors', 'visitorFollowUps', 'visitorReports', 'events', 'easterContributions', 'septemberContributions', 'tithes', 'leaders', 'elders', 'cellLeaders', 'pastors', 'employees', 'leaves', 'reports', 'titheReports', 'historyReports', 'whatsappInteractions', 'easterGrocery', 'easterSoundMedia', 'easterStageDeco', 'easterGuestPastor', 'septemberGrocery', 'septemberSoundMedia', 'septemberStageDeco', 'septemberGuestPastor'];
+            const stores = ['members', 'visitors', 'visitorFollowUps', 'visitorReminders', 'visitorReports', 'events', 'easterContributions', 'septemberContributions', 'tithes', 'leaders', 'elders', 'cellLeaders', 'pastors', 'employees', 'leaves', 'reports', 'titheReports', 'historyReports', 'whatsappInteractions', 'easterGrocery', 'easterSoundMedia', 'easterStageDeco', 'easterGuestPastor', 'septemberGrocery', 'septemberSoundMedia', 'septemberStageDeco', 'septemberGuestPastor'];
             for (const store of stores) {
                 await loadData(store);
             }
@@ -1810,6 +1921,7 @@
             renderMembers();
             renderVisitors();
             renderVisitorFollowUps();
+            renderVisitorReminders();
             renderVisitorReports();
             renderEvents();
             renderEasterContributions();
@@ -1832,12 +1944,16 @@
             updateAllTotals();
             updateEasterAllTotals();
             updateSeptemberAllTotals();
+            updateAnalytics();
+            checkReminders();
+            setInterval(checkReminders, 60000); // Check every minute
         }
 
         // Data storage (now loaded from DB)
         let members = [];
         let visitors = [];
         let visitorFollowUps = [];
+        let visitorReminders = [];
         let visitorReports = [];
         let events = [];
         let easterContributions = [];
@@ -1880,6 +1996,9 @@
             document.getElementById(sectionId).classList.add('active');
             document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
+            if (sectionId === 'analytics') {
+                updateAnalytics();
+            }
         }
 
         function formatPhone(phone) {
@@ -1916,6 +2035,15 @@
         function emailData(subject, body) {
             const mailto = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             window.open(mailto, '_blank');
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification show ${type}`;
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
         }
 
         // WhatsApp specific functions
@@ -2200,6 +2328,69 @@
             emailData('Visitor Follow-ups', body);
         }
 
+        // Follow-up Reminders functions
+        function renderVisitorReminders() {
+            const list = document.getElementById('reminderList');
+            list.innerHTML = '';
+            const today = new Date().toISOString().split('T')[0];
+            visitorReminders.sort((a, b) => new Date(a.reminderDate) - new Date(b.reminderDate));
+            visitorReminders.forEach(reminder => {
+                const visitor = visitors.find(v => v.id === reminder.visitorId);
+                const followUp = visitorFollowUps.find(f => f.id === reminder.followUpId);
+                const li = document.createElement('li');
+                li.classList.add('reminder-item');
+                const reminderDate = new Date(reminder.reminderDate);
+                const isDue = reminderDate.toISOString().split('T')[0] === today;
+                const isOverdue = reminderDate < new Date();
+                if (isOverdue) li.classList.add('overdue');
+                else if (isDue) li.classList.add('due');
+                li.innerHTML = `
+                    <strong>${visitor ? visitor.name : 'Unknown'}</strong> - Reminder: ${followUp ? followUp.status : 'N/A'} (${reminder.notes || ''})<br>
+                    <small>Due: ${reminder.reminderDate} ${isDue ? '(Today!)' : isOverdue ? '(Overdue)' : ''}</small>
+                    <button class="whatsapp-btn" onclick="sendReminderMessage(${reminder.id})">Send WhatsApp</button>
+                    <button class="delete-btn" onclick="deleteReminder(${reminder.id})">Delete</button>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function sendReminderMessage(reminderId) {
+            const reminder = visitorReminders.find(r => r.id === reminderId);
+            const visitor = visitors.find(v => v.id === reminder.visitorId);
+            if (visitor && visitor.cell) {
+                const message = `Reminder: Follow up with ${visitor.name} regarding ${reminder.notes || 'their visit'}. God bless!`;
+                sendWhatsAppMessage(visitor.cell, message);
+                showNotification(`Reminder sent to ${visitor.name}`);
+            }
+        }
+
+        function deleteReminder(id) {
+            if (confirm('Delete this reminder?')) {
+                deleteData('visitorReminders', id);
+            }
+        }
+
+        function exportReminders() {
+            const headers = ['visitorId', 'followUpId', 'reminderDate', 'notes'];
+            downloadCSV(visitorReminders, 'visitor_reminders.csv', headers);
+        }
+
+        function emailReminders() {
+            const body = visitorReminders.map(r => {
+                const visitor = visitors.find(v => v.id === r.visitorId) || { name: 'Unknown' };
+                return `${visitor.name}: Reminder on ${r.reminderDate} - ${r.notes || ''}\n`;
+            }).join('\n');
+            emailData('Visitor Reminders', body);
+        }
+
+        function checkReminders() {
+            const today = new Date().toISOString().split('T')[0];
+            const dueReminders = visitorReminders.filter(r => new Date(r.reminderDate).toISOString().split('T')[0] === today);
+            if (dueReminders.length > 0) {
+                showNotification(`${dueReminders.length} follow-up reminder(s) due today!`);
+            }
+        }
+
         // Visitor Report functions
         function generateVisitorReport() {
             const totalVisitors = visitors.length;
@@ -2254,6 +2445,73 @@
             }
         }
 
+        // Analytics functions
+        let visitorsChart, conversionChart;
+
+        function updateAnalytics() {
+            // Update stats
+            const totalVisitors = visitors.length;
+            const totalConverted = visitors.filter(v => v.convertedDate).length;
+            const conversionRate = totalVisitors > 0 ? ((totalConverted / totalVisitors) * 100).toFixed(2) : 0;
+            const pendingFollowUps = visitorFollowUps.filter(f => !visitors.find(v => v.id === f.visitorId)?.convertedDate).length;
+
+            document.getElementById('totalVisitors').textContent = totalVisitors;
+            document.getElementById('totalConverted').textContent = totalConverted;
+            document.getElementById('conversionRate').textContent = `${conversionRate}%`;
+            document.getElementById('pendingFollowUps').textContent = pendingFollowUps;
+
+            // Prepare data for charts
+            const monthlyVisitors = {};
+            visitors.forEach(v => {
+                const month = new Date(v.visitDate).toISOString().slice(0, 7); // YYYY-MM
+                monthlyVisitors[month] = (monthlyVisitors[month] || 0) + 1;
+            });
+            const months = Object.keys(monthlyVisitors).sort();
+            const visitorsData = months.map(m => monthlyVisitors[m]);
+
+            const statusData = {
+                new: visitors.filter(v => !v.convertedDate && !visitorFollowUps.some(f => f.visitorId === v.id)).length,
+                inProgress: visitors.filter(v => !v.convertedDate && visitorFollowUps.some(f => f.visitorId === v.id)).length,
+                converted: totalConverted
+            };
+
+            // Visitors over time chart
+            const ctx1 = document.getElementById('visitorsChart').getContext('2d');
+            if (visitorsChart) visitorsChart.destroy();
+            visitorsChart = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Visitors',
+                        data: visitorsData,
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // Conversion status pie chart
+            const ctx2 = document.getElementById('conversionChart').getContext('2d');
+            if (conversionChart) conversionChart.destroy();
+            conversionChart = new Chart(ctx2, {
+                type: 'pie',
+                data: {
+                    labels: ['New', 'In Progress', 'Converted'],
+                    datasets: [{
+                        data: [statusData.new, statusData.inProgress, statusData.converted],
+                        backgroundColor: ['#e74c3c', '#f39c12', '#27ae60']
+                    }]
+                },
+                options: { responsive: true }
+            });
+        }
+
         // Event listeners for visitors
         document.getElementById('visitorForm').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -2271,6 +2529,7 @@
             addData('visitors', visitor);
             e.target.reset();
             document.getElementById('visitorVisitDate').value = today;
+            updateAnalytics();
         });
 
         document.getElementById('followUpForm').addEventListener('submit', (e) => {
@@ -2280,11 +2539,22 @@
                 visitorId: parseInt(document.getElementById('followUpVisitorSelect').value),
                 status: document.getElementById('followUpStatus').value,
                 date: document.getElementById('followUpDate').value || today,
-                notes: document.getElementById('followUpNotes').value
+                notes: document.getElementById('followUpNotes').value,
+                reminderDate: document.getElementById('followUpReminderDate').value
             };
             addData('visitorFollowUps', followUp);
+            if (followUp.reminderDate) {
+                const reminder = {
+                    visitorId: followUp.visitorId,
+                    followUpId: followUp.id, // Note: id will be set after add, but for simplicity assume sequential
+                    reminderDate: followUp.reminderDate,
+                    notes: `Follow up: ${followUp.status} - ${followUp.notes}`
+                };
+                setTimeout(() => addData('visitorReminders', reminder), 100); // Delay to get id
+            }
             e.target.reset();
             document.getElementById('followUpDate').value = today;
+            updateAnalytics();
         });
 
         document.getElementById('visitorWhatsAppForm').addEventListener('submit', (e) => {
@@ -2334,6 +2604,7 @@
                     newVisitors.forEach(visitor => addData('visitors', visitor));
                     alert(`${newVisitors.length} visitors added.`);
                     e.target.reset();
+                    updateAnalytics();
                 } catch (error) {
                     alert('Error parsing CSV: ' + error.message);
                 }
@@ -2485,6 +2756,48 @@
         function searchMembers() {
             // Implement as needed
         }
+
+        // Broadcast form listener
+        document.getElementById('broadcastForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const selectedOptions = document.getElementById('broadcastMembers').selectedOptions;
+            const phones = Array.from(selectedOptions).map(opt => opt.value);
+            const message = document.getElementById('broadcastMessage').value;
+            if (phones.length === 0 || !message) {
+                alert('Please select members and enter a message.');
+                return;
+            }
+            sendBroadcast(phones, message);
+            const interaction = {
+                type: 'broadcast',
+                phones: phones,
+                message: message,
+                date: new Date().toISOString().split('T')[0]
+            };
+            addData('whatsappInteractions', interaction);
+            e.target.reset();
+        });
+
+        // Individual WhatsApp form listener
+        document.getElementById('whatsappForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const phone = document.getElementById('whatsappMemberSelect').value;
+            const message = document.getElementById('whatsappMessage').value;
+            if (!phone || !message) {
+                alert('Please select a member and enter a message.');
+                return;
+            }
+            sendWhatsAppMessage(phone, message);
+            const interaction = {
+                type: 'individual',
+                phone: phone,
+                message: message,
+                date: new Date().toISOString().split('T')[0]
+            };
+            addData('whatsappInteractions', interaction);
+            e.target.reset();
+            document.getElementById('whatsappMemberSelect').selectedIndex = 0;
+        });
     </script>
 </body>
 </html>
