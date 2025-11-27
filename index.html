@@ -16,18 +16,663 @@
     <!-- AI Integration: Simple client-side AI simulation using fuzzy search and template generation (enhanced with Levenshtein distance for identification) -->
     <script src="https://cdn.jsdelivr.net/npm/fuzzysort@2.0.0/fuzzysort.min.js"></script> <!-- For fuzzy matching in searches/uploads -->
     <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --text-color: #333;
+            --bg-color: #f4f4f4;
+            --card-bg: white;
+            --filter-brightness: 100%;
+            --filter-contrast: 100%;
+            --filter-saturate: 100%;
+        }
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            filter: brightness(var(--filter-brightness)) contrast(var(--filter-contrast)) saturate(var(--filter-saturate));
+            transition: all 0.3s ease;
         }
+        
+        /* Login Portal Styles */
+        .login-portal {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0033A0 0%, #1a5276 50%, #2c3e50 100%);
+        }
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            animation: fadeInUp 0.6s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .login-logo {
+            margin-bottom: 20px;
+        }
+        .login-logo .heart {
+            position: relative;
+            width: 150px;
+            height: 130px;
+            margin: 0 auto 10px;
+        }
+        .login-logo .heart::before,
+        .login-logo .heart::after {
+            content: '';
+            position: absolute;
+            width: 75px;
+            height: 115px;
+            background: #0033A0;
+            border-radius: 75px 75px 0 0;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+        .login-logo .heart::after {
+            left: 75px;
+            transform: rotate(90deg);
+            transform-origin: 100% 100%;
+        }
+        .login-logo .cross {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #D40000;
+            font-size: 80px;
+            font-weight: bold;
+            z-index: 10;
+        }
+        .login-logo .title {
+            color: #0033A0;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .login-logo .subtitle {
+            color: #D40000;
+            font-size: 12px;
+            font-style: italic;
+        }
+        .login-container h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        .login-container input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        .login-container button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .login-btn-main {
+            background: linear-gradient(135deg, #0033A0, #1a5276);
+            color: white;
+        }
+        .login-btn-main:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,51,160,0.4);
+        }
+        .login-btn-secondary {
+            background: linear-gradient(135deg, #27ae60, #219a52);
+            color: white;
+        }
+        .login-btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(39,174,96,0.4);
+        }
+        .login-error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin: 10px 0;
+            display: none;
+        }
+        .portal-choice {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .portal-choice button {
+            flex: 1;
+            padding: 12px;
+            font-size: 14px;
+        }
+        
+        /* Secondary Portal Specific Styles */
+        .secondary-portal-nav {
+            background: linear-gradient(135deg, #27ae60 0%, #219a52 100%);
+        }
+        .secondary-portal-nav button {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+        .secondary-portal-nav button.active {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+        
+        /* Main App Hidden Initially */
+        .main-app {
+            display: none;
+        }
+        .main-app.active {
+            display: block;
+        }
+        
         header {
-            background-color: #2c3e50;
+            background-color: var(--primary-color);
             color: white;
             padding: 20px;
             text-align: center;
         }
+        
+        /* Logo in Header */
+        .header-logo {
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        .header-logo .heart {
+            position: relative;
+            width: 120px;
+            height: 100px;
+            margin: 0 auto;
+        }
+        .header-logo .heart::before,
+        .header-logo .heart::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: #0033A0;
+            border-radius: 60px 60px 0 0;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+        .header-logo .heart::after {
+            left: 60px;
+            transform: rotate(90deg);
+            transform-origin: 100% 100%;
+        }
+        .header-logo .cross {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #D40000;
+            font-size: 60px;
+            font-weight: bold;
+            z-index: 10;
+        }
+        
+        /* Bible Quiz Styles */
+        .bible-quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .quiz-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .quiz-stat {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 100px;
+        }
+        .quiz-stat-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .quiz-stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        .difficulty-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .difficulty-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+        .difficulty-btn:hover {
+            transform: scale(1.05);
+        }
+        .difficulty-btn.level-1 { background: linear-gradient(135deg, #a8e6cf 0%, #88d8b0 100%); color: #1a5f3c; }
+        .difficulty-btn.level-2 { background: linear-gradient(135deg, #88d8b0 0%, #6bc99a 100%); color: #145c34; }
+        .difficulty-btn.level-3 { background: linear-gradient(135deg, #ffd93d 0%, #ffcc00 100%); color: #6b5900; }
+        .difficulty-btn.level-4 { background: linear-gradient(135deg, #ffb366 0%, #ff9933 100%); color: #804d00; }
+        .difficulty-btn.level-5 { background: linear-gradient(135deg, #ff9999 0%, #ff6666 100%); color: #800000; }
+        .difficulty-btn.level-6 { background: linear-gradient(135deg, #ff6666 0%, #ff3333 100%); color: #4d0000; }
+        .difficulty-btn.level-7 { background: linear-gradient(135deg, #cc0000 0%, #990000 100%); color: white; }
+        .difficulty-btn.active {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        .quiz-question-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            animation: bounceIn 0.5s ease;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .quiz-question-number {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+        .quiz-question-text {
+            font-size: 22px;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        @media (max-width: 600px) {
+            .quiz-options {
+                grid-template-columns: 1fr;
+            }
+        }
+        .quiz-option {
+            padding: 20px;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            color: #333;
+        }
+        .quiz-option:hover {
+            border-color: #3498db;
+            background: #f0f8ff;
+            transform: translateY(-3px);
+        }
+        .quiz-option.selected {
+            border-color: #3498db;
+            background: #e3f2fd;
+        }
+        .quiz-option.correct {
+            border-color: #27ae60;
+            background: #d4edda;
+            animation: pulse 0.5s ease;
+        }
+        .quiz-option.incorrect {
+            border-color: #e74c3c;
+            background: #f8d7da;
+            animation: shake 0.5s ease;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        .quiz-timer {
+            font-size: 48px;
+            font-weight: bold;
+            color: #e74c3c;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .quiz-timer.warning {
+            animation: pulse 1s infinite;
+        }
+        .quiz-progress {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .quiz-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            transition: width 0.3s;
+        }
+        .quiz-result {
+            text-align: center;
+            padding: 40px;
+            animation: fadeInUp 0.6s ease;
+        }
+        .quiz-result-score {
+            font-size: 72px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .quiz-result-message {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #2c3e50;
+        }
+        .quiz-result-stars {
+            font-size: 40px;
+            margin: 20px 0;
+        }
+        .quiz-leaderboard {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+        .leaderboard-rank {
+            font-weight: bold;
+            color: #f39c12;
+        }
+        
+        /* Poster Creator Styles */
+        .poster-creator {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            min-height: 600px;
+        }
+        @media (max-width: 900px) {
+            .poster-creator {
+                grid-template-columns: 1fr;
+            }
+        }
+        .poster-tools {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 15px;
+            overflow-y: auto;
+            max-height: 700px;
+        }
+        .tool-section {
+            margin-bottom: 20px;
+        }
+        .tool-section h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        .tool-btn {
+            width: 100%;
+            padding: 12px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .tool-btn:hover {
+            transform: translateX(5px);
+        }
+        .tool-btn.text-tool { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; }
+        .tool-btn.image-tool { background: linear-gradient(135deg, #27ae60 0%, #219a52 100%); color: white; }
+        .tool-btn.shape-tool { background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); color: white; }
+        .tool-btn.template-tool { background: linear-gradient(135deg, #e67e22 0%, #d35400 100%); color: white; }
+        .poster-canvas-container {
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .poster-canvas {
+            width: 100%;
+            height: 600px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            position: relative;
+            cursor: crosshair;
+        }
+        .canvas-element {
+            position: absolute;
+            cursor: move;
+            user-select: none;
+        }
+        .canvas-element.selected {
+            outline: 2px dashed #3498db;
+        }
+        .canvas-text {
+            padding: 10px;
+            min-width: 100px;
+        }
+        .canvas-toolbar {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            background: #2c3e50;
+            flex-wrap: wrap;
+        }
+        .canvas-toolbar button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .canvas-toolbar button:hover {
+            background: #2980b9;
+        }
+        .canvas-toolbar input[type="color"] {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .canvas-toolbar select, .canvas-toolbar input[type="number"] {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .template-item {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+            text-align: center;
+            padding: 5px;
+        }
+        .template-item:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Settings & Themes Styles */
+        .settings-container {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 20px;
+            min-height: 500px;
+        }
+        @media (max-width: 700px) {
+            .settings-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        .settings-sidebar {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 15px;
+        }
+        .settings-nav-btn {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: white;
+            color: #333;
+        }
+        .settings-nav-btn:hover {
+            background: #e8f4f8;
+        }
+        .settings-nav-btn.active {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+        .settings-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .settings-panel {
+            display: none;
+        }
+        .settings-panel.active {
+            display: block;
+            animation: fadeInContent 0.3s ease;
+        }
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .theme-card {
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            border: 3px solid transparent;
+        }
+        .theme-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .theme-card.active {
+            border-color: #3498db;
+        }
+        .theme-preview {
+            width: 80px;
+            height: 60px;
+            border-radius: 8px;
+            margin: 0 auto 10px;
+        }
+        .color-picker-group {
+            margin: 20px 0;
+        }
+        .color-picker-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 10px 0;
+        }
+        .color-picker-row label {
+            min-width: 120px;
+        }
+        .color-picker-row input[type="color"] {
+            width: 50px;
+            height: 35px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .filter-slider {
+            margin: 15px 0;
+        }
+        .filter-slider label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .filter-slider input[type="range"] {
+            width: 100%;
+        }
+        .filter-value {
+            text-align: right;
+            font-size: 14px;
+            color: #666;
+        }
+        
         nav {
             background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
             padding: 12px;
@@ -1131,88 +1776,122 @@
     </style>
 </head>
 <body>
-    <!-- Loading Spinner Overlay -->
-    <div class="spinner-overlay" id="spinnerOverlay">
-        <div class="spinner-container">
-            <div class="spinner"></div>
-            <div class="spinner-text" id="spinnerText">Processing...</div>
+    <!-- Login Portal -->
+    <div class="login-portal" id="loginPortal">
+        <div class="login-container">
+            <div class="login-logo">
+                <div class="heart">
+                    <div class="cross">†</div>
+                </div>
+                <div class="title">CHARITY AND FAITH MISSION</div>
+                <div class="subtitle">(The greatest church in the whole world)</div>
+            </div>
+            <h2>Welcome Back!</h2>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <input type="text" id="loginUsername" placeholder="Username" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <div class="login-error" id="loginError">Invalid username or password</div>
+                <button type="submit" class="login-btn-main">🔐 Login to Main Portal</button>
+            </form>
+            <div class="portal-choice">
+                <button class="login-btn-secondary" onclick="openSecondaryPortal()">📱 Quick Access Portal</button>
+            </div>
+            <p style="margin-top: 20px; color: #888; font-size: 12px;">
+                Default credentials: charity / faith
+            </p>
         </div>
     </div>
 
-    <!-- Enhanced Notification Container -->
-    <div id="notification" class="notification">
-        <span class="notification-icon"></span>
-        <div class="notification-content">
-            <div class="notification-title"></div>
-            <div class="notification-message"></div>
+    <!-- Main Application -->
+    <div class="main-app" id="mainApp">
+        <!-- Loading Spinner Overlay -->
+        <div class="spinner-overlay" id="spinnerOverlay">
+            <div class="spinner-container">
+                <div class="spinner"></div>
+                <div class="spinner-text" id="spinnerText">Processing...</div>
+            </div>
         </div>
-        <button class="notification-close" onclick="closeNotification()">&times;</button>
-    </div>
 
-    <!-- Confirmation Modal -->
-    <div class="modal-overlay" id="confirmModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-icon" id="modalIcon">❓</span>
-                <span class="modal-title" id="modalTitle">Confirm Action</span>
+        <!-- Enhanced Notification Container -->
+        <div id="notification" class="notification">
+            <span class="notification-icon"></span>
+            <div class="notification-content">
+                <div class="notification-title"></div>
+                <div class="notification-message"></div>
             </div>
-            <div class="modal-body" id="modalBody">
-                Are you sure you want to proceed?
-            </div>
-            <div class="modal-footer">
-                <button class="modal-btn secondary" onclick="closeModal()">Cancel</button>
-                <button class="modal-btn primary" id="modalConfirmBtn" onclick="confirmModalAction()">Confirm</button>
-            </div>
+            <button class="notification-close" onclick="closeNotification()">&times;</button>
         </div>
-    </div>
 
-    <header>
-        <h1>Charity And Faith Mission Management System</h1>
-        <p>Welcome to your church dashboard</p>
-    </header>
-    
-    <nav>
-        <button onclick="showSection('members', this)" class="active">👥 Members</button>
-        <button onclick="showSection('visitors', this)">🚪 Visitors</button>
-        <button onclick="showSection('analytics', this)">📊 Analytics</button>
-        <button onclick="showSection('events', this)">📅 Events</button>
-        <button onclick="showSection('tithe', this)">💰 Tithe & Offering</button>
-        <button onclick="showSection('church-admin', this)">⛪ Church Admin</button>
-        <button onclick="showSection('attendance', this)">📋 Attendance</button>
-        <button onclick="showSection('whatsapp', this)">💬 WhatsApp</button>
-        <button onclick="showSection('vault', this)">🔒 Vault</button>
-    </nav>
-    
-    <!-- Utility Toolbar -->
-    <div style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-        <div style="color: #ecf0f1; font-size: 12px;">
-            <span>⌨️ Shortcuts: </span>
-            <span style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 3px; margin: 0 3px;">Ctrl+S</span> Backup
-            <span style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 3px; margin: 0 3px;">Ctrl+F</span> Search
-            <span style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 3px; margin: 0 3px;">1-9</span> Navigate
+        <!-- Confirmation Modal -->
+        <div class="modal-overlay" id="confirmModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-icon" id="modalIcon">❓</span>
+                    <span class="modal-title" id="modalTitle">Confirm Action</span>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    Are you sure you want to proceed?
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn secondary" onclick="closeModal()">Cancel</button>
+                    <button class="modal-btn primary" id="modalConfirmBtn" onclick="confirmModalAction()">Confirm</button>
+                </div>
+            </div>
         </div>
-        <div style="display: flex; gap: 10px;">
-            <button onclick="backupData()" style="background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px;">
-                💾 Backup Data
-            </button>
-            <label style="background: #3498db; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px;">
-                📂 Restore Data
-                <input type="file" accept=".json" onchange="restoreData(this.files[0])" style="display: none;">
-            </label>
+
+        <header>
+            <div class="header-logo">
+                <div class="heart">
+                    <div class="cross">†</div>
+                </div>
+            </div>
+            <h1>Charity And Faith Mission Management System</h1>
+            <p>Welcome to your church dashboard</p>
+            <button onclick="logout()" style="position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); border: none; color: white; padding: 10px 20px; border-radius: 20px; cursor: pointer;">🚪 Logout</button>
+        </header>
+        
+        <nav id="mainNav">
+            <button onclick="showSection('members', this)" class="active">👥 Members</button>
+            <button onclick="showSection('visitors', this)">🚪 Visitors</button>
+            <button onclick="showSection('analytics', this)">📊 Analytics</button>
+            <button onclick="showSection('events', this)">📅 Events</button>
+            <button onclick="showSection('tithe', this)">💰 Tithe & Offering</button>
+            <button onclick="showSection('church-admin', this)">⛪ Church Admin</button>
+            <button onclick="showSection('attendance', this)">📋 Attendance</button>
+            <button onclick="showSection('media', this)">🎨 Media</button>
+            <button onclick="showSection('settings', this)">⚙️ Settings</button>
+        </nav>
+        
+        <!-- Utility Toolbar -->
+        <div style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div style="color: #ecf0f1; font-size: 12px;">
+                <span>⌨️ Shortcuts: </span>
+                <span style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 3px; margin: 0 3px;">Ctrl+S</span> Backup
+                <span style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 3px; margin: 0 3px;">Ctrl+F</span> Search
+                <span style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 3px; margin: 0 3px;">1-9</span> Navigate
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="backupData()" style="background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px;">
+                    💾 Backup Data
+                </button>
+                <label style="background: #3498db; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px;">
+                    📂 Restore Data
+                    <input type="file" accept=".json" onchange="restoreData(this.files[0])" style="display: none;">
+                </label>
+            </div>
         </div>
-    </div>
-    
-    <div id="members" class="content active">
-        <h2>Member Directory</h2>
-        <div class="bulk-upload">
-            <h3>📤 Bulk Upload Members</h3>
-            <div class="drop-zone" id="membersDropZone">
-                <div class="drop-zone-icon">📁</div>
-                <div class="drop-zone-text">Drag & drop files here or click to browse</div>
-                <div class="drop-zone-hint">Supports CSV, XLSX, PDF, DOCX</div>
-                <div class="file-type-icons">
-                    <span class="file-type-icon csv">CSV</span>
-                    <span class="file-type-icon xlsx">XLSX</span>
+        
+        <div id="members" class="content active">
+            <h2>Member Directory</h2>
+            <div class="bulk-upload">
+                <h3>📤 Bulk Upload Members</h3>
+                <div class="drop-zone" id="membersDropZone">
+                    <div class="drop-zone-icon">📁</div>
+                    <div class="drop-zone-text">Drag & drop files here or click to browse</div>
+                    <div class="drop-zone-hint">Supports CSV, XLSX, PDF, DOCX</div>
+                    <div class="file-type-icons">
+                        <span class="file-type-icon csv">CSV</span>
+                        <span class="file-type-icon xlsx">XLSX</span>
                     <span class="file-type-icon pdf">PDF</span>
                     <span class="file-type-icon docx">DOCX</span>
                 </div>
@@ -2175,157 +2854,301 @@
         </div>
     </div>
 
-    <div id="whatsapp" class="content">
-        <h2>WhatsApp Interactions</h2>
-        <details id="whatsapp-broadcast-folder">
-            <summary>Broadcast Messages</summary>
-            <div class="folder-content">
-                <form id="broadcastForm" class="broadcast-form" novalidate>
-                    <label for="broadcastSelect">Select Recipients:</label>
-                    <select id="broadcastSelect" multiple class="broadcast-select" required>
-                        <!-- Recipients will be populated here -->
-                    </select>
-                    <div class="error-message" id="broadcastSelect-error"></div>
-                    <label for="broadcastMessage">Message:</label>
-                    <textarea id="broadcastMessage" placeholder="Enter broadcast message..." required minlength="1" maxlength="1000"></textarea>
-                    <div class="error-message" id="broadcastMessage-error"></div>
-                    <div class="broadcast-actions">
-                        <button type="button" class="broadcast-btn" onclick="sendBroadcast()">Send Broadcast</button>
-                        <button type="button" class="broadcast-btn" onclick="scheduleBroadcast()">Schedule</button>
-                        <button type="button" class="ai-suggest-btn" onclick="generateAIMessage('broadcast')">AI Suggest</button>
+    <div id="media" class="content">
+        <h2>🎨 Media Center</h2>
+        <div class="settings-container">
+            <div class="settings-sidebar">
+                <button class="settings-nav-btn active" onclick="showMediaTab('poster-creator', this)">🖼️ Poster Creator</button>
+            </div>
+            <div class="settings-content">
+                <div id="poster-creator-tab" class="settings-panel active">
+                    <h3>📐 Advanced Poster Creator</h3>
+                    <div class="poster-creator">
+                        <div class="poster-tools">
+                            <div class="tool-section">
+                                <h4>📝 Text Tools</h4>
+                                <button class="tool-btn text-tool" onclick="addTextToCanvas()">➕ Add Text</button>
+                                <button class="tool-btn text-tool" onclick="addHeadingToCanvas()">📰 Add Heading</button>
+                                <select id="fontFamily" style="width:100%; padding:10px; margin:5px 0;">
+                                    <option value="Arial">Arial</option>
+                                    <option value="Georgia">Georgia</option>
+                                    <option value="Times New Roman">Times New Roman</option>
+                                    <option value="Verdana">Verdana</option>
+                                    <option value="Courier New">Courier New</option>
+                                    <option value="Impact">Impact</option>
+                                </select>
+                                <input type="number" id="fontSize" value="24" min="8" max="200" style="width:100%; padding:10px; margin:5px 0;" placeholder="Font Size">
+                            </div>
+                            <div class="tool-section">
+                                <h4>🖼️ Image Tools</h4>
+                                <button class="tool-btn image-tool" onclick="document.getElementById('imageUpload').click()">📷 Upload Image</button>
+                                <input type="file" id="imageUpload" accept="image/*" style="display:none;" onchange="addImageToCanvas(event)">
+                                <button class="tool-btn image-tool" onclick="addLogoToCanvas()">⛪ Add Church Logo</button>
+                            </div>
+                            <div class="tool-section">
+                                <h4>🔷 Shapes</h4>
+                                <button class="tool-btn shape-tool" onclick="addShapeToCanvas('rectangle')">⬛ Rectangle</button>
+                                <button class="tool-btn shape-tool" onclick="addShapeToCanvas('circle')">⚫ Circle</button>
+                                <button class="tool-btn shape-tool" onclick="addShapeToCanvas('line')">➖ Line</button>
+                            </div>
+                            <div class="tool-section">
+                                <h4>🎨 Templates</h4>
+                                <div class="template-grid">
+                                    <div class="template-item" style="background: linear-gradient(135deg, #667eea, #764ba2);" onclick="loadTemplate('sunday')">Sunday Service</div>
+                                    <div class="template-item" style="background: linear-gradient(135deg, #f093fb, #f5576c);" onclick="loadTemplate('event')">Event Poster</div>
+                                    <div class="template-item" style="background: linear-gradient(135deg, #4facfe, #00f2fe);" onclick="loadTemplate('youth')">Youth Meeting</div>
+                                    <div class="template-item" style="background: linear-gradient(135deg, #43e97b, #38f9d7);" onclick="loadTemplate('prayer')">Prayer Meeting</div>
+                                    <div class="template-item" style="background: linear-gradient(135deg, #fa709a, #fee140);" onclick="loadTemplate('conference')">Conference</div>
+                                    <div class="template-item" style="background: linear-gradient(135deg, #a18cd1, #fbc2eb);" onclick="loadTemplate('bible')">Bible Study</div>
+                                </div>
+                            </div>
+                            <div class="tool-section">
+                                <h4>🎨 Colors</h4>
+                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                    <input type="color" id="fillColor" value="#3498db" title="Fill Color" style="width:50px; height:40px;">
+                                    <input type="color" id="textColor" value="#ffffff" title="Text Color" style="width:50px; height:40px;">
+                                    <input type="color" id="bgColor" value="#f5f7fa" title="Background" style="width:50px; height:40px;" onchange="changeCanvasBg(this.value)">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="poster-canvas-container">
+                            <div class="canvas-toolbar">
+                                <button onclick="deleteSelected()">🗑️ Delete</button>
+                                <button onclick="bringToFront()">⬆️ Front</button>
+                                <button onclick="sendToBack()">⬇️ Back</button>
+                                <button onclick="clearCanvas()">🧹 Clear</button>
+                                <button onclick="undoCanvas()">↩️ Undo</button>
+                                <button onclick="downloadPoster()">💾 Download</button>
+                            </div>
+                            <div class="poster-canvas" id="posterCanvas" onclick="deselectAll()">
+                                <!-- Canvas elements will be added here -->
+                                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; color:#888;">
+                                    <p style="font-size:48px; margin:0;">🎨</p>
+                                    <p>Click tools on the left to start creating!</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </form>
-                <ul id="whatsappList" class="whatsapp-list">
-                    <!-- History will be added here -->
-                </ul>
-                <div class="folder-actions">
-                    <button class="print-btn" onclick="printFolder('whatsapp-broadcast')">Print</button>
-                    <button class="export-btn" onclick="exportWhatsApp()">Export</button>
-                    <button class="email-btn" onclick="emailWhatsApp()">Email</button>
-                    <button class="minimize-btn" onclick="toggleFolder('whatsapp-broadcast')">Minimize</button>
                 </div>
             </div>
-        </details>
+        </div>
     </div>
 
-    <div id="vault" class="content">
-        <h2>Vault</h2>
-        <details id="conference-reports-folder">
-            <summary>Conference Reports</summary>
-            <div class="folder-content">
-                <form id="conferenceReportForm" novalidate>
-                    <label for="conferenceReportTitle">Title:</label>
-                    <input type="text" id="conferenceReportTitle" required minlength="3" maxlength="100">
-                    <div class="error-message" id="conferenceReportTitle-error"></div>
-                    <label for="conferenceReportContent">Content:</label>
-                    <textarea id="conferenceReportContent" required minlength="10" maxlength="2000"></textarea>
-                    <div class="error-message" id="conferenceReportContent-error"></div>
-                    <label for="conferenceReportDate">Date:</label>
-                    <input type="date" id="conferenceReportDate" max="2025-11-03">
-                    <div class="error-message" id="conferenceReportDate-error"></div>
-                    <button type="submit">Add Report</button>
-                </form>
-                <ul id="conferenceReportList" class="report-list">
-                    <!-- Reports will be added here -->
-                </ul>
-                <div class="conference-file-upload">
-                    <h4>Upload Conference Files</h4>
-                    <form id="conferenceReportUploadForm" novalidate>
-                        <label for="fileReportTitle">File Title:</label>
-                        <input type="text" id="fileReportTitle" required minlength="3" maxlength="100">
-                        <div class="error-message" id="fileReportTitle-error"></div>
-                        <label for="conferenceReportFile">File:</label>
-                        <input type="file" id="conferenceReportFile" accept=".pdf,.docx,.xlsx" required>
-                        <div class="error-message" id="conferenceReportFile-error"></div>
-                        <button type="submit">Upload File</button>
-                    </form>
+    <div id="settings" class="content">
+        <h2>⚙️ Settings</h2>
+        <div class="settings-container">
+            <div class="settings-sidebar">
+                <button class="settings-nav-btn active" onclick="showSettingsTab('vault', this)">🔒 Vault</button>
+                <button class="settings-nav-btn" onclick="showSettingsTab('themes', this)">🎨 Themes</button>
+            </div>
+            <div class="settings-content">
+                <!-- Vault Tab -->
+                <div id="vault-tab" class="settings-panel active">
+                    <h3>🔒 Secure Vault</h3>
+                    <details id="conference-reports-folder">
+                        <summary>Conference Reports</summary>
+                        <div class="folder-content">
+                            <form id="conferenceReportForm" novalidate>
+                                <label for="conferenceReportTitle">Title:</label>
+                                <input type="text" id="conferenceReportTitle" required minlength="3" maxlength="100">
+                                <div class="error-message" id="conferenceReportTitle-error"></div>
+                                <label for="conferenceReportContent">Content:</label>
+                                <textarea id="conferenceReportContent" required minlength="10" maxlength="2000"></textarea>
+                                <div class="error-message" id="conferenceReportContent-error"></div>
+                                <label for="conferenceReportDate">Date:</label>
+                                <input type="date" id="conferenceReportDate" max="2025-11-03">
+                                <div class="error-message" id="conferenceReportDate-error"></div>
+                                <button type="submit">Add Report</button>
+                            </form>
+                            <ul id="conferenceReportList" class="report-list">
+                                <!-- Reports will be added here -->
+                            </ul>
+                            <div class="conference-file-upload">
+                                <h4>Upload Conference Files</h4>
+                                <form id="conferenceReportUploadForm" novalidate>
+                                    <label for="fileReportTitle">File Title:</label>
+                                    <input type="text" id="fileReportTitle" required minlength="3" maxlength="100">
+                                    <div class="error-message" id="fileReportTitle-error"></div>
+                                    <label for="conferenceReportFile">File:</label>
+                                    <input type="file" id="conferenceReportFile" accept=".pdf,.docx,.xlsx" required>
+                                    <div class="error-message" id="conferenceReportFile-error"></div>
+                                    <button type="submit">Upload File</button>
+                                </form>
+                            </div>
+                            <ul id="conferenceReportFileList" class="report-list">
+                                <!-- Files will be added here -->
+                            </ul>
+                            <div class="folder-actions">
+                                <button class="print-btn" onclick="printFolder('conference-reports')">Print</button>
+                                <button class="export-btn" onclick="exportConferenceReports()">Export</button>
+                                <button class="email-btn" onclick="emailConferenceReports()">Email</button>
+                                <button class="minimize-btn" onclick="toggleFolder('conference-reports')">Minimize</button>
+                            </div>
+                        </div>
+                    </details>
+                    <details id="tithe-reports-folder">
+                        <summary>Tithe Reports</summary>
+                        <div class="folder-content">
+                            <form id="titheReportForm" novalidate>
+                                <label for="titheReportTitle">Title:</label>
+                                <input type="text" id="titheReportTitle" required minlength="3" maxlength="100">
+                                <div class="error-message" id="titheReportTitle-error"></div>
+                                <label for="titheReportContent">Content:</label>
+                                <textarea id="titheReportContent" required minlength="10" maxlength="2000"></textarea>
+                                <div class="error-message" id="titheReportContent-error"></div>
+                                <label for="titheReportDate">Date:</label>
+                                <input type="date" id="titheReportDate" max="2025-11-03">
+                                <div class="error-message" id="titheReportDate-error"></div>
+                                <button type="submit">Add Report</button>
+                            </form>
+                            <ul id="titheReportList" class="report-list">
+                                <!-- Reports will be added here -->
+                            </ul>
+                            <div class="folder-actions">
+                                <button class="print-btn" onclick="printFolder('tithe-reports')">Print</button>
+                                <button class="export-btn" onclick="exportTitheReports()">Export</button>
+                                <button class="email-btn" onclick="emailTitheReports()">Email</button>
+                                <button class="minimize-btn" onclick="toggleFolder('tithe-reports')">Minimize</button>
+                            </div>
+                        </div>
+                    </details>
+                    <details id="visitors-reports-folder">
+                        <summary>Visitors Reports</summary>
+                        <div class="folder-content">
+                            <form id="visitorsReportForm" novalidate>
+                                <label for="visitorsReportTitle">Title:</label>
+                                <input type="text" id="visitorsReportTitle" required minlength="3" maxlength="100">
+                                <div class="error-message" id="visitorsReportTitle-error"></div>
+                                <label for="visitorsReportContent">Content:</label>
+                                <textarea id="visitorsReportContent" required minlength="10" maxlength="2000"></textarea>
+                                <div class="error-message" id="visitorsReportContent-error"></div>
+                                <label for="visitorsReportDate">Date:</label>
+                                <input type="date" id="visitorsReportDate" max="2025-11-03">
+                                <div class="error-message" id="visitorsReportDate-error"></div>
+                                <button type="submit">Add Report</button>
+                            </form>
+                            <ul id="visitorsReportList" class="report-list">
+                                <!-- Reports will be added here -->
+                            </ul>
+                            <div class="folder-actions">
+                                <button class="print-btn" onclick="printFolder('visitors-reports')">Print</button>
+                                <button class="export-btn" onclick="exportVisitorsReports()">Export</button>
+                                <button class="email-btn" onclick="emailVisitorsReports()">Email</button>
+                                <button class="minimize-btn" onclick="toggleFolder('visitors-reports')">Minimize</button>
+                            </div>
+                        </div>
+                    </details>
+                    <details id="secure-notes-folder">
+                        <summary>Secure Notes</summary>
+                        <div class="folder-content">
+                            <form id="vaultForm" novalidate>
+                                <label for="vaultTitle">Title:</label>
+                                <input type="text" id="vaultTitle" required minlength="3" maxlength="100">
+                                <div class="error-message" id="vaultTitle-error"></div>
+                                <label for="vaultContent">Content:</label>
+                                <textarea id="vaultContent" required minlength="10" maxlength="2000"></textarea>
+                                <div class="error-message" id="vaultContent-error"></div>
+                                <button type="submit">Add Secure Note</button>
+                            </form>
+                            <ul id="vaultList" class="report-list">
+                                <!-- Notes will be added here -->
+                            </ul>
+                            <div class="folder-actions">
+                                <button class="print-btn" onclick="printFolder('secure-notes')">Print</button>
+                                <button class="export-btn" onclick="exportVault()">Export</button>
+                                <button class="email-btn" onclick="emailVault()">Email</button>
+                                <button class="minimize-btn" onclick="toggleFolder('secure-notes')">Minimize</button>
+                            </div>
+                        </div>
+                    </details>
                 </div>
-                <ul id="conferenceReportFileList" class="report-list">
-                    <!-- Files will be added here -->
-                </ul>
-                <div class="folder-actions">
-                    <button class="print-btn" onclick="printFolder('conference-reports')">Print</button>
-                    <button class="export-btn" onclick="exportConferenceReports()">Export</button>
-                    <button class="email-btn" onclick="emailConferenceReports()">Email</button>
-                    <button class="minimize-btn" onclick="toggleFolder('conference-reports')">Minimize</button>
+                
+                <!-- Themes Tab -->
+                <div id="themes-tab" class="settings-panel">
+                    <h3>🎨 Advanced Color Themes</h3>
+                    <p>Customize your dashboard appearance with filters and lighting effects.</p>
+                    
+                    <h4>📦 Preset Themes</h4>
+                    <div class="theme-grid">
+                        <div class="theme-card active" onclick="applyTheme('default')" data-theme="default">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #2c3e50, #3498db);"></div>
+                            <span>Default Blue</span>
+                        </div>
+                        <div class="theme-card" onclick="applyTheme('dark')" data-theme="dark">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #1a1a2e, #16213e);"></div>
+                            <span>Dark Mode</span>
+                        </div>
+                        <div class="theme-card" onclick="applyTheme('light')" data-theme="light">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef);"></div>
+                            <span>Light Mode</span>
+                        </div>
+                        <div class="theme-card" onclick="applyTheme('ocean')" data-theme="ocean">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #0077b6, #00b4d8);"></div>
+                            <span>Ocean Blue</span>
+                        </div>
+                        <div class="theme-card" onclick="applyTheme('forest')" data-theme="forest">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #2d6a4f, #40916c);"></div>
+                            <span>Forest Green</span>
+                        </div>
+                        <div class="theme-card" onclick="applyTheme('sunset')" data-theme="sunset">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #f72585, #7209b7);"></div>
+                            <span>Sunset Pink</span>
+                        </div>
+                        <div class="theme-card" onclick="applyTheme('royal')" data-theme="royal">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #7b2cbf, #9d4edd);"></div>
+                            <span>Royal Purple</span>
+                        </div>
+                        <div class="theme-card" onclick="applyTheme('gold')" data-theme="gold">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #d4a373, #e9c46a);"></div>
+                            <span>Golden Hour</span>
+                        </div>
+                    </div>
+                    
+                    <h4>🎨 Custom Colors</h4>
+                    <div class="color-picker-group">
+                        <div class="color-picker-row">
+                            <label>Primary Color:</label>
+                            <input type="color" id="customPrimary" value="#2c3e50" onchange="updateCustomColor('primary', this.value)">
+                            <span id="primaryHex">#2c3e50</span>
+                        </div>
+                        <div class="color-picker-row">
+                            <label>Accent Color:</label>
+                            <input type="color" id="customAccent" value="#3498db" onchange="updateCustomColor('accent', this.value)">
+                            <span id="accentHex">#3498db</span>
+                        </div>
+                        <div class="color-picker-row">
+                            <label>Success Color:</label>
+                            <input type="color" id="customSuccess" value="#27ae60" onchange="updateCustomColor('success', this.value)">
+                            <span id="successHex">#27ae60</span>
+                        </div>
+                        <div class="color-picker-row">
+                            <label>Background:</label>
+                            <input type="color" id="customBg" value="#f4f4f4" onchange="updateCustomColor('bg', this.value)">
+                            <span id="bgHex">#f4f4f4</span>
+                        </div>
+                    </div>
+                    
+                    <h4>✨ Filters & Lighting</h4>
+                    <div class="filter-slider">
+                        <label>☀️ Brightness: <span id="brightnessValue">100%</span></label>
+                        <input type="range" id="brightnessSlider" min="50" max="150" value="100" onchange="updateFilter('brightness', this.value)">
+                    </div>
+                    <div class="filter-slider">
+                        <label>🎯 Contrast: <span id="contrastValue">100%</span></label>
+                        <input type="range" id="contrastSlider" min="50" max="150" value="100" onchange="updateFilter('contrast', this.value)">
+                    </div>
+                    <div class="filter-slider">
+                        <label>🌈 Saturation: <span id="saturateValue">100%</span></label>
+                        <input type="range" id="saturateSlider" min="0" max="200" value="100" onchange="updateFilter('saturate', this.value)">
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <button onclick="resetTheme()" style="background: #e74c3c; color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; margin-right: 10px;">🔄 Reset to Default</button>
+                        <button onclick="saveThemeSettings()" style="background: #27ae60; color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer;">💾 Save Settings</button>
+                    </div>
                 </div>
             </div>
-        </details>
-        <details id="tithe-reports-folder">
-            <summary>Tithe Reports</summary>
-            <div class="folder-content">
-                <form id="titheReportForm" novalidate>
-                    <label for="titheReportTitle">Title:</label>
-                    <input type="text" id="titheReportTitle" required minlength="3" maxlength="100">
-                    <div class="error-message" id="titheReportTitle-error"></div>
-                    <label for="titheReportContent">Content:</label>
-                    <textarea id="titheReportContent" required minlength="10" maxlength="2000"></textarea>
-                    <div class="error-message" id="titheReportContent-error"></div>
-                    <label for="titheReportDate">Date:</label>
-                    <input type="date" id="titheReportDate" max="2025-11-03">
-                    <div class="error-message" id="titheReportDate-error"></div>
-                    <button type="submit">Add Report</button>
-                </form>
-                <ul id="titheReportList" class="report-list">
-                    <!-- Reports will be added here -->
-                </ul>
-                <div class="folder-actions">
-                    <button class="print-btn" onclick="printFolder('tithe-reports')">Print</button>
-                    <button class="export-btn" onclick="exportTitheReports()">Export</button>
-                    <button class="email-btn" onclick="emailTitheReports()">Email</button>
-                    <button class="minimize-btn" onclick="toggleFolder('tithe-reports')">Minimize</button>
-                </div>
-            </div>
-        </details>
-        <details id="visitors-reports-folder">
-            <summary>Visitors Reports</summary>
-            <div class="folder-content">
-                <form id="visitorsReportForm" novalidate>
-                    <label for="visitorsReportTitle">Title:</label>
-                    <input type="text" id="visitorsReportTitle" required minlength="3" maxlength="100">
-                    <div class="error-message" id="visitorsReportTitle-error"></div>
-                    <label for="visitorsReportContent">Content:</label>
-                    <textarea id="visitorsReportContent" required minlength="10" maxlength="2000"></textarea>
-                    <div class="error-message" id="visitorsReportContent-error"></div>
-                    <label for="visitorsReportDate">Date:</label>
-                    <input type="date" id="visitorsReportDate" max="2025-11-03">
-                    <div class="error-message" id="visitorsReportDate-error"></div>
-                    <button type="submit">Add Report</button>
-                </form>
-                <ul id="visitorsReportList" class="report-list">
-                    <!-- Reports will be added here -->
-                </ul>
-                <div class="folder-actions">
-                    <button class="print-btn" onclick="printFolder('visitors-reports')">Print</button>
-                    <button class="export-btn" onclick="exportVisitorsReports()">Export</button>
-                    <button class="email-btn" onclick="emailVisitorsReports()">Email</button>
-                    <button class="minimize-btn" onclick="toggleFolder('visitors-reports')">Minimize</button>
-                </div>
-            </div>
-        </details>
-        <details id="secure-notes-folder">
-            <summary>Secure Notes</summary>
-            <div class="folder-content">
-                <form id="vaultForm" novalidate>
-                    <label for="vaultTitle">Title:</label>
-                    <input type="text" id="vaultTitle" required minlength="3" maxlength="100">
-                    <div class="error-message" id="vaultTitle-error"></div>
-                    <label for="vaultContent">Content:</label>
-                    <textarea id="vaultContent" required minlength="10" maxlength="2000"></textarea>
-                    <div class="error-message" id="vaultContent-error"></div>
-                    <button type="submit">Add Secure Note</button>
-                </form>
-                <ul id="vaultList" class="report-list">
-                    <!-- Notes will be added here -->
-                </ul>
-                <div class="folder-actions">
-                    <button class="print-btn" onclick="printFolder('secure-notes')">Print</button>
-                    <button class="export-btn" onclick="exportVault()">Export</button>
-                    <button class="email-btn" onclick="emailVault()">Email</button>
-                    <button class="minimize-btn" onclick="toggleFolder('secure-notes')">Minimize</button>
-                </div>
-            </div>
-        </details>
+        </div>
     </div>
 
     <!-- Payment Modal -->
@@ -2391,11 +3214,908 @@
         <button onclick="closeAISuggestion()">Cancel</button>
     </div>
 
+    </div> <!-- End of main-app -->
+
+    <!-- Secondary Portal (Quick Access) -->
+    <div class="main-app" id="secondaryPortal">
+        <header style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);">
+            <div class="header-logo">
+                <div class="heart">
+                    <div class="cross">†</div>
+                </div>
+            </div>
+            <h1>CFM Quick Access Portal</h1>
+            <p>Attendance, Visitors & Bible Quiz</p>
+            <button onclick="logout()" style="position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); border: none; color: white; padding: 10px 20px; border-radius: 20px; cursor: pointer;">🚪 Exit</button>
+        </header>
+        
+        <nav class="secondary-portal-nav">
+            <button onclick="showSecondarySection('secondary-attendance', this)" class="active">📋 Attendance</button>
+            <button onclick="showSecondarySection('secondary-visitors', this)">🚪 Visitors</button>
+            <button onclick="showSecondarySection('bible-quiz', this)">📖 Bible Quiz</button>
+        </nav>
+        
+        <div id="secondary-attendance" class="content active">
+            <h2>📋 Quick Attendance</h2>
+            <form id="quickAttendanceForm" class="attendance-form">
+                <label for="quickAttendanceBranch">Branch:</label>
+                <select id="quickAttendanceBranch" required>
+                    <option value="">Select Branch</option>
+                    <option value="Khutsong">Khutsong</option>
+                    <option value="Mamelodi EXT5">Mamelodi EXT5</option>
+                    <option value="Mahube">Mahube</option>
+                    <option value="Phase 5">Phase 5</option>
+                    <option value="Kwamhlanga">Kwamhlanga</option>
+                    <option value="Kameel Port">Kameel Port</option>
+                    <option value="Nelmaphius ext4">Nelmaphius ext4</option>
+                    <option value="Nelmaphius ext 6">Nelmaphius ext 6</option>
+                </select>
+                <label for="quickAttendanceDate">Date:</label>
+                <input type="date" id="quickAttendanceDate" required>
+                <label for="quickYouthAttendance">Youth:</label>
+                <input type="number" id="quickYouthAttendance" min="0" required placeholder="Youth count">
+                <label for="quickAdultAttendance">Adult:</label>
+                <input type="number" id="quickAdultAttendance" min="0" required placeholder="Adult count">
+                <label for="quickSundaySchoolAttendance">Sunday School:</label>
+                <input type="number" id="quickSundaySchoolAttendance" min="0" required placeholder="Sunday School count">
+                <button type="submit">✅ Log Attendance</button>
+            </form>
+            <div id="quickAttendanceList" style="margin-top: 20px;"></div>
+        </div>
+        
+        <div id="secondary-visitors" class="content">
+            <h2>🚪 Quick Visitor Registration</h2>
+            <form id="quickVisitorForm">
+                <label for="quickVisitorName">Name:</label>
+                <input type="text" id="quickVisitorName" required placeholder="Full Name">
+                <label for="quickVisitorBranch">Branch:</label>
+                <select id="quickVisitorBranch" required>
+                    <option value="">Select Branch</option>
+                    <option value="Khutsong">Khutsong</option>
+                    <option value="Mamelodi EXT5">Mamelodi EXT5</option>
+                    <option value="Mahube">Mahube</option>
+                    <option value="Phase 5">Phase 5</option>
+                    <option value="Kwamhlanga">Kwamhlanga</option>
+                    <option value="Kameel Port">Kameel Port</option>
+                    <option value="Nelmaphius ext4">Nelmaphius ext4</option>
+                    <option value="Nelmaphius ext 6">Nelmaphius ext 6</option>
+                </select>
+                <label for="quickVisitorCell">Phone:</label>
+                <input type="tel" id="quickVisitorCell" required placeholder="Phone Number">
+                <label for="quickVisitorNotes">Notes:</label>
+                <textarea id="quickVisitorNotes" placeholder="Any notes..."></textarea>
+                <button type="submit">✅ Register Visitor</button>
+            </form>
+            <div id="quickVisitorList" style="margin-top: 20px;"></div>
+        </div>
+        
+        <div id="bible-quiz" class="content">
+            <h2>📖 Bible Quiz Challenge</h2>
+            <div class="bible-quiz-container">
+                <div class="quiz-header">
+                    <h3>🏆 Test Your Bible Knowledge!</h3>
+                    <p>Choose a difficulty level and see how well you know the Scriptures!</p>
+                </div>
+                
+                <div class="quiz-stats">
+                    <div class="quiz-stat">
+                        <div class="quiz-stat-value" id="quizScore">0</div>
+                        <div class="quiz-stat-label">Score</div>
+                    </div>
+                    <div class="quiz-stat">
+                        <div class="quiz-stat-value" id="quizStreak">0</div>
+                        <div class="quiz-stat-label">Streak 🔥</div>
+                    </div>
+                    <div class="quiz-stat">
+                        <div class="quiz-stat-value" id="quizLevel">1</div>
+                        <div class="quiz-stat-label">Level</div>
+                    </div>
+                </div>
+                
+                <div class="difficulty-selector" id="difficultySelector">
+                    <button class="difficulty-btn level-1 active" onclick="selectDifficulty(1)">🌱 Level 1<br><small>Beginner</small></button>
+                    <button class="difficulty-btn level-2" onclick="selectDifficulty(2)">🌿 Level 2<br><small>Easy</small></button>
+                    <button class="difficulty-btn level-3" onclick="selectDifficulty(3)">🌳 Level 3<br><small>Medium</small></button>
+                    <button class="difficulty-btn level-4" onclick="selectDifficulty(4)">⭐ Level 4<br><small>Intermediate</small></button>
+                    <button class="difficulty-btn level-5" onclick="selectDifficulty(5)">🔥 Level 5<br><small>Hard</small></button>
+                    <button class="difficulty-btn level-6" onclick="selectDifficulty(6)">💎 Level 6<br><small>Expert</small></button>
+                    <button class="difficulty-btn level-7" onclick="selectDifficulty(7)">👑 Level 7<br><small>Master</small></button>
+                </div>
+                
+                <div id="quizArea" style="display: none;">
+                    <div class="quiz-timer" id="quizTimer">30</div>
+                    <div class="quiz-progress">
+                        <div class="quiz-progress-bar" id="quizProgressBar" style="width: 0%;"></div>
+                    </div>
+                    <div class="quiz-question-card" id="quizQuestionCard">
+                        <div class="quiz-question-number" id="quizQuestionNumber">Question 1 of 10</div>
+                        <div class="quiz-question-text" id="quizQuestionText">Loading question...</div>
+                    </div>
+                    <div class="quiz-options" id="quizOptions">
+                        <!-- Options will be added here -->
+                    </div>
+                </div>
+                
+                <div id="quizResult" class="quiz-result" style="display: none;">
+                    <div class="quiz-result-score" id="finalScore">0%</div>
+                    <div class="quiz-result-stars" id="resultStars">⭐⭐⭐</div>
+                    <div class="quiz-result-message" id="resultMessage">Great job!</div>
+                    <button onclick="startQuiz(currentDifficulty)" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 15px 40px; border: none; border-radius: 30px; font-size: 18px; cursor: pointer; margin-top: 20px;">🔄 Play Again</button>
+                    <button onclick="showDifficultySelector()" style="background: linear-gradient(135deg, #27ae60, #2ecc71); color: white; padding: 15px 40px; border: none; border-radius: 30px; font-size: 18px; cursor: pointer; margin-top: 20px; margin-left: 10px;">📚 Change Level</button>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;" id="startQuizBtn">
+                    <button onclick="startQuiz(currentDifficulty)" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px 60px; border: none; border-radius: 40px; font-size: 20px; cursor: pointer; box-shadow: 0 10px 30px rgba(102,126,234,0.4); transition: all 0.3s;">
+                        🎮 Start Quiz!
+                    </button>
+                </div>
+                
+                <div class="quiz-leaderboard" style="margin-top: 30px;">
+                    <h4>🏆 Your Best Scores</h4>
+                    <div id="leaderboard">
+                        <!-- Leaderboard entries will appear here -->
+                        <p style="color: #888; text-align: center;">Complete quizzes to see your scores here!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Notification -->
     <div id="notification" class="notification"></div>
 
     <script>
-        // Data stores (localStorage based)
+        // ==========================================
+        // LOGIN AND PORTAL MANAGEMENT
+        // ==========================================
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (username === 'charity' && password === 'faith') {
+                document.getElementById('loginPortal').style.display = 'none';
+                document.getElementById('mainApp').classList.add('active');
+                showNotification('Welcome to CFM Management System!', 'success', 'Login Successful');
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('loginError').style.display = 'none';
+                }, 3000);
+            }
+        }
+        
+        function openSecondaryPortal() {
+            document.getElementById('loginPortal').style.display = 'none';
+            document.getElementById('secondaryPortal').classList.add('active');
+        }
+        
+        function logout() {
+            document.getElementById('mainApp').classList.remove('active');
+            document.getElementById('secondaryPortal').classList.remove('active');
+            document.getElementById('loginPortal').style.display = 'flex';
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+        
+        function showSecondarySection(sectionId, btn) {
+            document.querySelectorAll('#secondaryPortal .content').forEach(c => c.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            document.querySelectorAll('#secondaryPortal nav button').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+        }
+        
+        // Quick Portal Form Handlers
+        document.addEventListener('DOMContentLoaded', function() {
+            const quickAttForm = document.getElementById('quickAttendanceForm');
+            if (quickAttForm) {
+                quickAttForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const item = {
+                        branch: document.getElementById('quickAttendanceBranch').value,
+                        date: document.getElementById('quickAttendanceDate').value,
+                        youth: document.getElementById('quickYouthAttendance').value,
+                        adult: document.getElementById('quickAdultAttendance').value,
+                        sundaySchool: document.getElementById('quickSundaySchoolAttendance').value
+                    };
+                    addData('attendance', item);
+                    alert('Attendance logged successfully!');
+                    this.reset();
+                });
+            }
+            
+            const quickVisForm = document.getElementById('quickVisitorForm');
+            if (quickVisForm) {
+                quickVisForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const item = {
+                        name: document.getElementById('quickVisitorName').value,
+                        branch: document.getElementById('quickVisitorBranch').value,
+                        cell: document.getElementById('quickVisitorCell').value,
+                        notes: document.getElementById('quickVisitorNotes').value,
+                        visitDate: new Date().toISOString().split('T')[0],
+                        status: 'Pending'
+                    };
+                    addData('visitors', item);
+                    alert('Visitor registered successfully!');
+                    this.reset();
+                });
+            }
+        });
+        
+        // ==========================================
+        // BIBLE QUIZ SYSTEM
+        // ==========================================
+        let currentDifficulty = 1;
+        let currentQuestion = 0;
+        let quizScore = 0;
+        let quizStreak = 0;
+        let quizTimer = null;
+        let timeLeft = 30;
+        let quizQuestions = [];
+        
+        const bibleQuestions = {
+            1: [ // Beginner
+                { q: "Who built the ark?", options: ["Moses", "Noah", "Abraham", "David"], correct: 1 },
+                { q: "How many disciples did Jesus have?", options: ["10", "11", "12", "13"], correct: 2 },
+                { q: "What is the first book of the Bible?", options: ["Exodus", "Genesis", "Leviticus", "Matthew"], correct: 1 },
+                { q: "Who was swallowed by a big fish?", options: ["Jonah", "Peter", "Paul", "Daniel"], correct: 0 },
+                { q: "What did Jesus turn water into?", options: ["Milk", "Wine", "Juice", "Oil"], correct: 1 },
+                { q: "Who defeated Goliath?", options: ["Saul", "David", "Jonathan", "Samuel"], correct: 1 },
+                { q: "Where was Jesus born?", options: ["Jerusalem", "Nazareth", "Bethlehem", "Egypt"], correct: 2 },
+                { q: "What did God create on the first day?", options: ["Animals", "Light", "Man", "Trees"], correct: 1 },
+                { q: "Who was the first woman?", options: ["Sarah", "Eve", "Mary", "Ruth"], correct: 1 },
+                { q: "What animal spoke to Balaam?", options: ["Snake", "Donkey", "Lion", "Eagle"], correct: 1 }
+            ],
+            2: [ // Easy
+                { q: "How many days did God take to create the world?", options: ["5", "6", "7", "8"], correct: 1 },
+                { q: "What was the name of Abraham's wife?", options: ["Rebecca", "Rachel", "Sarah", "Leah"], correct: 2 },
+                { q: "How many plagues did God send on Egypt?", options: ["7", "8", "9", "10"], correct: 3 },
+                { q: "Who wrote most of the Psalms?", options: ["Moses", "David", "Solomon", "Paul"], correct: 1 },
+                { q: "What river was Jesus baptized in?", options: ["Nile", "Euphrates", "Jordan", "Tigris"], correct: 2 },
+                { q: "Who was Moses' brother?", options: ["Joshua", "Aaron", "Caleb", "Levi"], correct: 1 },
+                { q: "What did Esau sell for a bowl of stew?", options: ["His land", "His birthright", "His donkey", "His coat"], correct: 1 },
+                { q: "Who was thrown into a lions' den?", options: ["David", "Daniel", "Elijah", "Jeremiah"], correct: 1 },
+                { q: "What did the wise men bring to baby Jesus?", options: ["Gold, silver, bronze", "Gold, frankincense, myrrh", "Food and water", "Clothes"], correct: 1 },
+                { q: "How many sons did Jacob have?", options: ["10", "11", "12", "13"], correct: 2 }
+            ],
+            3: [ // Medium
+                { q: "Who was the oldest man in the Bible?", options: ["Adam", "Noah", "Methuselah", "Enoch"], correct: 2 },
+                { q: "What was Peter's original name?", options: ["John", "Simon", "James", "Andrew"], correct: 1 },
+                { q: "How old was Jesus when he started his ministry?", options: ["25", "27", "30", "33"], correct: 2 },
+                { q: "Who wrote the book of Revelation?", options: ["Paul", "Peter", "John", "James"], correct: 2 },
+                { q: "What was the profession of Luke?", options: ["Fisherman", "Tax collector", "Physician", "Carpenter"], correct: 2 },
+                { q: "Who said 'Am I my brother's keeper?'", options: ["Abel", "Cain", "Seth", "Adam"], correct: 1 },
+                { q: "How many books are in the New Testament?", options: ["25", "27", "29", "31"], correct: 1 },
+                { q: "Who replaced Judas as an apostle?", options: ["Paul", "Matthias", "Barnabas", "Timothy"], correct: 1 },
+                { q: "What mountain did Moses receive the Ten Commandments?", options: ["Horeb", "Sinai", "Zion", "Carmel"], correct: 1 },
+                { q: "Who was the first king of Israel?", options: ["David", "Saul", "Solomon", "Samuel"], correct: 1 }
+            ],
+            4: [ // Intermediate
+                { q: "How many years did the Israelites wander in the wilderness?", options: ["20", "30", "40", "50"], correct: 2 },
+                { q: "Who was the father of John the Baptist?", options: ["Zechariah", "Joseph", "Simeon", "Aaron"], correct: 0 },
+                { q: "What was the name of the garden where Jesus prayed before his arrest?", options: ["Eden", "Gethsemane", "Galilee", "Bethany"], correct: 1 },
+                { q: "How many books did Paul write?", options: ["10", "13", "15", "17"], correct: 1 },
+                { q: "What color was the robe placed on Jesus before crucifixion?", options: ["Red", "Blue", "Purple", "White"], correct: 2 },
+                { q: "Who was the prophet that anointed David as king?", options: ["Elijah", "Nathan", "Samuel", "Elisha"], correct: 2 },
+                { q: "What was the name of Ruth's mother-in-law?", options: ["Naomi", "Hannah", "Rachel", "Deborah"], correct: 0 },
+                { q: "How many loaves and fish fed the 5000?", options: ["3 loaves, 2 fish", "5 loaves, 2 fish", "5 loaves, 3 fish", "7 loaves, 2 fish"], correct: 1 },
+                { q: "Who was called the 'weeping prophet'?", options: ["Isaiah", "Ezekiel", "Jeremiah", "Daniel"], correct: 2 },
+                { q: "What is the longest book in the Bible?", options: ["Isaiah", "Jeremiah", "Psalms", "Genesis"], correct: 2 }
+            ],
+            5: [ // Hard
+                { q: "What were the names of the two thieves crucified with Jesus?", options: ["Dismas and Gestas", "Barabbas and Judas", "Names not given", "Simon and Peter"], correct: 2 },
+                { q: "How many chapters are in the book of Psalms?", options: ["100", "125", "150", "175"], correct: 2 },
+                { q: "What was the occupation of the apostle Matthew?", options: ["Fisherman", "Tent maker", "Tax collector", "Shepherd"], correct: 2 },
+                { q: "Who was Barnabas' cousin?", options: ["Paul", "Timothy", "Mark", "Silas"], correct: 2 },
+                { q: "What does 'Golgotha' mean?", options: ["Place of peace", "Place of a skull", "Mount of Olives", "Garden of God"], correct: 1 },
+                { q: "How old was Abraham when Isaac was born?", options: ["90", "95", "99", "100"], correct: 3 },
+                { q: "Who was the first Christian martyr?", options: ["Peter", "Stephen", "James", "Paul"], correct: 1 },
+                { q: "What book comes after Galatians?", options: ["Philippians", "Ephesians", "Colossians", "Thessalonians"], correct: 1 },
+                { q: "How many times did Peter deny Jesus?", options: ["1", "2", "3", "4"], correct: 2 },
+                { q: "Who was the grandmother of Timothy?", options: ["Lois", "Eunice", "Priscilla", "Lydia"], correct: 0 }
+            ],
+            6: [ // Expert
+                { q: "What was the original name of the city of Jerusalem?", options: ["Salem", "Jebus", "Both A and B", "Zion"], correct: 2 },
+                { q: "How many judges are mentioned in the book of Judges?", options: ["10", "12", "14", "15"], correct: 2 },
+                { q: "What tribe was King Saul from?", options: ["Judah", "Benjamin", "Levi", "Ephraim"], correct: 1 },
+                { q: "How many letters did Paul write from prison?", options: ["2", "3", "4", "5"], correct: 2 },
+                { q: "What was the name of the pool where Jesus healed the blind man?", options: ["Bethesda", "Siloam", "Galilee", "Jordan"], correct: 1 },
+                { q: "Who was the father of King David's wife Abigail's first husband?", options: ["Nabal", "Jesse", "Saul", "Nathan"], correct: 0 },
+                { q: "How many minor prophets are in the Old Testament?", options: ["10", "11", "12", "14"], correct: 2 },
+                { q: "What was Aquila's profession?", options: ["Fisherman", "Tentmaker", "Carpenter", "Physician"], correct: 1 },
+                { q: "Who were the two spies that gave a good report about Canaan?", options: ["Moses and Aaron", "Joshua and Caleb", "David and Jonathan", "Elijah and Elisha"], correct: 1 },
+                { q: "How old was Josiah when he became king?", options: ["6", "7", "8", "10"], correct: 2 }
+            ],
+            7: [ // Master
+                { q: "What is the shortest verse in the Bible (KJV)?", options: ["Jesus wept", "Rejoice evermore", "Pray without ceasing", "Be not afraid"], correct: 0 },
+                { q: "How many books in the Bible were written by Moses (traditionally)?", options: ["3", "4", "5", "6"], correct: 2 },
+                { q: "What was the name of the servant of Elisha who was struck with leprosy?", options: ["Naaman", "Gehazi", "Hazael", "Benhadad"], correct: 1 },
+                { q: "How many years was the temple in Jerusalem under construction during Solomon's reign?", options: ["5", "7", "10", "13"], correct: 1 },
+                { q: "What prophet was taken up to heaven in a chariot of fire?", options: ["Elisha", "Elijah", "Enoch", "Moses"], correct: 1 },
+                { q: "How many chapters are in the book of Isaiah?", options: ["52", "60", "66", "72"], correct: 2 },
+                { q: "Who was the high priest during Jesus' trial?", options: ["Annas", "Caiaphas", "Zacharias", "Eli"], correct: 1 },
+                { q: "What angel appeared to Daniel?", options: ["Michael", "Gabriel", "Raphael", "Uriel"], correct: 1 },
+                { q: "In what city was the church first called 'Christians'?", options: ["Jerusalem", "Antioch", "Rome", "Corinth"], correct: 1 },
+                { q: "How many silver pieces was Joseph sold for?", options: ["15", "20", "25", "30"], correct: 1 }
+            ]
+        };
+        
+        function selectDifficulty(level) {
+            currentDifficulty = level;
+            document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.difficulty-btn.level-' + level).classList.add('active');
+            document.getElementById('quizLevel').textContent = level;
+        }
+        
+        function startQuiz(difficulty) {
+            currentDifficulty = difficulty || currentDifficulty;
+            currentQuestion = 0;
+            quizScore = 0;
+            quizStreak = 0;
+            
+            // Shuffle and pick 10 questions
+            const allQuestions = [...bibleQuestions[currentDifficulty]];
+            quizQuestions = allQuestions.sort(() => Math.random() - 0.5).slice(0, 10);
+            
+            document.getElementById('difficultySelector').style.display = 'none';
+            document.getElementById('startQuizBtn').style.display = 'none';
+            document.getElementById('quizResult').style.display = 'none';
+            document.getElementById('quizArea').style.display = 'block';
+            
+            updateQuizStats();
+            showQuestion();
+        }
+        
+        function showQuestion() {
+            if (currentQuestion >= quizQuestions.length) {
+                endQuiz();
+                return;
+            }
+            
+            const question = quizQuestions[currentQuestion];
+            const timePerQuestion = Math.max(30 - (currentDifficulty * 3), 10); // Harder = less time
+            timeLeft = timePerQuestion;
+            
+            document.getElementById('quizQuestionNumber').textContent = `Question ${currentQuestion + 1} of ${quizQuestions.length}`;
+            document.getElementById('quizQuestionText').textContent = question.q;
+            document.getElementById('quizProgressBar').style.width = `${((currentQuestion) / quizQuestions.length) * 100}%`;
+            
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionBtn = document.createElement('div');
+                optionBtn.className = 'quiz-option';
+                optionBtn.textContent = option;
+                optionBtn.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(optionBtn);
+            });
+            
+            startTimer();
+        }
+        
+        function startTimer() {
+            clearInterval(quizTimer);
+            updateTimerDisplay();
+            
+            quizTimer = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 5) {
+                    document.getElementById('quizTimer').classList.add('warning');
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(quizTimer);
+                    selectAnswer(-1); // Time's up - wrong answer
+                }
+            }, 1000);
+        }
+        
+        function updateTimerDisplay() {
+            document.getElementById('quizTimer').textContent = timeLeft;
+            document.getElementById('quizTimer').classList.toggle('warning', timeLeft <= 5);
+        }
+        
+        function selectAnswer(selectedIndex) {
+            clearInterval(quizTimer);
+            
+            const question = quizQuestions[currentQuestion];
+            const options = document.querySelectorAll('.quiz-option');
+            
+            options.forEach((opt, idx) => {
+                opt.onclick = null; // Disable further clicks
+                if (idx === question.correct) {
+                    opt.classList.add('correct');
+                } else if (idx === selectedIndex) {
+                    opt.classList.add('incorrect');
+                }
+            });
+            
+            if (selectedIndex === question.correct) {
+                quizScore += currentDifficulty * 10;
+                quizStreak++;
+                if (quizStreak > 2) {
+                    quizScore += quizStreak * 5; // Streak bonus
+                }
+            } else {
+                quizStreak = 0;
+            }
+            
+            updateQuizStats();
+            
+            setTimeout(() => {
+                currentQuestion++;
+                showQuestion();
+            }, 1500);
+        }
+        
+        function updateQuizStats() {
+            document.getElementById('quizScore').textContent = quizScore;
+            document.getElementById('quizStreak').textContent = quizStreak;
+        }
+        
+        function endQuiz() {
+            clearInterval(quizTimer);
+            document.getElementById('quizArea').style.display = 'none';
+            document.getElementById('quizResult').style.display = 'block';
+            
+            const correctAnswers = Math.round(quizScore / (currentDifficulty * 10));
+            const percentage = Math.round((correctAnswers / quizQuestions.length) * 100);
+            
+            document.getElementById('finalScore').textContent = quizScore + ' pts';
+            
+            let stars = '';
+            let message = '';
+            if (percentage >= 90) {
+                stars = '⭐⭐⭐⭐⭐';
+                message = '🎉 AMAZING! You are a Bible Master!';
+            } else if (percentage >= 70) {
+                stars = '⭐⭐⭐⭐';
+                message = '🙌 Great job! You know your Bible well!';
+            } else if (percentage >= 50) {
+                stars = '⭐⭐⭐';
+                message = '👍 Good effort! Keep studying!';
+            } else if (percentage >= 30) {
+                stars = '⭐⭐';
+                message = '📖 Keep reading your Bible!';
+            } else {
+                stars = '⭐';
+                message = '🙏 Time to study more!';
+            }
+            
+            document.getElementById('resultStars').textContent = stars;
+            document.getElementById('resultMessage').textContent = message;
+            
+            // Save to leaderboard
+            saveQuizScore(currentDifficulty, quizScore);
+        }
+        
+        function showDifficultySelector() {
+            document.getElementById('quizResult').style.display = 'none';
+            document.getElementById('quizArea').style.display = 'none';
+            document.getElementById('difficultySelector').style.display = 'flex';
+            document.getElementById('startQuizBtn').style.display = 'block';
+        }
+        
+        function saveQuizScore(level, score) {
+            let scores = JSON.parse(localStorage.getItem('bibleQuizScores') || '[]');
+            scores.push({ level, score, date: new Date().toLocaleDateString() });
+            scores.sort((a, b) => b.score - a.score);
+            scores = scores.slice(0, 10); // Keep top 10
+            localStorage.setItem('bibleQuizScores', JSON.stringify(scores));
+            renderLeaderboard();
+        }
+        
+        function renderLeaderboard() {
+            const scores = JSON.parse(localStorage.getItem('bibleQuizScores') || '[]');
+            const leaderboard = document.getElementById('leaderboard');
+            
+            if (scores.length === 0) {
+                leaderboard.innerHTML = '<p style="color: #888; text-align: center;">Complete quizzes to see your scores here!</p>';
+                return;
+            }
+            
+            leaderboard.innerHTML = scores.map((s, i) => `
+                <div class="leaderboard-item">
+                    <span class="leaderboard-rank">#${i + 1}</span>
+                    <span>Level ${s.level} - ${s.score} pts</span>
+                    <span style="color: #888;">${s.date}</span>
+                </div>
+            `).join('');
+        }
+        
+        // ==========================================
+        // SETTINGS TABS
+        // ==========================================
+        function showSettingsTab(tabId, btn) {
+            document.querySelectorAll('#settings .settings-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(tabId + '-tab').classList.add('active');
+            document.querySelectorAll('#settings .settings-nav-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+        }
+        
+        function showMediaTab(tabId, btn) {
+            document.querySelectorAll('#media .settings-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(tabId + '-tab').classList.add('active');
+            document.querySelectorAll('#media .settings-nav-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+        }
+        
+        // ==========================================
+        // THEME SYSTEM
+        // ==========================================
+        const themes = {
+            default: { primary: '#2c3e50', accent: '#3498db', success: '#27ae60', bg: '#f4f4f4', text: '#333' },
+            dark: { primary: '#1a1a2e', accent: '#4a69bd', success: '#27ae60', bg: '#0f0f0f', text: '#ecf0f1', cardBg: '#16213e' },
+            light: { primary: '#f8f9fa', accent: '#007bff', success: '#28a745', bg: '#ffffff', text: '#212529' },
+            ocean: { primary: '#0077b6', accent: '#00b4d8', success: '#48cae4', bg: '#caf0f8', text: '#03045e' },
+            forest: { primary: '#2d6a4f', accent: '#40916c', success: '#52b788', bg: '#d8f3dc', text: '#1b4332' },
+            sunset: { primary: '#f72585', accent: '#7209b7', success: '#b5179e', bg: '#fae0e4', text: '#3a0ca3' },
+            royal: { primary: '#7b2cbf', accent: '#9d4edd', success: '#c77dff', bg: '#e0aaff', text: '#10002b' },
+            gold: { primary: '#d4a373', accent: '#e9c46a', success: '#f4a261', bg: '#fefae0', text: '#6c584c' }
+        };
+        
+        function applyTheme(themeName) {
+            const theme = themes[themeName];
+            if (!theme) return;
+            
+            document.documentElement.style.setProperty('--primary-color', theme.primary);
+            document.documentElement.style.setProperty('--accent-color', theme.accent);
+            document.documentElement.style.setProperty('--success-color', theme.success);
+            document.documentElement.style.setProperty('--bg-color', theme.bg);
+            document.documentElement.style.setProperty('--text-color', theme.text);
+            
+            if (theme.cardBg) {
+                document.documentElement.style.setProperty('--card-bg', theme.cardBg);
+            } else {
+                document.documentElement.style.setProperty('--card-bg', 'white');
+            }
+            
+            // Update active theme card
+            document.querySelectorAll('.theme-card').forEach(card => {
+                card.classList.toggle('active', card.dataset.theme === themeName);
+            });
+            
+            // Update color pickers
+            document.getElementById('customPrimary').value = theme.primary;
+            document.getElementById('customAccent').value = theme.accent;
+            document.getElementById('customSuccess').value = theme.success;
+            document.getElementById('customBg').value = theme.bg;
+            
+            localStorage.setItem('cfmTheme', themeName);
+        }
+        
+        function updateCustomColor(type, value) {
+            const hexDisplay = document.getElementById(type + 'Hex');
+            if (hexDisplay) hexDisplay.textContent = value;
+            
+            switch(type) {
+                case 'primary': document.documentElement.style.setProperty('--primary-color', value); break;
+                case 'accent': document.documentElement.style.setProperty('--accent-color', value); break;
+                case 'success': document.documentElement.style.setProperty('--success-color', value); break;
+                case 'bg': document.documentElement.style.setProperty('--bg-color', value); break;
+            }
+        }
+        
+        function updateFilter(type, value) {
+            document.getElementById(type + 'Value').textContent = value + '%';
+            document.documentElement.style.setProperty('--filter-' + type, value + '%');
+        }
+        
+        function resetTheme() {
+            applyTheme('default');
+            document.getElementById('brightnessSlider').value = 100;
+            document.getElementById('contrastSlider').value = 100;
+            document.getElementById('saturateSlider').value = 100;
+            updateFilter('brightness', 100);
+            updateFilter('contrast', 100);
+            updateFilter('saturate', 100);
+        }
+        
+        function saveThemeSettings() {
+            const settings = {
+                primary: document.getElementById('customPrimary').value,
+                accent: document.getElementById('customAccent').value,
+                success: document.getElementById('customSuccess').value,
+                bg: document.getElementById('customBg').value,
+                brightness: document.getElementById('brightnessSlider').value,
+                contrast: document.getElementById('contrastSlider').value,
+                saturate: document.getElementById('saturateSlider').value
+            };
+            localStorage.setItem('cfmThemeSettings', JSON.stringify(settings));
+            alert('Theme settings saved!');
+        }
+        
+        // Load saved theme on startup
+        function loadSavedTheme() {
+            const savedTheme = localStorage.getItem('cfmTheme');
+            if (savedTheme) {
+                applyTheme(savedTheme);
+            }
+            
+            const savedSettings = localStorage.getItem('cfmThemeSettings');
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                updateFilter('brightness', settings.brightness);
+                updateFilter('contrast', settings.contrast);
+                updateFilter('saturate', settings.saturate);
+                document.getElementById('brightnessSlider').value = settings.brightness;
+                document.getElementById('contrastSlider').value = settings.contrast;
+                document.getElementById('saturateSlider').value = settings.saturate;
+            }
+        }
+        
+        // ==========================================
+        // POSTER CREATOR
+        // ==========================================
+        let canvasElements = [];
+        let selectedElement = null;
+        let undoStack = [];
+        
+        function addTextToCanvas() {
+            const text = prompt('Enter text:');
+            if (!text) return;
+            
+            const canvas = document.getElementById('posterCanvas');
+            const element = document.createElement('div');
+            element.className = 'canvas-element canvas-text';
+            element.textContent = text;
+            element.style.left = '50px';
+            element.style.top = '50px';
+            element.style.fontSize = document.getElementById('fontSize').value + 'px';
+            element.style.fontFamily = document.getElementById('fontFamily').value;
+            element.style.color = document.getElementById('textColor').value;
+            element.contentEditable = true;
+            
+            setupDraggable(element);
+            canvas.appendChild(element);
+            canvasElements.push(element);
+            saveToUndo();
+        }
+        
+        function addHeadingToCanvas() {
+            const text = prompt('Enter heading:');
+            if (!text) return;
+            
+            const canvas = document.getElementById('posterCanvas');
+            const element = document.createElement('div');
+            element.className = 'canvas-element canvas-text';
+            element.textContent = text;
+            element.style.left = '50px';
+            element.style.top = '50px';
+            element.style.fontSize = '48px';
+            element.style.fontFamily = 'Impact';
+            element.style.fontWeight = 'bold';
+            element.style.color = document.getElementById('textColor').value;
+            element.contentEditable = true;
+            
+            setupDraggable(element);
+            canvas.appendChild(element);
+            canvasElements.push(element);
+            saveToUndo();
+        }
+        
+        function addImageToCanvas(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const canvas = document.getElementById('posterCanvas');
+                const element = document.createElement('img');
+                element.className = 'canvas-element';
+                element.src = e.target.result;
+                element.style.left = '50px';
+                element.style.top = '50px';
+                element.style.maxWidth = '200px';
+                
+                setupDraggable(element);
+                canvas.appendChild(element);
+                canvasElements.push(element);
+                saveToUndo();
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function addLogoToCanvas() {
+            const canvas = document.getElementById('posterCanvas');
+            const element = document.createElement('div');
+            element.className = 'canvas-element';
+            element.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="color: #0033A0; font-size: 40px;">❤️</div>
+                    <div style="color: #0033A0; font-weight: bold;">CFM</div>
+                </div>
+            `;
+            element.style.left = '50px';
+            element.style.top = '50px';
+            
+            setupDraggable(element);
+            canvas.appendChild(element);
+            canvasElements.push(element);
+            saveToUndo();
+        }
+        
+        function addShapeToCanvas(type) {
+            const canvas = document.getElementById('posterCanvas');
+            const element = document.createElement('div');
+            element.className = 'canvas-element';
+            element.style.left = '100px';
+            element.style.top = '100px';
+            element.style.backgroundColor = document.getElementById('fillColor').value;
+            
+            switch(type) {
+                case 'rectangle':
+                    element.style.width = '150px';
+                    element.style.height = '100px';
+                    break;
+                case 'circle':
+                    element.style.width = '100px';
+                    element.style.height = '100px';
+                    element.style.borderRadius = '50%';
+                    break;
+                case 'line':
+                    element.style.width = '200px';
+                    element.style.height = '4px';
+                    break;
+            }
+            
+            setupDraggable(element);
+            canvas.appendChild(element);
+            canvasElements.push(element);
+            saveToUndo();
+        }
+        
+        function loadTemplate(templateType) {
+            clearCanvas();
+            const canvas = document.getElementById('posterCanvas');
+            
+            const templates = {
+                sunday: { bg: 'linear-gradient(135deg, #667eea, #764ba2)', heading: 'Sunday Service', subheading: 'Join us for worship' },
+                event: { bg: 'linear-gradient(135deg, #f093fb, #f5576c)', heading: 'Special Event', subheading: 'You are invited!' },
+                youth: { bg: 'linear-gradient(135deg, #4facfe, #00f2fe)', heading: 'Youth Meeting', subheading: 'Come as you are' },
+                prayer: { bg: 'linear-gradient(135deg, #43e97b, #38f9d7)', heading: 'Prayer Meeting', subheading: 'Let us pray together' },
+                conference: { bg: 'linear-gradient(135deg, #fa709a, #fee140)', heading: 'Annual Conference', subheading: 'Don\'t miss it!' },
+                bible: { bg: 'linear-gradient(135deg, #a18cd1, #fbc2eb)', heading: 'Bible Study', subheading: 'Grow in the Word' }
+            };
+            
+            const template = templates[templateType];
+            canvas.style.background = template.bg;
+            
+            // Add heading
+            const heading = document.createElement('div');
+            heading.className = 'canvas-element canvas-text';
+            heading.textContent = template.heading;
+            heading.style.left = '50%';
+            heading.style.top = '40%';
+            heading.style.transform = 'translateX(-50%)';
+            heading.style.fontSize = '48px';
+            heading.style.fontWeight = 'bold';
+            heading.style.color = 'white';
+            heading.style.textShadow = '2px 2px 4px rgba(0,0,0,0.3)';
+            heading.contentEditable = true;
+            setupDraggable(heading);
+            canvas.appendChild(heading);
+            canvasElements.push(heading);
+            
+            // Add subheading
+            const subheading = document.createElement('div');
+            subheading.className = 'canvas-element canvas-text';
+            subheading.textContent = template.subheading;
+            subheading.style.left = '50%';
+            subheading.style.top = '55%';
+            subheading.style.transform = 'translateX(-50%)';
+            subheading.style.fontSize = '24px';
+            subheading.style.color = 'white';
+            subheading.contentEditable = true;
+            setupDraggable(subheading);
+            canvas.appendChild(subheading);
+            canvasElements.push(subheading);
+            
+            saveToUndo();
+        }
+        
+        function setupDraggable(element) {
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            
+            element.onmousedown = dragMouseDown;
+            element.onclick = function(e) {
+                e.stopPropagation();
+                selectElement(element);
+            };
+            
+            function dragMouseDown(e) {
+                e.preventDefault();
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+                selectElement(element);
+            }
+            
+            function elementDrag(e) {
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                element.style.top = (element.offsetTop - pos2) + "px";
+                element.style.left = (element.offsetLeft - pos1) + "px";
+            }
+            
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+        
+        function selectElement(element) {
+            deselectAll();
+            element.classList.add('selected');
+            selectedElement = element;
+        }
+        
+        function deselectAll() {
+            canvasElements.forEach(el => el.classList.remove('selected'));
+            selectedElement = null;
+        }
+        
+        function deleteSelected() {
+            if (!selectedElement) return;
+            selectedElement.remove();
+            canvasElements = canvasElements.filter(el => el !== selectedElement);
+            selectedElement = null;
+            saveToUndo();
+        }
+        
+        function bringToFront() {
+            if (!selectedElement) return;
+            const canvas = document.getElementById('posterCanvas');
+            canvas.appendChild(selectedElement);
+        }
+        
+        function sendToBack() {
+            if (!selectedElement) return;
+            const canvas = document.getElementById('posterCanvas');
+            canvas.insertBefore(selectedElement, canvas.firstChild);
+        }
+        
+        function clearCanvas() {
+            canvasElements.forEach(el => el.remove());
+            canvasElements = [];
+            selectedElement = null;
+            document.getElementById('posterCanvas').style.background = 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
+        }
+        
+        function saveToUndo() {
+            undoStack.push(document.getElementById('posterCanvas').innerHTML);
+            if (undoStack.length > 20) undoStack.shift();
+        }
+        
+        function undoCanvas() {
+            if (undoStack.length < 2) return;
+            undoStack.pop(); // Remove current state
+            const prevState = undoStack.pop();
+            document.getElementById('posterCanvas').innerHTML = prevState;
+            // Re-setup draggable for restored elements
+            canvasElements = Array.from(document.getElementById('posterCanvas').querySelectorAll('.canvas-element'));
+            canvasElements.forEach(setupDraggable);
+        }
+        
+        function changeCanvasBg(color) {
+            document.getElementById('posterCanvas').style.background = color;
+        }
+        
+        function downloadPoster() {
+            alert('To download, please take a screenshot of the canvas area. Full export feature coming soon!');
+        }
+        
+        // ==========================================
+        // ORIGINAL DATA STORES AND FUNCTIONS
+        // ==========================================
         let members = loadData('members', []);
         let visitors = loadData('visitors', []);
         let events = loadData('events', []);
@@ -4279,6 +5999,12 @@
             }
         }
         setTimeout(initSampleData, 1000);
+        
+        // Load saved theme and quiz leaderboard on startup
+        setTimeout(function() {
+            loadSavedTheme();
+            renderLeaderboard();
+        }, 500);
     </script>
 </body>
 </html>
