@@ -2586,11 +2586,14 @@
             document.getElementById(statusId).textContent = status;
         }
         
-        function hideProgress(progressId, statusId) {
+        function hideProgress(progressId, barId, statusId) {
             setTimeout(() => {
-                document.getElementById(progressId).classList.remove('active');
-                document.getElementById(barId).style.width = '0%';
-                document.getElementById(statusId).textContent = '';
+                const progressEl = document.getElementById(progressId);
+                const barEl = document.getElementById(barId);
+                const statusEl = document.getElementById(statusId);
+                if (progressEl) progressEl.classList.remove('active');
+                if (barEl) barEl.style.width = '0%';
+                if (statusEl) statusEl.textContent = '';
             }, 1000);
         }
 
