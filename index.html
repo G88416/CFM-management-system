@@ -1348,6 +1348,225 @@
             flex-direction: column;
             align-items: center;
         }
+        /* Saved Imports Styles */
+        .imports-container {
+            display: grid;
+            gap: 20px;
+        }
+        .imports-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .imports-stats {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .imports-stat {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 120px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        .imports-stat-value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .imports-stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .import-card {
+            background: linear-gradient(145deg, #ffffff, #f5f5f5);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border-left: 5px solid #3498db;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 20px;
+            align-items: center;
+        }
+        .import-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        .import-card.members { border-left-color: #3498db; }
+        .import-card.visitors { border-left-color: #27ae60; }
+        .import-card.events { border-left-color: #e67e22; }
+        .import-card.tithes { border-left-color: #9b59b6; }
+        .import-card.attendance { border-left-color: #e74c3c; }
+        .import-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+        }
+        .import-icon.members { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .import-icon.visitors { background: linear-gradient(135deg, #27ae60, #219a52); }
+        .import-icon.events { background: linear-gradient(135deg, #e67e22, #d35400); }
+        .import-icon.tithes { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+        .import-icon.attendance { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .import-details {
+            flex: 1;
+        }
+        .import-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .import-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+        .import-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .import-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .import-action-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .import-action-btn.view {
+            background: #3498db;
+            color: white;
+        }
+        .import-action-btn.view:hover {
+            background: #2980b9;
+        }
+        .import-action-btn.delete {
+            background: #e74c3c;
+            color: white;
+        }
+        .import-action-btn.delete:hover {
+            background: #c0392b;
+        }
+        .import-action-btn.export {
+            background: #27ae60;
+            color: white;
+        }
+        .import-action-btn.export:hover {
+            background: #219a52;
+        }
+        .imports-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #95a5a6;
+        }
+        .imports-empty-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        .imports-empty h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #7f8c8d;
+        }
+        .imports-empty p {
+            font-size: 14px;
+        }
+        .imports-filter {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .imports-filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        .imports-filter-btn:hover {
+            border-color: #3498db;
+            color: #3498db;
+        }
+        .imports-filter-btn.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        .import-preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+        .import-preview-modal.active {
+            display: flex;
+        }
+        .import-preview-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: auto;
+            animation: slideInModal 0.3s ease;
+        }
+        .import-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .import-preview-close {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .import-preview-close:hover {
+            background: #c0392b;
+            transform: rotate(90deg);
+        }
         .search-container {
             margin-bottom: 20px;
         }
@@ -2165,6 +2384,7 @@
             <button onclick="showSection('tithe', this)">💰 Tithe & Offering</button>
             <button onclick="showSection('church-admin', this)">⛪ Church Admin</button>
             <button onclick="showSection('attendance', this)">📋 Attendance</button>
+            <button onclick="showSection('saved-imports', this)">📥 Saved Imports</button>
             <button onclick="showSection('media', this)">🎨 Media</button>
             <button onclick="showSection('settings', this)">⚙️ Settings</button>
         </nav>
@@ -3336,6 +3556,63 @@
             <button class="print-btn" onclick="printAttendance()">Print</button>
             <button class="export-btn" onclick="exportAttendance()">Export</button>
             <button class="email-btn" onclick="emailAttendance()">Email</button>
+        </div>
+    </div>
+
+    <!-- Saved Imports Section -->
+    <div id="saved-imports" class="content">
+        <h2>📥 Saved Imports History</h2>
+        <p>Track all your data imports in one place. View, manage, and export your import history.</p>
+        
+        <div class="imports-header">
+            <div class="imports-stats">
+                <div class="imports-stat" aria-label="Total number of imports">
+                    <div class="imports-stat-value" id="totalImportsCount">0</div>
+                    <div class="imports-stat-label">Total Imports</div>
+                </div>
+                <div class="imports-stat" style="background: linear-gradient(135deg, #27ae60, #219a52);" aria-label="Total number of records imported">
+                    <div class="imports-stat-value" id="totalRecordsImported">0</div>
+                    <div class="imports-stat-label">Records Imported</div>
+                </div>
+                <div class="imports-stat" style="background: linear-gradient(135deg, #e67e22, #d35400);" aria-label="Date of last import">
+                    <div class="imports-stat-value" id="lastImportDate">-</div>
+                    <div class="imports-stat-label">Last Import</div>
+                </div>
+            </div>
+            <div class="imports-filter">
+                <button class="imports-filter-btn active" onclick="filterImports('all', this)">All</button>
+                <button class="imports-filter-btn" onclick="filterImports('members', this)">👥 Members</button>
+                <button class="imports-filter-btn" onclick="filterImports('visitors', this)">🚪 Visitors</button>
+                <button class="imports-filter-btn" onclick="filterImports('events', this)">📅 Events</button>
+                <button class="imports-filter-btn" onclick="filterImports('tithes', this)">💰 Tithes</button>
+                <button class="imports-filter-btn" onclick="filterImports('attendance', this)">📋 Attendance</button>
+            </div>
+        </div>
+        
+        <div class="imports-actions" style="margin-bottom: 20px; display: flex; gap: 10px;">
+            <button onclick="exportAllImports()" style="background: linear-gradient(135deg, #27ae60, #219a52); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                📤 Export All Imports
+            </button>
+            <button onclick="clearAllImports()" style="background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                🗑️ Clear History
+            </button>
+        </div>
+        
+        <div id="savedImportsList" class="imports-container">
+            <!-- Import cards will be rendered here -->
+        </div>
+    </div>
+    
+    <!-- Import Preview Modal -->
+    <div id="importPreviewModal" class="import-preview-modal">
+        <div class="import-preview-content">
+            <div class="import-preview-header">
+                <h3 id="importPreviewTitle">Import Details</h3>
+                <button class="import-preview-close" onclick="closeImportPreview()">&times;</button>
+            </div>
+            <div id="importPreviewBody">
+                <!-- Preview content will be rendered here -->
+            </div>
         </div>
     </div>
 
@@ -5227,6 +5504,11 @@
         let visitorsReports = loadData('visitorsReports', []);
         let vault = loadData('vault', []);
         let conferenceBudgets = loadData('conferenceBudgets', { september: {}, easter: {}, combined: {} });
+        let savedImports = loadData('savedImports', []);
+        
+        // Import history constants
+        const MAX_PREVIEW_RECORDS_STORED = 100; // Maximum records stored per import for preview
+        const MAX_PREVIEW_RECORDS_DISPLAYED = 50; // Maximum records displayed in preview modal
 
         // Utility functions
         function loadData(key, defaultValue) {
@@ -5300,6 +5582,7 @@
                 renderBranchCoordinators();
             }
             if (section === 'attendance') renderAttendance();
+            if (section === 'saved-imports') renderSavedImports();
             if (section === 'whatsapp') {
                 populateBroadcastSelect();
                 renderWhatsAppHistory();
@@ -5611,7 +5894,9 @@
                     dataKey: dataKey,
                     fileInputId: fileInputId,
                     previewId: previewId,
-                    progressId: progressId
+                    progressId: progressId,
+                    fileName: file.name,
+                    fileType: fileType
                 };
                 
             } catch (error) {
@@ -5720,7 +6005,7 @@
         async function confirmUpload() {
             if (!window.pendingUpload) return;
             
-            const { data, dataKey, fileInputId, previewId, progressId } = window.pendingUpload;
+            const { data, dataKey, fileInputId, previewId, progressId, fileName, fileType } = window.pendingUpload;
             
             // Show confirmation modal
             const confirmed = await showModal(
@@ -5743,6 +6028,19 @@
                     addData(dataKey, item);
                     successCount++;
                 }
+                
+                // Save to import history
+                const importRecord = {
+                    id: Date.now(),
+                    dataType: dataKey,
+                    recordCount: successCount,
+                    fileName: fileName || 'Unknown file',
+                    fileType: fileType || 'csv',
+                    timestamp: new Date().toISOString(),
+                    data: data.slice(0, MAX_PREVIEW_RECORDS_STORED)
+                };
+                savedImports.push(importRecord);
+                saveData('savedImports', savedImports);
                 
                 hideSpinner();
                 
@@ -5767,6 +6065,9 @@
                     renderFunctions[dataKey]();
                 }
                 
+                // Update saved imports display if visible
+                renderSavedImports();
+                
                 showNotification(`Successfully uploaded ${successCount} records!`, 'success', 'Upload Complete');
                 window.pendingUpload = null;
                 
@@ -5780,6 +6081,301 @@
         async function handleBulkUpload(formId, dataKey, expectedFields, previewId) {
             // This function is now handled by initDragDropUpload
             // Keep for any legacy form submissions
+        }
+
+        // ===== Saved Imports Functions =====
+        
+        // Current filter state
+        let currentImportFilter = 'all';
+        
+        // Render saved imports
+        function renderSavedImports() {
+            const container = document.getElementById('savedImportsList');
+            if (!container) return;
+            
+            // Get filtered imports
+            let filteredImports = savedImports;
+            if (currentImportFilter !== 'all') {
+                filteredImports = savedImports.filter(imp => imp.dataType === currentImportFilter);
+            }
+            
+            // Sort by timestamp (newest first)
+            filteredImports.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            // Update stats
+            updateImportStats();
+            
+            // Check if empty
+            if (filteredImports.length === 0) {
+                container.innerHTML = `
+                    <div class="imports-empty">
+                        <div class="imports-empty-icon">📥</div>
+                        <h3>No Imports Yet</h3>
+                        <p>Your import history will appear here after you upload data files.</p>
+                        <p>Go to Members, Visitors, Events, Tithe, or Attendance sections to import data.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Render import cards
+            container.innerHTML = filteredImports.map(imp => {
+                const date = new Date(imp.timestamp);
+                const formattedDate = date.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+                const formattedTime = date.toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                
+                const icons = {
+                    members: '👥',
+                    visitors: '🚪',
+                    events: '📅',
+                    tithes: '💰',
+                    attendance: '📋'
+                };
+                
+                const typeLabels = {
+                    members: 'Members',
+                    visitors: 'Visitors',
+                    events: 'Events',
+                    tithes: 'Tithe & Offering',
+                    attendance: 'Attendance'
+                };
+                
+                return `
+                    <div class="import-card ${imp.dataType}" data-type="${imp.dataType}">
+                        <div class="import-icon ${imp.dataType}">
+                            ${icons[imp.dataType] || '📁'}
+                        </div>
+                        <div class="import-details">
+                            <div class="import-title">${typeLabels[imp.dataType] || imp.dataType} Import</div>
+                            <div class="import-meta">
+                                <span>📄 ${imp.fileName || 'Unknown file'}</span>
+                                <span>📊 ${imp.recordCount} records</span>
+                                <span>📅 ${formattedDate}</span>
+                                <span>🕐 ${formattedTime}</span>
+                                <span>📁 ${(imp.fileType || 'csv').toUpperCase()}</span>
+                            </div>
+                        </div>
+                        <div class="import-actions">
+                            <button class="import-action-btn view" onclick="viewImportDetails(${imp.id})">
+                                👁️ View
+                            </button>
+                            <button class="import-action-btn export" onclick="exportSingleImport(${imp.id})">
+                                📤 Export
+                            </button>
+                            <button class="import-action-btn delete" onclick="deleteSavedImport(${imp.id})">
+                                🗑️ Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Update import statistics
+        function updateImportStats() {
+            const totalImportsEl = document.getElementById('totalImportsCount');
+            const totalRecordsEl = document.getElementById('totalRecordsImported');
+            const lastImportEl = document.getElementById('lastImportDate');
+            
+            if (totalImportsEl) {
+                totalImportsEl.textContent = savedImports.length;
+            }
+            
+            if (totalRecordsEl) {
+                const totalRecords = savedImports.reduce((sum, imp) => sum + (imp.recordCount || 0), 0);
+                totalRecordsEl.textContent = totalRecords;
+            }
+            
+            if (lastImportEl) {
+                if (savedImports.length > 0) {
+                    const sortedImports = [...savedImports].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                    const lastImport = new Date(sortedImports[0].timestamp);
+                    lastImportEl.textContent = lastImport.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                } else {
+                    lastImportEl.textContent = '-';
+                }
+            }
+        }
+        
+        // Filter imports by type
+        function filterImports(type, btn) {
+            currentImportFilter = type;
+            
+            // Update active button
+            document.querySelectorAll('.imports-filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Re-render
+            renderSavedImports();
+        }
+        
+        // View import details
+        function viewImportDetails(importId) {
+            const imp = savedImports.find(i => i.id === importId);
+            if (!imp) return;
+            
+            const modal = document.getElementById('importPreviewModal');
+            const title = document.getElementById('importPreviewTitle');
+            const body = document.getElementById('importPreviewBody');
+            
+            const date = new Date(imp.timestamp);
+            const formattedDate = date.toLocaleString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            title.textContent = `${imp.dataType.charAt(0).toUpperCase() + imp.dataType.slice(1)} Import - ${formattedDate}`;
+            
+            // Build preview table
+            let tableHtml = '';
+            if (imp.data && Array.isArray(imp.data) && imp.data.length > 0) {
+                const headers = Object.keys(imp.data[0]);
+                const displayCount = Math.min(imp.data.length, MAX_PREVIEW_RECORDS_DISPLAYED);
+                tableHtml = `
+                    <div style="margin-bottom: 20px;">
+                        <p><strong>File:</strong> ${imp.fileName || 'Unknown'}</p>
+                        <p><strong>Records:</strong> ${imp.recordCount} total (showing first ${displayCount})</p>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                            <thead>
+                                <tr>
+                                    ${headers.map(h => `<th style="background: #3498db; color: white; padding: 10px; text-align: left; border: 1px solid #ddd;">${h}</th>`).join('')}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${imp.data.slice(0, MAX_PREVIEW_RECORDS_DISPLAYED).map((row, idx) => `
+                                    <tr style="background: ${idx % 2 === 0 ? '#f9f9f9' : 'white'};">
+                                        ${headers.map(h => `<td style="padding: 8px; border: 1px solid #ddd;">${row[h] || ''}</td>`).join('')}
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } else {
+                tableHtml = '<p>No preview data available for this import.</p>';
+            }
+            
+            body.innerHTML = tableHtml;
+            modal.classList.add('active');
+        }
+        
+        // Close import preview modal
+        function closeImportPreview() {
+            const modal = document.getElementById('importPreviewModal');
+            modal.classList.remove('active');
+        }
+        
+        // Export single import
+        function exportSingleImport(importId) {
+            const imp = savedImports.find(i => i.id === importId);
+            if (!imp || !imp.data || !Array.isArray(imp.data) || imp.data.length === 0) {
+                showNotification('No data available to export', 'error', 'Export Error');
+                return;
+            }
+            
+            // Create CSV
+            const headers = Object.keys(imp.data[0]);
+            const csvContent = [
+                headers.join(','),
+                ...imp.data.map(row => headers.map(h => `"${(row[h] || '').toString().replace(/"/g, '""')}"`).join(','))
+            ].join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${imp.dataType}_import_${new Date(imp.timestamp).toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showNotification('Import data exported successfully!', 'success', 'Export Complete');
+        }
+        
+        // Export all imports
+        function exportAllImports() {
+            if (savedImports.length === 0) {
+                showNotification('No imports to export', 'warning', 'Export Warning');
+                return;
+            }
+            
+            // Create summary export
+            const exportData = savedImports.map(imp => ({
+                id: imp.id,
+                dataType: imp.dataType,
+                fileName: imp.fileName,
+                fileType: imp.fileType,
+                recordCount: imp.recordCount,
+                timestamp: imp.timestamp
+            }));
+            
+            const headers = ['id', 'dataType', 'fileName', 'fileType', 'recordCount', 'timestamp'];
+            const csvContent = [
+                headers.join(','),
+                ...exportData.map(row => headers.map(h => `"${(row[h] || '').toString().replace(/"/g, '""')}"`).join(','))
+            ].join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `all_imports_history_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showNotification('All imports exported successfully!', 'success', 'Export Complete');
+        }
+        
+        // Delete saved import
+        async function deleteSavedImport(importId) {
+            const confirmed = await showModal(
+                'Delete Import Record',
+                '<p>Are you sure you want to delete this import record from history?</p><p>This will not delete the actual imported data.</p>',
+                '🗑️',
+                'Delete',
+                'danger'
+            );
+            
+            if (!confirmed) return;
+            
+            savedImports = savedImports.filter(i => i.id !== importId);
+            saveData('savedImports', savedImports);
+            renderSavedImports();
+            showNotification('Import record deleted', 'info', 'Deleted');
+        }
+        
+        // Clear all import history
+        async function clearAllImports() {
+            if (savedImports.length === 0) {
+                showNotification('No imports to clear', 'info', 'Info');
+                return;
+            }
+            
+            const confirmed = await showModal(
+                'Clear All Import History',
+                `<p>Are you sure you want to clear all <strong>${savedImports.length}</strong> import records?</p><p>This action cannot be undone. Note: This will not delete the actual imported data.</p>`,
+                '⚠️',
+                'Clear All',
+                'danger'
+            );
+            
+            if (!confirmed) return;
+            
+            savedImports = [];
+            saveData('savedImports', savedImports);
+            renderSavedImports();
+            showNotification('All import history cleared', 'info', 'Cleared');
         }
 
         // AI Integration Functions
