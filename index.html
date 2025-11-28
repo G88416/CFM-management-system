@@ -2653,8 +2653,8 @@
         </div>
         <!-- Tab Navigation for Members -->
         <div class="member-tabs">
-            <button class="member-tab active" onclick="showMemberTab('mdf')">MDF</button>
-            <button class="member-tab" onclick="showMemberTab('filter')">Filter</button>
+            <button class="member-tab active" onclick="showMemberTab('mdf', this)">MDF</button>
+            <button class="member-tab" onclick="showMemberTab('filter', this)">Filter</button>
         </div>
         
         <details id="mdf-folder" class="member-tab-content active">
@@ -6900,10 +6900,12 @@
         }
         
         // Member Tab Navigation
-        function showMemberTab(tabName) {
+        function showMemberTab(tabName, clickedTab) {
             // Update tab buttons
             document.querySelectorAll('.member-tab').forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
+            if (clickedTab) {
+                clickedTab.classList.add('active');
+            }
             
             // Show/hide tab content
             document.querySelectorAll('.member-tab-content').forEach(content => {
