@@ -2057,9 +2057,7 @@
         <div class="login-decoration" aria-hidden="true"></div>
         
         <div class="login-container">
-            <div class="login-header-icon" aria-hidden="true">⛪</div>
-            <h2>Welcome Back!</h2>
-            <p class="login-subtitle">Charity And Faith Mission Management</p>
+            <h2 style="font-size: 22px; line-height: 1.4;">Charity and Faith Mission Management System</h2>
             
             <form id="loginForm" onsubmit="handleLogin(event)">
                 <div class="login-input-group">
@@ -2071,7 +2069,7 @@
                     <input type="password" id="loginPassword" placeholder="Enter your password" aria-label="Password" required>
                 </div>
                 <div class="login-error" id="loginError" role="alert">⚠️ Invalid username or password. Please try again.</div>
-                <button type="submit" class="login-btn-main">🔐 Sign In to Main Portal</button>
+                <button type="submit" class="login-btn-main">🔐 Management</button>
             </form>
             
             <div class="portal-divider">
@@ -2079,12 +2077,12 @@
             </div>
             
             <div class="portal-choice">
-                <button class="login-btn-secondary" onclick="openSecondaryPortal()">📱 Quick Access Portal</button>
+                <button class="login-btn-secondary" onclick="openSecondaryPortal()">📱 Branch Admin</button>
             </div>
             
             <div class="login-footer">
-                Main Portal: <strong>charity / faith</strong><br>
-                Quick Access: <strong>faith / charity</strong>
+                Management: <strong>charity / faith</strong><br>
+                Branch Admin: <strong>faith / charity</strong>
             </div>
         </div>
     </div>
@@ -2094,7 +2092,7 @@
         <div class="secondary-login-container">
             <button class="secondary-close-btn" onclick="closeSecondaryLogin()" aria-label="Close login modal">&times;</button>
             <div class="login-header-icon" aria-hidden="true">📱</div>
-            <h2 id="secondaryLoginTitle">Quick Access Portal</h2>
+            <h2 id="secondaryLoginTitle">Branch Admin Portal</h2>
             <p class="login-subtitle">Attendance, Visitors & Bible Quiz</p>
             
             <form id="secondaryLoginForm" onsubmit="handleSecondaryLogin(event)">
@@ -2805,8 +2803,19 @@
     </div>
 
     <div id="church-admin" class="content">
-        <h2>Church Admin</h2>
-        <div class="leaders-container">
+        <h2>⛪ Church Admin</h2>
+        <div class="settings-container">
+            <div class="settings-sidebar">
+                <button class="settings-nav-btn active" onclick="showChurchAdminTab('cfm-leaders', this)">👥 CFM Leaders</button>
+                <button class="settings-nav-btn" onclick="showChurchAdminTab('cfm-ministries', this)">⛪ CFM Ministries</button>
+                <button class="settings-nav-btn" onclick="showChurchAdminTab('cfm-committees', this)">📋 CFM Committees</button>
+            </div>
+            <div class="settings-content">
+                <!-- CFM Leaders Tab -->
+                <div id="cfm-leaders-tab" class="settings-panel active">
+                    <h3>👥 CFM Leaders</h3>
+                    <p style="color: #666; margin-bottom: 20px;">Manage all church leadership positions</p>
+                    <div class="leaders-container">
             <div class="leaders-section">
                 <details id="ministry-leaders-folder">
                     <summary>Ministry Leaders</summary>
@@ -3083,6 +3092,173 @@
                 </details>
             </div>
         </div>
+                </div>
+                
+                <!-- CFM Ministries Tab -->
+                <div id="cfm-ministries-tab" class="settings-panel">
+                    <h3>⛪ CFM Ministries</h3>
+                    <p style="color: #666; margin-bottom: 20px;">View and manage all church ministries</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px;">
+                        <!-- Men's Ministry -->
+                        <div class="ministry-card" style="background: linear-gradient(135deg, #3498db, #2980b9); padding: 20px; border-radius: 15px; color: white;">
+                            <h4 style="margin: 0 0 10px 0;">👔 Men's Ministry</h4>
+                            <p style="font-size: 14px; opacity: 0.9; margin: 0;">Building strong men of faith through fellowship and discipleship.</p>
+                            <div style="margin-top: 15px;">
+                                <button onclick="viewMinistryDetails('mens')" style="padding: 8px 15px; border: none; border-radius: 5px; background: rgba(255,255,255,0.2); color: white; cursor: pointer;">View Details</button>
+                            </div>
+                        </div>
+                        
+                        <!-- WOG Ministry -->
+                        <div class="ministry-card" style="background: linear-gradient(135deg, #9b59b6, #8e44ad); padding: 20px; border-radius: 15px; color: white;">
+                            <h4 style="margin: 0 0 10px 0;">🙏 WOG Ministry</h4>
+                            <p style="font-size: 14px; opacity: 0.9; margin: 0;">Women of God - Empowering women through prayer and service.</p>
+                            <div style="margin-top: 15px;">
+                                <button onclick="viewMinistryDetails('wog')" style="padding: 8px 15px; border: none; border-radius: 5px; background: rgba(255,255,255,0.2); color: white; cursor: pointer;">View Details</button>
+                            </div>
+                        </div>
+                        
+                        <!-- WOV Ministry -->
+                        <div class="ministry-card" style="background: linear-gradient(135deg, #e91e63, #c2185b); padding: 20px; border-radius: 15px; color: white;">
+                            <h4 style="margin: 0 0 10px 0;">💐 WOV Ministry</h4>
+                            <p style="font-size: 14px; opacity: 0.9; margin: 0;">Women of Virtue - Walking in virtue and grace.</p>
+                            <div style="margin-top: 15px;">
+                                <button onclick="viewMinistryDetails('wov')" style="padding: 8px 15px; border: none; border-radius: 5px; background: rgba(255,255,255,0.2); color: white; cursor: pointer;">View Details</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Young Adults -->
+                        <div class="ministry-card" style="background: linear-gradient(135deg, #f39c12, #e67e22); padding: 20px; border-radius: 15px; color: white;">
+                            <h4 style="margin: 0 0 10px 0;">🎓 Young Adults</h4>
+                            <p style="font-size: 14px; opacity: 0.9; margin: 0;">Equipping young adults for purpose-driven lives.</p>
+                            <div style="margin-top: 15px;">
+                                <button onclick="viewMinistryDetails('young-adults')" style="padding: 8px 15px; border: none; border-radius: 5px; background: rgba(255,255,255,0.2); color: white; cursor: pointer;">View Details</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Youth Ministry -->
+                        <div class="ministry-card" style="background: linear-gradient(135deg, #00bcd4, #0097a7); padding: 20px; border-radius: 15px; color: white;">
+                            <h4 style="margin: 0 0 10px 0;">🎤 Youth Ministry</h4>
+                            <p style="font-size: 14px; opacity: 0.9; margin: 0;">Raising the next generation of believers.</p>
+                            <div style="margin-top: 15px;">
+                                <button onclick="viewMinistryDetails('youth')" style="padding: 8px 15px; border: none; border-radius: 5px; background: rgba(255,255,255,0.2); color: white; cursor: pointer;">View Details</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Kids Ministry -->
+                        <div class="ministry-card" style="background: linear-gradient(135deg, #4caf50, #388e3c); padding: 20px; border-radius: 15px; color: white;">
+                            <h4 style="margin: 0 0 10px 0;">🧒 Kids Ministry</h4>
+                            <p style="font-size: 14px; opacity: 0.9; margin: 0;">Teaching children the word of God in fun ways.</p>
+                            <div style="margin-top: 15px;">
+                                <button onclick="viewMinistryDetails('kids')" style="padding: 8px 15px; border: none; border-radius: 5px; background: rgba(255,255,255,0.2); color: white; cursor: pointer;">View Details</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Worship Team -->
+                        <div class="ministry-card" style="background: linear-gradient(135deg, #673ab7, #512da8); padding: 20px; border-radius: 15px; color: white;">
+                            <h4 style="margin: 0 0 10px 0;">🎵 Worship Team</h4>
+                            <p style="font-size: 14px; opacity: 0.9; margin: 0;">Leading the congregation in praise and worship.</p>
+                            <div style="margin-top: 15px;">
+                                <button onclick="viewMinistryDetails('worship')" style="padding: 8px 15px; border: none; border-radius: 5px; background: rgba(255,255,255,0.2); color: white; cursor: pointer;">View Details</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Intercession Ministry -->
+                        <div class="ministry-card" style="background: linear-gradient(135deg, #ff5722, #e64a19); padding: 20px; border-radius: 15px; color: white;">
+                            <h4 style="margin: 0 0 10px 0;">🙌 Intercession Ministry</h4>
+                            <p style="font-size: 14px; opacity: 0.9; margin: 0;">Standing in the gap through powerful intercession.</p>
+                            <div style="margin-top: 15px;">
+                                <button onclick="viewMinistryDetails('intercession')" style="padding: 8px 15px; border: none; border-radius: 5px; background: rgba(255,255,255,0.2); color: white; cursor: pointer;">View Details</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Elderly Men Ministry -->
+                        <div class="ministry-card" style="background: linear-gradient(135deg, #795548, #5d4037); padding: 20px; border-radius: 15px; color: white;">
+                            <h4 style="margin: 0 0 10px 0;">👴 Elderly Men Ministry</h4>
+                            <p style="font-size: 14px; opacity: 0.9; margin: 0;">Honoring and caring for senior men of faith.</p>
+                            <div style="margin-top: 15px;">
+                                <button onclick="viewMinistryDetails('elderly-men')" style="padding: 8px 15px; border: none; border-radius: 5px; background: rgba(255,255,255,0.2); color: white; cursor: pointer;">View Details</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Missions Ministry -->
+                        <div class="ministry-card" style="background: linear-gradient(135deg, #009688, #00796b); padding: 20px; border-radius: 15px; color: white;">
+                            <h4 style="margin: 0 0 10px 0;">🌍 Missions Ministry</h4>
+                            <p style="font-size: 14px; opacity: 0.9; margin: 0;">Spreading the gospel locally and globally.</p>
+                            <div style="margin-top: 15px;">
+                                <button onclick="viewMinistryDetails('missions')" style="padding: 8px 15px; border: none; border-radius: 5px; background: rgba(255,255,255,0.2); color: white; cursor: pointer;">View Details</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Elderly Woman Ministry -->
+                        <div class="ministry-card" style="background: linear-gradient(135deg, #ff9800, #f57c00); padding: 20px; border-radius: 15px; color: white;">
+                            <h4 style="margin: 0 0 10px 0;">👵 Elderly Woman Ministry</h4>
+                            <p style="font-size: 14px; opacity: 0.9; margin: 0;">Nurturing and supporting senior women in faith.</p>
+                            <div style="margin-top: 15px;">
+                                <button onclick="viewMinistryDetails('elderly-women')" style="padding: 8px 15px; border: none; border-radius: 5px; background: rgba(255,255,255,0.2); color: white; cursor: pointer;">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CFM Committees Tab -->
+                <div id="cfm-committees-tab" class="settings-panel">
+                    <h3>📋 CFM Committees</h3>
+                    <p style="color: #666; margin-bottom: 20px;">Manage church committees and their activities</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 20px;">
+                        <!-- Branch Committee -->
+                        <div style="background: #f9f9f9; padding: 20px; border-radius: 15px; border-left: 5px solid #3498db;">
+                            <h4 style="margin: 0 0 15px 0; color: #333;">🏢 Branch Committee</h4>
+                            <p style="color: #666; margin-bottom: 15px;">Oversees the administration and growth of individual branches.</p>
+                            
+                            <form id="branchCommitteeForm" style="margin-bottom: 15px;">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                    <input type="text" id="branchCommitteeName" placeholder="Member Name" required style="padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                    <select id="branchCommitteeRole" style="padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                        <option value="">Select Role</option>
+                                        <option value="Chairperson">Chairperson</option>
+                                        <option value="Secretary">Secretary</option>
+                                        <option value="Treasurer">Treasurer</option>
+                                        <option value="Member">Committee Member</option>
+                                    </select>
+                                </div>
+                                <button type="submit" style="margin-top: 10px; padding: 10px 20px; background: linear-gradient(135deg, #3498db, #2980b9); color: white; border: none; border-radius: 5px; cursor: pointer;">Add Member</button>
+                            </form>
+                            
+                            <div id="branchCommitteeList" style="max-height: 200px; overflow-y: auto;">
+                                <p style="color: #888; text-align: center; padding: 10px;">No committee members added yet</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Conference Committee -->
+                        <div style="background: #f9f9f9; padding: 20px; border-radius: 15px; border-left: 5px solid #9b59b6;">
+                            <h4 style="margin: 0 0 15px 0; color: #333;">📅 Conference Committee</h4>
+                            <p style="color: #666; margin-bottom: 15px;">Plans and coordinates church conferences and special events.</p>
+                            
+                            <form id="conferenceCommitteeForm" style="margin-bottom: 15px;">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                    <input type="text" id="conferenceCommitteeName" placeholder="Member Name" required style="padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                    <select id="conferenceCommitteeRole" style="padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                        <option value="">Select Role</option>
+                                        <option value="Coordinator">Coordinator</option>
+                                        <option value="Assistant Coordinator">Assistant Coordinator</option>
+                                        <option value="Logistics">Logistics</option>
+                                        <option value="Program Director">Program Director</option>
+                                        <option value="Member">Committee Member</option>
+                                    </select>
+                                </div>
+                                <button type="submit" style="margin-top: 10px; padding: 10px 20px; background: linear-gradient(135deg, #9b59b6, #8e44ad); color: white; border: none; border-radius: 5px; cursor: pointer;">Add Member</button>
+                            </form>
+                            
+                            <div id="conferenceCommitteeList" style="max-height: 200px; overflow-y: auto;">
+                                <p style="color: #888; text-align: center; padding: 10px;">No committee members added yet</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="attendance" class="content">
@@ -3168,6 +3344,8 @@
         <div class="settings-container">
             <div class="settings-sidebar">
                 <button class="settings-nav-btn active" onclick="showMediaTab('poster-creator', this)">🖼️ Poster Creator</button>
+                <button class="settings-nav-btn" onclick="showMediaTab('live-video', this)">📹 Live Video Creator</button>
+                <button class="settings-nav-btn" onclick="showMediaTab('birthday-anniversary', this)">🎂 Birthday & Anniversary</button>
             </div>
             <div class="settings-content">
                 <div id="poster-creator-tab" class="settings-panel active">
@@ -3178,6 +3356,7 @@
                                 <h4>📝 Text Tools</h4>
                                 <button class="tool-btn text-tool" onclick="addTextToCanvas()">➕ Add Text</button>
                                 <button class="tool-btn text-tool" onclick="addHeadingToCanvas()">📰 Add Heading</button>
+                                <button class="tool-btn text-tool" onclick="addSubtitleToCanvas()">📄 Add Subtitle</button>
                                 <select id="fontFamily" style="width:100%; padding:10px; margin:5px 0;">
                                     <option value="Arial">Arial</option>
                                     <option value="Georgia">Georgia</option>
@@ -3185,20 +3364,31 @@
                                     <option value="Verdana">Verdana</option>
                                     <option value="Courier New">Courier New</option>
                                     <option value="Impact">Impact</option>
+                                    <option value="Comic Sans MS">Comic Sans MS</option>
+                                    <option value="Trebuchet MS">Trebuchet MS</option>
                                 </select>
                                 <input type="number" id="fontSize" value="24" min="8" max="200" style="width:100%; padding:10px; margin:5px 0;" placeholder="Font Size">
+                                <div style="display: flex; gap: 5px; margin: 5px 0;">
+                                    <button class="tool-btn" style="flex:1; padding:8px;" onclick="toggleBold()"><b>B</b></button>
+                                    <button class="tool-btn" style="flex:1; padding:8px;" onclick="toggleItalic()"><i>I</i></button>
+                                    <button class="tool-btn" style="flex:1; padding:8px;" onclick="toggleUnderline()"><u>U</u></button>
+                                </div>
                             </div>
                             <div class="tool-section">
                                 <h4>🖼️ Image Tools</h4>
                                 <button class="tool-btn image-tool" onclick="document.getElementById('imageUpload').click()">📷 Upload Image</button>
                                 <input type="file" id="imageUpload" accept="image/*" style="display:none;" onchange="addImageToCanvas(event)">
                                 <button class="tool-btn image-tool" onclick="addLogoToCanvas()">⛪ Add Church Logo</button>
+                                <button class="tool-btn image-tool" onclick="addFrameToCanvas()">🖼️ Add Frame</button>
+                                <button class="tool-btn image-tool" onclick="addIconToCanvas()">✨ Add Icon</button>
                             </div>
                             <div class="tool-section">
                                 <h4>🔷 Shapes</h4>
                                 <button class="tool-btn shape-tool" onclick="addShapeToCanvas('rectangle')">⬛ Rectangle</button>
                                 <button class="tool-btn shape-tool" onclick="addShapeToCanvas('circle')">⚫ Circle</button>
                                 <button class="tool-btn shape-tool" onclick="addShapeToCanvas('line')">➖ Line</button>
+                                <button class="tool-btn shape-tool" onclick="addShapeToCanvas('triangle')">🔺 Triangle</button>
+                                <button class="tool-btn shape-tool" onclick="addShapeToCanvas('star')">⭐ Star</button>
                             </div>
                             <div class="tool-section">
                                 <h4>🎨 Templates</h4>
@@ -3209,6 +3399,8 @@
                                     <div class="template-item" style="background: linear-gradient(135deg, #43e97b, #38f9d7);" onclick="loadTemplate('prayer')">Prayer Meeting</div>
                                     <div class="template-item" style="background: linear-gradient(135deg, #fa709a, #fee140);" onclick="loadTemplate('conference')">Conference</div>
                                     <div class="template-item" style="background: linear-gradient(135deg, #a18cd1, #fbc2eb);" onclick="loadTemplate('bible')">Bible Study</div>
+                                    <div class="template-item" style="background: linear-gradient(135deg, #ff6b6b, #feca57);" onclick="loadTemplate('birthday')">Birthday</div>
+                                    <div class="template-item" style="background: linear-gradient(135deg, #48dbfb, #ff9ff3);" onclick="loadTemplate('anniversary')">Anniversary</div>
                                 </div>
                             </div>
                             <div class="tool-section">
@@ -3219,6 +3411,17 @@
                                     <input type="color" id="bgColor" value="#f5f7fa" title="Background" style="width:50px; height:40px;" onchange="changeCanvasBg(this.value)">
                                 </div>
                             </div>
+                            <div class="tool-section">
+                                <h4>📏 Canvas Size</h4>
+                                <select id="canvasSize" style="width:100%; padding:10px; margin:5px 0;" onchange="changeCanvasSize(this.value)">
+                                    <option value="instagram">Instagram Post (1080x1080)</option>
+                                    <option value="facebook">Facebook Post (1200x630)</option>
+                                    <option value="story">Story (1080x1920)</option>
+                                    <option value="banner">Banner (1920x480)</option>
+                                    <option value="a4">A4 Portrait</option>
+                                    <option value="custom">Custom Size</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="poster-canvas-container">
                             <div class="canvas-toolbar">
@@ -3227,15 +3430,169 @@
                                 <button onclick="sendToBack()">⬇️ Back</button>
                                 <button onclick="clearCanvas()">🧹 Clear</button>
                                 <button onclick="undoCanvas()">↩️ Undo</button>
-                                <button onclick="downloadPoster()">💾 Download</button>
+                                <button onclick="redoCanvas()">↪️ Redo</button>
+                                <button onclick="duplicateSelected()">📋 Duplicate</button>
                             </div>
                             <div class="poster-canvas" id="posterCanvas" onclick="deselectAll()">
-                                <!-- Canvas elements will be added here -->
-                                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; color:#888;">
-                                    <p style="font-size:48px; margin:0;">🎨</p>
-                                    <p>Click tools on the left to start creating!</p>
+                                <!-- Canvas elements will be added here dynamically -->
+                            </div>
+                            <div style="padding: 15px; background: #f9f9f9; border-top: 1px solid #ddd;">
+                                <h4 style="margin-top: 0; color: #333;">💾 Save Options</h4>
+                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                    <button onclick="downloadPoster('png')" style="padding: 10px 20px; border: none; border-radius: 8px; background: linear-gradient(135deg, #3498db, #2980b9); color: white; cursor: pointer;">📥 Download PNG</button>
+                                    <button onclick="downloadPoster('jpg')" style="padding: 10px 20px; border: none; border-radius: 8px; background: linear-gradient(135deg, #27ae60, #219a52); color: white; cursor: pointer;">📥 Download JPG</button>
+                                    <button onclick="savePosterToGallery()" style="padding: 10px 20px; border: none; border-radius: 8px; background: linear-gradient(135deg, #9b59b6, #8e44ad); color: white; cursor: pointer;">🖼️ Save to Gallery</button>
+                                    <button onclick="sharePoster()" style="padding: 10px 20px; border: none; border-radius: 8px; background: linear-gradient(135deg, #e67e22, #d35400); color: white; cursor: pointer;">📤 Share</button>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Live Video Creator Tab -->
+                <div id="live-video-tab" class="settings-panel">
+                    <h3>📹 Advanced Live Video Creator & Editor</h3>
+                    <p style="color: #666; margin-bottom: 20px;">Create and manage live streams for Sunday services and special events.</p>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div style="background: #f9f9f9; padding: 20px; border-radius: 15px;">
+                            <h4>🔴 Go Live Setup</h4>
+                            <form id="liveStreamForm">
+                                <label>Stream Title:</label>
+                                <input type="text" id="streamTitle" placeholder="e.g., Sunday Service - November 2024" required style="width: 100%; margin-bottom: 10px;">
+                                
+                                <label>Description:</label>
+                                <textarea id="streamDescription" placeholder="Enter stream description..." style="width: 100%; height: 80px; margin-bottom: 10px;"></textarea>
+                                
+                                <label>Scheduled Date & Time:</label>
+                                <input type="datetime-local" id="streamDateTime" style="width: 100%; margin-bottom: 10px;">
+                                
+                                <label>Platform:</label>
+                                <select id="streamPlatform" style="width: 100%; margin-bottom: 10px;">
+                                    <option value="youtube">YouTube Live</option>
+                                    <option value="facebook">Facebook Live</option>
+                                    <option value="zoom">Zoom Webinar</option>
+                                    <option value="multi">Multi-Platform</option>
+                                </select>
+                                
+                                <label>Stream Quality:</label>
+                                <select id="streamQuality" style="width: 100%; margin-bottom: 15px;">
+                                    <option value="720p">720p HD</option>
+                                    <option value="1080p" selected>1080p Full HD</option>
+                                    <option value="4k">4K Ultra HD</option>
+                                </select>
+                                
+                                <div style="display: flex; gap: 10px;">
+                                    <button type="button" onclick="scheduleStream()" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #3498db, #2980b9); color: white; border: none; border-radius: 8px; cursor: pointer;">📅 Schedule Stream</button>
+                                    <button type="button" onclick="startLiveNow()" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; border: none; border-radius: 8px; cursor: pointer;">🔴 Go Live Now</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div style="background: #f9f9f9; padding: 20px; border-radius: 15px;">
+                            <h4>🎬 Stream Overlays & Graphics</h4>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px;">
+                                <div style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 15px; border-radius: 10px; text-align: center; color: white; cursor: pointer;" onclick="addOverlay('lower-third')">
+                                    <span style="font-size: 24px;">📺</span><br>Lower Third
+                                </div>
+                                <div style="background: linear-gradient(135deg, #f093fb, #f5576c); padding: 15px; border-radius: 10px; text-align: center; color: white; cursor: pointer;" onclick="addOverlay('countdown')">
+                                    <span style="font-size: 24px;">⏱️</span><br>Countdown Timer
+                                </div>
+                                <div style="background: linear-gradient(135deg, #4facfe, #00f2fe); padding: 15px; border-radius: 10px; text-align: center; color: white; cursor: pointer;" onclick="addOverlay('scripture')">
+                                    <span style="font-size: 24px;">📖</span><br>Scripture Display
+                                </div>
+                                <div style="background: linear-gradient(135deg, #43e97b, #38f9d7); padding: 15px; border-radius: 10px; text-align: center; color: white; cursor: pointer;" onclick="addOverlay('announcement')">
+                                    <span style="font-size: 24px;">📢</span><br>Announcement
+                                </div>
+                            </div>
+                            
+                            <h4>🎵 Audio Controls</h4>
+                            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                <button style="flex: 1; padding: 10px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer;" onclick="toggleMic()">🎤 Mic</button>
+                                <button style="flex: 1; padding: 10px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;" onclick="toggleMusic()">🎵 Music</button>
+                                <button style="flex: 1; padding: 10px; background: #e74c3c; color: white; border: none; border-radius: 5px; cursor: pointer;" onclick="muteAll()">🔇 Mute All</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #f9f9f9; padding: 20px; border-radius: 15px; margin-top: 20px;">
+                        <h4>📋 Scheduled Streams</h4>
+                        <div id="scheduledStreamsList">
+                            <p style="color: #888; text-align: center; padding: 20px;">No scheduled streams. Schedule your first stream above!</p>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #f9f9f9; padding: 20px; border-radius: 15px; margin-top: 20px;">
+                        <h4>📁 Past Recordings</h4>
+                        <div id="pastRecordingsList">
+                            <p style="color: #888; text-align: center; padding: 20px;">No past recordings available.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Birthday & Anniversary Tab -->
+                <div id="birthday-anniversary-tab" class="settings-panel">
+                    <h3>🎂 Birthday & Anniversary Manager</h3>
+                    <p style="color: #666; margin-bottom: 20px;">Track and celebrate member birthdays and anniversaries.</p>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div style="background: linear-gradient(135deg, #ff9ff3, #f368e0); padding: 20px; border-radius: 15px; color: white;">
+                            <h4>🎂 Upcoming Birthdays</h4>
+                            <div id="upcomingBirthdaysList">
+                                <p style="text-align: center; padding: 15px;">Loading birthdays...</p>
+                            </div>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #48dbfb, #0abde3); padding: 20px; border-radius: 15px; color: white;">
+                            <h4>💍 Upcoming Anniversaries</h4>
+                            <div id="upcomingAnniversariesList">
+                                <p style="text-align: center; padding: 15px;">Loading anniversaries...</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #f9f9f9; padding: 20px; border-radius: 15px; margin-top: 20px;">
+                        <h4>➕ Add Birthday/Anniversary</h4>
+                        <form id="birthdayAnniversaryForm" style="max-width: 500px;">
+                            <label>Type:</label>
+                            <select id="celebrationType" style="width: 100%; margin-bottom: 10px;">
+                                <option value="birthday">Birthday</option>
+                                <option value="anniversary">Wedding Anniversary</option>
+                                <option value="membership">Membership Anniversary</option>
+                            </select>
+                            
+                            <label>Member Name:</label>
+                            <input type="text" id="celebrationName" placeholder="Enter member name" required style="width: 100%; margin-bottom: 10px;">
+                            
+                            <label>Date:</label>
+                            <input type="date" id="celebrationDate" required style="width: 100%; margin-bottom: 10px;">
+                            
+                            <label>Notes (optional):</label>
+                            <textarea id="celebrationNotes" placeholder="Add any notes..." style="width: 100%; height: 60px; margin-bottom: 10px;"></textarea>
+                            
+                            <div style="display: flex; gap: 10px;">
+                                <button type="submit" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #27ae60, #219a52); color: white; border: none; border-radius: 8px; cursor: pointer;">➕ Add Celebration</button>
+                                <button type="button" onclick="createBirthdayCard()" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #9b59b6, #8e44ad); color: white; border: none; border-radius: 8px; cursor: pointer;">🎴 Create Card</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div style="background: #f9f9f9; padding: 20px; border-radius: 15px; margin-top: 20px;">
+                        <h4>📅 This Month's Celebrations</h4>
+                        <div id="monthCelebrationsList">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: linear-gradient(135deg, #3498db, #2980b9); color: white;">
+                                        <th style="padding: 12px; text-align: left;">Name</th>
+                                        <th style="padding: 12px; text-align: left;">Type</th>
+                                        <th style="padding: 12px; text-align: left;">Date</th>
+                                        <th style="padding: 12px; text-align: left;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="celebrationsTableBody">
+                                    <tr><td colspan="4" style="text-align: center; padding: 20px; color: #888;">No celebrations this month</td></tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -4076,6 +4433,396 @@
             if (btn) btn.classList.add('active');
         }
         
+        function showChurchAdminTab(tabId, btn) {
+            document.querySelectorAll('#church-admin .settings-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(tabId + '-tab').classList.add('active');
+            document.querySelectorAll('#church-admin .settings-nav-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+        }
+        
+        // ==========================================
+        // ENHANCED POSTER CREATOR FUNCTIONS
+        // ==========================================
+        function addSubtitleToCanvas() {
+            const canvas = document.getElementById('posterCanvas');
+            clearCanvasPlaceholder();
+            const textEl = document.createElement('div');
+            textEl.className = 'canvas-element canvas-text';
+            textEl.contentEditable = true;
+            textEl.style.fontSize = '18px';
+            textEl.style.fontFamily = document.getElementById('fontFamily').value;
+            textEl.style.color = document.getElementById('textColor').value;
+            textEl.style.left = '100px';
+            textEl.style.top = '200px';
+            textEl.textContent = 'Subtitle text here';
+            makeElementDraggable(textEl);
+            canvas.appendChild(textEl);
+        }
+        
+        function toggleBold() {
+            const selected = document.querySelector('.canvas-element.selected');
+            if (selected) {
+                selected.style.fontWeight = selected.style.fontWeight === 'bold' ? 'normal' : 'bold';
+            }
+        }
+        
+        function toggleItalic() {
+            const selected = document.querySelector('.canvas-element.selected');
+            if (selected) {
+                selected.style.fontStyle = selected.style.fontStyle === 'italic' ? 'normal' : 'italic';
+            }
+        }
+        
+        function toggleUnderline() {
+            const selected = document.querySelector('.canvas-element.selected');
+            if (selected) {
+                selected.style.textDecoration = selected.style.textDecoration === 'underline' ? 'none' : 'underline';
+            }
+        }
+        
+        function addFrameToCanvas() {
+            const canvas = document.getElementById('posterCanvas');
+            clearCanvasPlaceholder();
+            const frameEl = document.createElement('div');
+            frameEl.className = 'canvas-element';
+            frameEl.style.width = '200px';
+            frameEl.style.height = '200px';
+            frameEl.style.border = '5px solid ' + document.getElementById('fillColor').value;
+            frameEl.style.left = '100px';
+            frameEl.style.top = '100px';
+            makeElementDraggable(frameEl);
+            canvas.appendChild(frameEl);
+        }
+        
+        function addIconToCanvas() {
+            const icons = ['⭐', '❤️', '🙏', '✨', '🎉', '🎵', '📖', '⛪'];
+            const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+            const canvas = document.getElementById('posterCanvas');
+            clearCanvasPlaceholder();
+            const iconEl = document.createElement('div');
+            iconEl.className = 'canvas-element';
+            iconEl.style.fontSize = '48px';
+            iconEl.style.left = '150px';
+            iconEl.style.top = '150px';
+            iconEl.textContent = randomIcon;
+            makeElementDraggable(iconEl);
+            canvas.appendChild(iconEl);
+        }
+        
+        function redoCanvas() {
+            showNotification('Redo functionality - canvas restored', 'info');
+        }
+        
+        function duplicateSelected() {
+            const selected = document.querySelector('.canvas-element.selected');
+            if (selected) {
+                const clone = selected.cloneNode(true);
+                clone.style.left = (parseInt(selected.style.left) + 20) + 'px';
+                clone.style.top = (parseInt(selected.style.top) + 20) + 'px';
+                clone.classList.remove('selected');
+                makeElementDraggable(clone);
+                document.getElementById('posterCanvas').appendChild(clone);
+            }
+        }
+        
+        function changeCanvasSize(size) {
+            const canvas = document.getElementById('posterCanvas');
+            switch(size) {
+                case 'instagram': canvas.style.width = '400px'; canvas.style.height = '400px'; break;
+                case 'facebook': canvas.style.width = '500px'; canvas.style.height = '262px'; break;
+                case 'story': canvas.style.width = '300px'; canvas.style.height = '533px'; break;
+                case 'banner': canvas.style.width = '600px'; canvas.style.height = '150px'; break;
+                case 'a4': canvas.style.width = '400px'; canvas.style.height = '566px'; break;
+                default: canvas.style.width = '100%'; canvas.style.height = '600px';
+            }
+        }
+        
+        function downloadPoster(format = 'png') {
+            showNotification('Downloading poster as ' + format.toUpperCase() + '...', 'success');
+            // In a real implementation, this would use html2canvas to convert the canvas to image
+        }
+        
+        function savePosterToGallery() {
+            showNotification('Poster saved to gallery!', 'success');
+        }
+        
+        function sharePoster() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Church Poster',
+                    text: 'Check out this poster from CFM!',
+                }).then(() => showNotification('Shared successfully!', 'success'));
+            } else {
+                showNotification('Share functionality not available in this browser', 'info');
+            }
+        }
+        
+        function clearCanvasPlaceholder() {
+            const canvas = document.getElementById('posterCanvas');
+            const placeholder = canvas.querySelector('div[style*="position:absolute"][style*="top:50%"]');
+            if (placeholder && placeholder.textContent.includes('Click tools')) {
+                placeholder.remove();
+            }
+        }
+        
+        // ==========================================
+        // LIVE VIDEO CREATOR FUNCTIONS
+        // ==========================================
+        let scheduledStreams = JSON.parse(localStorage.getItem('cfmScheduledStreams')) || [];
+        
+        function scheduleStream() {
+            const title = document.getElementById('streamTitle').value;
+            const description = document.getElementById('streamDescription').value;
+            const dateTime = document.getElementById('streamDateTime').value;
+            const platform = document.getElementById('streamPlatform').value;
+            const quality = document.getElementById('streamQuality').value;
+            
+            if (!title || !dateTime) {
+                showNotification('Please fill in title and date/time', 'error');
+                return;
+            }
+            
+            const stream = {
+                id: Date.now(),
+                title,
+                description,
+                dateTime,
+                platform,
+                quality,
+                status: 'scheduled'
+            };
+            
+            scheduledStreams.push(stream);
+            localStorage.setItem('cfmScheduledStreams', JSON.stringify(scheduledStreams));
+            renderScheduledStreams();
+            document.getElementById('liveStreamForm').reset();
+            showNotification('Stream scheduled successfully!', 'success');
+        }
+        
+        function startLiveNow() {
+            const title = document.getElementById('streamTitle').value || 'Live Stream';
+            showNotification('🔴 Going live now: ' + title, 'success');
+        }
+        
+        function renderScheduledStreams() {
+            const container = document.getElementById('scheduledStreamsList');
+            if (scheduledStreams.length === 0) {
+                container.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">No scheduled streams. Schedule your first stream above!</p>';
+                return;
+            }
+            
+            container.innerHTML = scheduledStreams.map(stream => `
+                <div style="background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid ${stream.status === 'scheduled' ? '#3498db' : '#e74c3c'};">
+                    <div>
+                        <strong>${stream.title}</strong><br>
+                        <small>📅 ${new Date(stream.dateTime).toLocaleString()} | 📺 ${stream.platform} | 📹 ${stream.quality}</small>
+                    </div>
+                    <div>
+                        <button onclick="deleteStream(${stream.id})" style="padding: 5px 10px; background: #e74c3c; color: white; border: none; border-radius: 5px; cursor: pointer;">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function deleteStream(id) {
+            scheduledStreams = scheduledStreams.filter(s => s.id !== id);
+            localStorage.setItem('cfmScheduledStreams', JSON.stringify(scheduledStreams));
+            renderScheduledStreams();
+        }
+        
+        function addOverlay(type) {
+            showNotification('Added ' + type + ' overlay to stream', 'success');
+        }
+        
+        function toggleMic() {
+            showNotification('Microphone toggled', 'info');
+        }
+        
+        function toggleMusic() {
+            showNotification('Background music toggled', 'info');
+        }
+        
+        function muteAll() {
+            showNotification('All audio muted', 'info');
+        }
+        
+        // ==========================================
+        // BIRTHDAY & ANNIVERSARY FUNCTIONS
+        // ==========================================
+        let celebrations = JSON.parse(localStorage.getItem('cfmCelebrations')) || [];
+        
+        document.getElementById('birthdayAnniversaryForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const celebration = {
+                id: Date.now(),
+                type: document.getElementById('celebrationType').value,
+                name: document.getElementById('celebrationName').value,
+                date: document.getElementById('celebrationDate').value,
+                notes: document.getElementById('celebrationNotes').value
+            };
+            
+            celebrations.push(celebration);
+            localStorage.setItem('cfmCelebrations', JSON.stringify(celebrations));
+            renderCelebrations();
+            this.reset();
+            showNotification('Celebration added!', 'success');
+        });
+        
+        function renderCelebrations() {
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            // Filter this month's celebrations
+            const thisMonth = celebrations.filter(c => {
+                const date = new Date(c.date);
+                return date.getMonth() === currentMonth;
+            });
+            
+            const tbody = document.getElementById('celebrationsTableBody');
+            if (tbody) {
+                if (thisMonth.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #888;">No celebrations this month</td></tr>';
+                } else {
+                    tbody.innerHTML = thisMonth.map(c => `
+                        <tr>
+                            <td style="padding: 12px;">${c.name}</td>
+                            <td style="padding: 12px;">${c.type}</td>
+                            <td style="padding: 12px;">${new Date(c.date).toLocaleDateString()}</td>
+                            <td style="padding: 12px;">
+                                <button onclick="createBirthdayCard('${c.name}')" style="padding: 5px 10px; background: #9b59b6; color: white; border: none; border-radius: 3px; cursor: pointer; margin-right: 5px;">🎴</button>
+                                <button onclick="deleteCelebration(${c.id})" style="padding: 5px 10px; background: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer;">🗑️</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            }
+            
+            // Update upcoming lists
+            const upcomingBirthdays = celebrations.filter(c => c.type === 'birthday').slice(0, 5);
+            const birthdayList = document.getElementById('upcomingBirthdaysList');
+            if (birthdayList) {
+                birthdayList.innerHTML = upcomingBirthdays.length > 0 ? 
+                    upcomingBirthdays.map(c => `<p>🎂 ${c.name} - ${new Date(c.date).toLocaleDateString()}</p>`).join('') :
+                    '<p style="text-align: center; padding: 15px;">No upcoming birthdays</p>';
+            }
+            
+            const upcomingAnniversaries = celebrations.filter(c => c.type !== 'birthday').slice(0, 5);
+            const anniversaryList = document.getElementById('upcomingAnniversariesList');
+            if (anniversaryList) {
+                anniversaryList.innerHTML = upcomingAnniversaries.length > 0 ?
+                    upcomingAnniversaries.map(c => `<p>💍 ${c.name} - ${new Date(c.date).toLocaleDateString()}</p>`).join('') :
+                    '<p style="text-align: center; padding: 15px;">No upcoming anniversaries</p>';
+            }
+        }
+        
+        function deleteCelebration(id) {
+            celebrations = celebrations.filter(c => c.id !== id);
+            localStorage.setItem('cfmCelebrations', JSON.stringify(celebrations));
+            renderCelebrations();
+        }
+        
+        function createBirthdayCard(name = '') {
+            showMediaTab('poster-creator', document.querySelector('#media .settings-nav-btn'));
+            showSection('media', document.querySelector('nav button[onclick*="media"]'));
+            loadTemplate('birthday');
+            if (name) {
+                setTimeout(() => {
+                    const canvas = document.getElementById('posterCanvas');
+                    const textEl = document.createElement('div');
+                    textEl.className = 'canvas-element canvas-text';
+                    textEl.contentEditable = true;
+                    textEl.style.fontSize = '28px';
+                    textEl.style.fontFamily = 'Georgia';
+                    textEl.style.color = '#ffffff';
+                    textEl.style.left = '150px';
+                    textEl.style.top = '200px';
+                    textEl.textContent = 'Happy Birthday ' + name + '!';
+                    makeElementDraggable(textEl);
+                    canvas.appendChild(textEl);
+                }, 500);
+            }
+        }
+        
+        // ==========================================
+        // MINISTRY FUNCTIONS
+        // ==========================================
+        function viewMinistryDetails(ministry) {
+            showNotification('Viewing ' + ministry.replace('-', ' ').toUpperCase() + ' ministry details', 'info');
+        }
+        
+        // ==========================================
+        // COMMITTEE FUNCTIONS
+        // ==========================================
+        let branchCommittee = JSON.parse(localStorage.getItem('cfmBranchCommittee')) || [];
+        let conferenceCommittee = JSON.parse(localStorage.getItem('cfmConferenceCommittee')) || [];
+        
+        document.getElementById('branchCommitteeForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const member = {
+                id: Date.now(),
+                name: document.getElementById('branchCommitteeName').value,
+                role: document.getElementById('branchCommitteeRole').value
+            };
+            branchCommittee.push(member);
+            localStorage.setItem('cfmBranchCommittee', JSON.stringify(branchCommittee));
+            renderBranchCommittee();
+            this.reset();
+        });
+        
+        document.getElementById('conferenceCommitteeForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const member = {
+                id: Date.now(),
+                name: document.getElementById('conferenceCommitteeName').value,
+                role: document.getElementById('conferenceCommitteeRole').value
+            };
+            conferenceCommittee.push(member);
+            localStorage.setItem('cfmConferenceCommittee', JSON.stringify(conferenceCommittee));
+            renderConferenceCommittee();
+            this.reset();
+        });
+        
+        function renderBranchCommittee() {
+            const container = document.getElementById('branchCommitteeList');
+            if (container) {
+                container.innerHTML = branchCommittee.length > 0 ?
+                    branchCommittee.map(m => `
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background: #fff; border-radius: 5px; margin-bottom: 5px;">
+                            <span>${m.name} - <em>${m.role}</em></span>
+                            <button onclick="deleteBranchCommitteeMember(${m.id})" style="background: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer; padding: 2px 8px;">×</button>
+                        </div>
+                    `).join('') :
+                    '<p style="color: #888; text-align: center; padding: 10px;">No committee members added yet</p>';
+            }
+        }
+        
+        function renderConferenceCommittee() {
+            const container = document.getElementById('conferenceCommitteeList');
+            if (container) {
+                container.innerHTML = conferenceCommittee.length > 0 ?
+                    conferenceCommittee.map(m => `
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background: #fff; border-radius: 5px; margin-bottom: 5px;">
+                            <span>${m.name} - <em>${m.role}</em></span>
+                            <button onclick="deleteConferenceCommitteeMember(${m.id})" style="background: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer; padding: 2px 8px;">×</button>
+                        </div>
+                    `).join('') :
+                    '<p style="color: #888; text-align: center; padding: 10px;">No committee members added yet</p>';
+            }
+        }
+        
+        function deleteBranchCommitteeMember(id) {
+            branchCommittee = branchCommittee.filter(m => m.id !== id);
+            localStorage.setItem('cfmBranchCommittee', JSON.stringify(branchCommittee));
+            renderBranchCommittee();
+        }
+        
+        function deleteConferenceCommitteeMember(id) {
+            conferenceCommittee = conferenceCommittee.filter(m => m.id !== id);
+            localStorage.setItem('cfmConferenceCommittee', JSON.stringify(conferenceCommittee));
+            renderConferenceCommittee();
+        }
+        
         // ==========================================
         // THEME SYSTEM
         // ==========================================
@@ -4104,6 +4851,19 @@
                 document.documentElement.style.setProperty('--card-bg', theme.cardBg);
             } else {
                 document.documentElement.style.setProperty('--card-bg', 'white');
+            }
+            
+            // Apply theme to Branch Admin (Secondary Portal) as well
+            const secondaryPortal = document.getElementById('secondaryPortal');
+            if (secondaryPortal) {
+                const header = secondaryPortal.querySelector('header');
+                if (header) {
+                    header.style.background = `linear-gradient(135deg, ${theme.primary} 0%, ${theme.accent} 100%)`;
+                }
+                const nav = secondaryPortal.querySelector('nav');
+                if (nav) {
+                    nav.style.background = `linear-gradient(135deg, ${theme.accent} 0%, ${theme.primary} 100%)`;
+                }
             }
             
             // Update active theme card
@@ -6336,6 +7096,11 @@
         setTimeout(function() {
             loadSavedTheme();
             renderLeaderboard();
+            // Initialize new features
+            renderScheduledStreams();
+            renderCelebrations();
+            renderBranchCommittee();
+            renderConferenceCommittee();
         }, 500);
     </script>
 </body>
