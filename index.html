@@ -2265,6 +2265,222 @@
         #ai-suggestion button {
             margin: 10px;
         }
+        
+        /* Member Tabs Styles */
+        .member-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 0;
+        }
+        .member-tab {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            color: #555;
+            transition: all 0.3s ease;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            margin-bottom: -2px;
+        }
+        .member-tab:hover {
+            background: linear-gradient(135deg, #e8e8e8 0%, #ddd 100%);
+            color: #333;
+        }
+        .member-tab.active {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border-color: #2980b9;
+        }
+        .member-tab-content {
+            display: none;
+        }
+        .member-tab-content.active {
+            display: block;
+        }
+        
+        /* Member Form Grid */
+        .member-form-grid {
+            max-width: 100% !important;
+        }
+        .form-section {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+        .form-section h4 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+        .multi-select {
+            height: 180px !important;
+            width: 100%;
+        }
+        .photo-preview {
+            margin-top: 10px;
+            max-width: 150px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .photo-preview img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .disclaimer-section {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ffc107;
+            margin-top: 15px;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .checkbox-label input[type="checkbox"] {
+            margin-top: 3px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .submit-btn-full {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        
+        /* Filter Panel Styles */
+        .filter-panel {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+        }
+        .filter-panel h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .filter-group label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+        }
+        .filter-group select, .filter-group input {
+            padding: 10px 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .filter-group select:focus, .filter-group input:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+            outline: none;
+        }
+        .age-range-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .age-range-container input {
+            width: 80px;
+        }
+        .age-range-container span {
+            color: #666;
+            font-weight: 500;
+        }
+        .filter-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .filter-apply-btn {
+            background: linear-gradient(135deg, #27ae60 0%, #219a52 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+        }
+        .filter-apply-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(39, 174, 96, 0.4);
+        }
+        .filter-clear-btn {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+        .filter-clear-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(231, 76, 60, 0.4);
+        }
+        .filter-export-btn {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+        .filter-export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
+        }
+        .filter-stats {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background: #e8f4f8;
+            border-radius: 8px;
+            color: #2980b9;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -2429,75 +2645,287 @@
             </div>
             <div class="upload-status" id="membersStatus"></div>
             <div id="membersFilePreview" class="file-preview"></div>
-            <p style="font-size: 12px; color: #666;">Format: name,email,cell,address,joinDate,role,branch</p>
+            <p style="font-size: 12px; color: #666;">Format: fullNames,surname,rsaIdPassport,gender,age,homeAddress,cellphone,emailAddress,ministries,relativeContact,yearJoinedChurch,yearBornAgain,baptised,cellGroup,branch</p>
         </div>
         <div class="search-container">
             <h3>Search Members</h3>
-            <input type="text" id="memberSearch" placeholder="Search by name, email, cell, address, or role..." >
+            <input type="text" id="memberSearch" placeholder="Search by name, cellphone, branch, ministry..." >
         </div>
-        <details id="mdf-folder">
-            <summary>MDF</summary>
+        <!-- Tab Navigation for Members -->
+        <div class="member-tabs">
+            <button class="member-tab active" onclick="showMemberTab('mdf', this)">MDF</button>
+            <button class="member-tab" onclick="showMemberTab('filter', this)">Filter</button>
+        </div>
+        
+        <details id="mdf-folder" class="member-tab-content active">
+            <summary>Member Data Form (MDF)</summary>
             <div class="folder-content">
-                <form id="memberForm" novalidate>
-                    <label for="name">Full Name:</label>
-                    <input type="text" id="name" placeholder="Full Name" required minlength="2" maxlength="100">
-                    <div class="error-message" id="name-error"></div>
-                    <label for="branch">Branch:</label>
-                    <select id="branch" required>
-                        <option value="">Select Branch</option>
-                        <option value="Khutsong">Khutsong</option>
-                        <option value="Mamelodi EXT5">Mamelodi EXT5</option>
-                        <option value="Mahube">Mahube</option>
-                        <option value="Phase 5">Phase 5</option>
-                        <option value="Kwamhlanga">Kwamhlanga</option>
-                        <option value="Kameel Port">Kameel Port</option>
-                        <option value="Nelmaphius ext4">Nelmaphius ext4</option>
-                        <option value="Nelmaphius ext 6">Nelmaphius ext 6</option>
-                    </select>
-                    <div class="error-message" id="branch-error"></div>
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" placeholder="Email" required>
-                    <div class="error-message" id="email-error"></div>
-                    <label for="cell">Cell Number:</label>
-                    <input type="tel" id="cell" placeholder="Cell Number (e.g., +1234567890)" required pattern="[+]?[0-9\s\-\(\)]{10,}" title="Enter a valid phone number (at least 10 digits)">
-                    <div class="error-message" id="cell-error"></div>
-                    <label for="address">Address:</label>
-                    <input type="text" id="address" placeholder="Address" required minlength="5" maxlength="200">
-                    <div class="error-message" id="address-error"></div>
-                    <label for="joinDate">Join Date:</label>
-                    <input type="date" id="joinDate" required max="2025-11-03">
-                    <div class="error-message" id="joinDate-error"></div>
-                    <label for="role">Role:</label>
-                    <select id="role" required>
-                        <option value="">Select Role</option>
-                        <option value="Member">Member</option>
-                        <option value="Volunteer">Volunteer</option>
-                        <option value="Leader">Leader</option>
-                    </select>
-                    <div class="error-message" id="role-error"></div>
-                    <button type="submit">Add Member</button>
+                <form id="memberForm" novalidate class="member-form-grid">
+                    <!-- Personal Information -->
+                    <div class="form-section">
+                        <h4>Personal Information</h4>
+                        <label for="fullNames">Full Names *</label>
+                        <input type="text" id="fullNames" placeholder="Full Names" required minlength="2" maxlength="100">
+                        <div class="error-message" id="fullNames-error"></div>
+                        
+                        <label for="surname">Surname *</label>
+                        <input type="text" id="surname" placeholder="Surname" required minlength="2" maxlength="50">
+                        <div class="error-message" id="surname-error"></div>
+                        
+                        <label for="rsaIdPassport">RSA ID or Passport Number *</label>
+                        <input type="text" id="rsaIdPassport" placeholder="RSA ID or Passport Number" required minlength="6" maxlength="20">
+                        <div class="error-message" id="rsaIdPassport-error"></div>
+                        
+                        <label for="gender">Gender *</label>
+                        <select id="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                        <div class="error-message" id="gender-error"></div>
+                        
+                        <label for="age">Age *</label>
+                        <input type="number" id="age" placeholder="Age" required min="0" max="120">
+                        <div class="error-message" id="age-error"></div>
+                    </div>
+                    
+                    <!-- Contact Information -->
+                    <div class="form-section">
+                        <h4>Contact Information</h4>
+                        <label for="homeAddress">Home Physical Address *</label>
+                        <textarea id="homeAddress" placeholder="Home Physical Address" required minlength="10" maxlength="300"></textarea>
+                        <div class="error-message" id="homeAddress-error"></div>
+                        
+                        <label for="cellphone">Cellphone Number *</label>
+                        <input type="tel" id="cellphone" placeholder="Cellphone Number (e.g., 074 296 1000)" required pattern="[+]?[0-9\s\-\(\)]{10,}" title="Enter a valid phone number (at least 10 digits)">
+                        <div class="error-message" id="cellphone-error"></div>
+                        
+                        <label for="emailAddress">Email Address</label>
+                        <input type="email" id="emailAddress" placeholder="Email Address">
+                        <div class="error-message" id="emailAddress-error"></div>
+                        
+                        <label for="relativeContact">Contact Details of Relative/Friend (Name and Cell Number) *</label>
+                        <input type="text" id="relativeContact" placeholder="e.g., Andries Ndlovu - Brother - 073 850 3017" required minlength="10" maxlength="200">
+                        <div class="error-message" id="relativeContact-error"></div>
+                    </div>
+                    
+                    <!-- Church Information -->
+                    <div class="form-section">
+                        <h4>Church Information</h4>
+                        <label for="ministries">Which Ministries are you part of? (Hold Ctrl/Cmd to select multiple)</label>
+                        <select id="ministries" multiple class="multi-select">
+                            <option value="Couples">Couples</option>
+                            <option value="Youth">Youth</option>
+                            <option value="Children">Children</option>
+                            <option value="Worship">Worship</option>
+                            <option value="Ushering">Ushering</option>
+                            <option value="Media">Media</option>
+                            <option value="Sound">Sound</option>
+                            <option value="Hospitality">Hospitality</option>
+                            <option value="Prayer">Prayer</option>
+                            <option value="Evangelism">Evangelism</option>
+                            <option value="Cell Group Leader">Cell Group Leader</option>
+                            <option value="Sunday School">Sunday School</option>
+                            <option value="None">None</option>
+                        </select>
+                        <div class="error-message" id="ministries-error"></div>
+                        
+                        <label for="yearJoinedChurch">Which year did you join the Church? *</label>
+                        <input type="number" id="yearJoinedChurch" placeholder="e.g., 2014" required min="1900" max="2025">
+                        <div class="error-message" id="yearJoinedChurch-error"></div>
+                        
+                        <label for="yearBornAgain">Which year were you born again?</label>
+                        <input type="number" id="yearBornAgain" placeholder="e.g., 1998" min="1900" max="2025">
+                        <div class="error-message" id="yearBornAgain-error"></div>
+                        
+                        <label for="baptised">Have you been baptised? If Yes, When?</label>
+                        <input type="text" id="baptised" placeholder="e.g., Yes, 2015 or No">
+                        <div class="error-message" id="baptised-error"></div>
+                        
+                        <label for="cellGroup">Which Cell Group do you Belong to?</label>
+                        <input type="text" id="cellGroup" placeholder="Cell Group Name">
+                        <div class="error-message" id="cellGroup-error"></div>
+                        
+                        <label for="branch">Which Branch do you Belong to? *</label>
+                        <select id="branch" required>
+                            <option value="">Select Branch</option>
+                            <option value="Khutsong">Khutsong</option>
+                            <option value="Mamelodi EXT5">Mamelodi EXT5</option>
+                            <option value="Mahube">Mahube</option>
+                            <option value="Phase 5">Phase 5</option>
+                            <option value="Kwamhlanga">Kwamhlanga</option>
+                            <option value="Kameel Port">Kameel Port</option>
+                            <option value="Nelmaphius ext4">Nelmaphius ext4</option>
+                            <option value="Nelmaphius ext 6">Nelmaphius ext 6</option>
+                        </select>
+                        <div class="error-message" id="branch-error"></div>
+                    </div>
+                    
+                    <!-- Additional Information -->
+                    <div class="form-section">
+                        <h4>Additional Information</h4>
+                        <label for="photoUpload">Please upload your Face photograph</label>
+                        <input type="file" id="photoUpload" accept="image/*" class="file-input">
+                        <div id="photoPreview" class="photo-preview"></div>
+                        <div class="error-message" id="photoUpload-error"></div>
+                        
+                        <label for="hasMinorDependents">Do you have Minor Dependents Aged 0-15?</label>
+                        <select id="hasMinorDependents" onchange="toggleDependentsField()">
+                            <option value="">Select</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                        <div class="error-message" id="hasMinorDependents-error"></div>
+                        
+                        <div id="dependentsContainer" style="display: none;">
+                            <label for="dependentsDetails">If Yes, provide ALL Dependent's full names, Age, and Gender (e.g., John Mahlangu - 7 - Male)</label>
+                            <textarea id="dependentsDetails" placeholder="e.g., John Mahlangu - 7 - Male, Mary Mahlangu - 5 - Female" maxlength="500"></textarea>
+                            <small style="color: #666;">*Those Aged 16 and Above must Complete OWN forms</small>
+                            <div class="error-message" id="dependentsDetails-error"></div>
+                        </div>
+                        
+                        <div class="disclaimer-section">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="disclaimer" required>
+                                <span>I hereby confirm that all information is provided voluntarily. <strong>Disclaimer</strong> - All data collected will be kept in compliance with the applicable laws.</span>
+                            </label>
+                            <div class="error-message" id="disclaimer-error"></div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn-full">Add Member</button>
                 </form>
-                <table id="memberTable">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Branch</th>
-                            <th>Email</th>
-                            <th>Cell Number</th>
-                            <th>Address</th>
-                            <th>Join Date</th>
-                            <th>Role</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Members will be added here -->
-                    </tbody>
-                </table>
+                
+                <div class="table-container">
+                    <table id="memberTable">
+                        <thead>
+                            <tr>
+                                <th>Full Names</th>
+                                <th>Surname</th>
+                                <th>RSA ID/Passport</th>
+                                <th>Gender</th>
+                                <th>Age</th>
+                                <th>Cellphone</th>
+                                <th>Email</th>
+                                <th>Branch</th>
+                                <th>Ministries</th>
+                                <th>Year Joined</th>
+                                <th>Cell Group</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Members will be added here -->
+                        </tbody>
+                    </table>
+                </div>
                 <div class="folder-actions">
                     <button class="print-btn" onclick="printFolder('mdf')">Print</button>
                     <button class="export-btn" onclick="exportMembers()">Export</button>
                     <button class="email-btn" onclick="emailMembers()">Email</button>
                     <button class="minimize-btn" onclick="toggleFolder('mdf')">Minimize</button>
+                </div>
+            </div>
+        </details>
+        
+        <!-- Filter Tab Content -->
+        <details id="filter-folder" class="member-tab-content" style="display: none;">
+            <summary>Filter Members</summary>
+            <div class="folder-content">
+                <div class="filter-panel">
+                    <h3>🔍 Advanced Member Filter</h3>
+                    <p>Use the filters below to search and filter members by specific criteria.</p>
+                    
+                    <div class="filter-grid">
+                        <div class="filter-group">
+                            <label for="filterAge">Age Range</label>
+                            <div class="age-range-container">
+                                <input type="number" id="filterAgeMin" placeholder="Min" min="0" max="120">
+                                <span>to</span>
+                                <input type="number" id="filterAgeMax" placeholder="Max" min="0" max="120">
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="filterGender">Gender</label>
+                            <select id="filterGender">
+                                <option value="">All Genders</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="filterMinistry">Ministry</label>
+                            <select id="filterMinistry">
+                                <option value="">All Ministries</option>
+                                <option value="Couples">Couples</option>
+                                <option value="Youth">Youth</option>
+                                <option value="Children">Children</option>
+                                <option value="Worship">Worship</option>
+                                <option value="Ushering">Ushering</option>
+                                <option value="Media">Media</option>
+                                <option value="Sound">Sound</option>
+                                <option value="Hospitality">Hospitality</option>
+                                <option value="Prayer">Prayer</option>
+                                <option value="Evangelism">Evangelism</option>
+                                <option value="Cell Group Leader">Cell Group Leader</option>
+                                <option value="Sunday School">Sunday School</option>
+                                <option value="None">None</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="filterBranch">Branch</label>
+                            <select id="filterBranch">
+                                <option value="">All Branches</option>
+                                <option value="Khutsong">Khutsong</option>
+                                <option value="Mamelodi EXT5">Mamelodi EXT5</option>
+                                <option value="Mahube">Mahube</option>
+                                <option value="Phase 5">Phase 5</option>
+                                <option value="Kwamhlanga">Kwamhlanga</option>
+                                <option value="Kameel Port">Kameel Port</option>
+                                <option value="Nelmaphius ext4">Nelmaphius ext4</option>
+                                <option value="Nelmaphius ext 6">Nelmaphius ext 6</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-actions">
+                        <button class="filter-apply-btn" onclick="applyMemberFilters()">🔍 Apply Filters</button>
+                        <button class="filter-clear-btn" onclick="clearMemberFilters()">✖ Clear Filters</button>
+                        <button class="filter-export-btn" onclick="exportFilteredMembers()">📥 Export Filtered Results</button>
+                    </div>
+                    
+                    <div id="filterStats" class="filter-stats">
+                        <span id="filterResultCount">Showing all members</span>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="filteredMemberTable">
+                        <thead>
+                            <tr>
+                                <th>Full Names</th>
+                                <th>Surname</th>
+                                <th>Gender</th>
+                                <th>Age</th>
+                                <th>Cellphone</th>
+                                <th>Branch</th>
+                                <th>Ministries</th>
+                                <th>Cell Group</th>
+                            </tr>
+                        </thead>
+                        <tbody id="filteredMemberTableBody">
+                            <!-- Filtered members will be added here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="folder-actions">
+                    <button class="print-btn" onclick="printFilteredMembers()">Print Filtered</button>
+                    <button class="export-btn" onclick="exportFilteredMembers()">Export Filtered</button>
+                    <button class="email-btn" onclick="emailFilteredMembers()">Email Filtered</button>
                 </div>
             </div>
         </details>
@@ -6441,17 +6869,247 @@
             members.forEach(member => {
                 const row = document.createElement('tr');
                 row.dataset.id = member.id;
+                const ministriesDisplay = Array.isArray(member.ministries) ? member.ministries.join(', ') : (member.ministries || '');
                 row.innerHTML = `
-                    <td>${member.name || ''}</td>
+                    <td>${member.fullNames || member.name || ''}</td>
+                    <td>${member.surname || ''}</td>
+                    <td>${member.rsaIdPassport || ''}</td>
+                    <td>${member.gender || ''}</td>
+                    <td>${member.age || ''}</td>
+                    <td>${member.cellphone || member.cell || ''}</td>
+                    <td>${member.emailAddress || member.email || ''}</td>
                     <td>${member.branch || ''}</td>
-                    <td>${member.email || ''}</td>
-                    <td>${member.cell || ''}</td>
-                    <td>${member.address || ''}</td>
-                    <td>${member.joinDate || ''}</td>
-                    <td>${member.role || ''}</td>
+                    <td>${ministriesDisplay}</td>
+                    <td>${member.yearJoinedChurch || member.joinDate || ''}</td>
+                    <td>${member.cellGroup || ''}</td>
+                    <td><button class="delete-btn" onclick="deleteMember(${member.id})">Delete</button></td>
                 `;
                 tbody.appendChild(row);
             });
+            // Also update the filtered table
+            renderFilteredMembers(members);
+        }
+        
+        // Delete member function
+        function deleteMember(id) {
+            if (confirm('Are you sure you want to delete this member?')) {
+                deleteData('members', id);
+                renderMembers();
+                showNotification('Member deleted successfully', 'info', 'Deleted');
+            }
+        }
+        
+        // Member Tab Navigation
+        function showMemberTab(tabName, clickedTab) {
+            // Update tab buttons
+            document.querySelectorAll('.member-tab').forEach(tab => tab.classList.remove('active'));
+            if (clickedTab) {
+                clickedTab.classList.add('active');
+            }
+            
+            // Show/hide tab content
+            document.querySelectorAll('.member-tab-content').forEach(content => {
+                content.style.display = 'none';
+                content.classList.remove('active');
+            });
+            
+            const targetFolder = document.getElementById(tabName + '-folder');
+            if (targetFolder) {
+                targetFolder.style.display = 'block';
+                targetFolder.classList.add('active');
+                targetFolder.open = true;
+            }
+            
+            // If showing filter tab, render filtered members
+            if (tabName === 'filter') {
+                renderFilteredMembers(members);
+            }
+        }
+        
+        // Toggle dependents field visibility
+        function toggleDependentsField() {
+            const hasMinorDependents = document.getElementById('hasMinorDependents').value;
+            const dependentsContainer = document.getElementById('dependentsContainer');
+            if (hasMinorDependents === 'Yes') {
+                dependentsContainer.style.display = 'block';
+            } else {
+                dependentsContainer.style.display = 'none';
+            }
+        }
+        
+        // Photo preview
+        document.addEventListener('DOMContentLoaded', function() {
+            const photoUpload = document.getElementById('photoUpload');
+            if (photoUpload) {
+                photoUpload.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    const photoPreview = document.getElementById('photoPreview');
+                    if (file && file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            photoPreview.innerHTML = `<img src="${event.target.result}" alt="Photo Preview">`;
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        photoPreview.innerHTML = '';
+                    }
+                });
+            }
+        });
+        
+        // Filter functions
+        function applyMemberFilters() {
+            const ageMin = parseInt(document.getElementById('filterAgeMin').value) || 0;
+            const ageMax = parseInt(document.getElementById('filterAgeMax').value) || 999;
+            const gender = document.getElementById('filterGender').value;
+            const ministry = document.getElementById('filterMinistry').value;
+            const branch = document.getElementById('filterBranch').value;
+            
+            let filteredMembers = members.filter(member => {
+                // Age filter
+                const memberAge = parseInt(member.age) || 0;
+                if (memberAge < ageMin || memberAge > ageMax) return false;
+                
+                // Gender filter
+                if (gender && member.gender !== gender) return false;
+                
+                // Ministry filter
+                if (ministry) {
+                    const memberMinistries = Array.isArray(member.ministries) ? member.ministries : [member.ministries || ''];
+                    if (!memberMinistries.some(m => m && m.toLowerCase().includes(ministry.toLowerCase()))) return false;
+                }
+                
+                // Branch filter
+                if (branch && member.branch !== branch) return false;
+                
+                return true;
+            });
+            
+            renderFilteredMembers(filteredMembers);
+            
+            // Update stats
+            document.getElementById('filterResultCount').textContent = 
+                `Showing ${filteredMembers.length} of ${members.length} members`;
+        }
+        
+        function clearMemberFilters() {
+            document.getElementById('filterAgeMin').value = '';
+            document.getElementById('filterAgeMax').value = '';
+            document.getElementById('filterGender').value = '';
+            document.getElementById('filterMinistry').value = '';
+            document.getElementById('filterBranch').value = '';
+            
+            renderFilteredMembers(members);
+            document.getElementById('filterResultCount').textContent = 'Showing all members';
+        }
+        
+        function renderFilteredMembers(filteredData) {
+            const tbody = document.getElementById('filteredMemberTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            filteredData.forEach(member => {
+                const row = document.createElement('tr');
+                const ministriesDisplay = Array.isArray(member.ministries) ? member.ministries.join(', ') : (member.ministries || '');
+                row.innerHTML = `
+                    <td>${member.fullNames || member.name || ''}</td>
+                    <td>${member.surname || ''}</td>
+                    <td>${member.gender || ''}</td>
+                    <td>${member.age || ''}</td>
+                    <td>${member.cellphone || member.cell || ''}</td>
+                    <td>${member.branch || ''}</td>
+                    <td>${ministriesDisplay}</td>
+                    <td>${member.cellGroup || ''}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        function exportFilteredMembers() {
+            const ageMin = parseInt(document.getElementById('filterAgeMin').value) || 0;
+            const ageMax = parseInt(document.getElementById('filterAgeMax').value) || 999;
+            const gender = document.getElementById('filterGender').value;
+            const ministry = document.getElementById('filterMinistry').value;
+            const branch = document.getElementById('filterBranch').value;
+            
+            let filteredMembers = members.filter(member => {
+                const memberAge = parseInt(member.age) || 0;
+                if (memberAge < ageMin || memberAge > ageMax) return false;
+                if (gender && member.gender !== gender) return false;
+                if (ministry) {
+                    const memberMinistries = Array.isArray(member.ministries) ? member.ministries : [member.ministries || ''];
+                    if (!memberMinistries.some(m => m && m.toLowerCase().includes(ministry.toLowerCase()))) return false;
+                }
+                if (branch && member.branch !== branch) return false;
+                return true;
+            });
+            
+            if (filteredMembers.length === 0) {
+                showNotification('No members to export', 'warning', 'Export');
+                return;
+            }
+            
+            const headers = ['Full Names', 'Surname', 'Gender', 'Age', 'Cellphone', 'Email', 'Branch', 'Ministries', 'Cell Group', 'Year Joined'];
+            const csvContent = [
+                headers.join(','),
+                ...filteredMembers.map(m => [
+                    `"${m.fullNames || m.name || ''}"`,
+                    `"${m.surname || ''}"`,
+                    `"${m.gender || ''}"`,
+                    `"${m.age || ''}"`,
+                    `"${m.cellphone || m.cell || ''}"`,
+                    `"${m.emailAddress || m.email || ''}"`,
+                    `"${m.branch || ''}"`,
+                    `"${Array.isArray(m.ministries) ? m.ministries.join('; ') : (m.ministries || '')}"`,
+                    `"${m.cellGroup || ''}"`,
+                    `"${m.yearJoinedChurch || m.joinDate || ''}"`
+                ].join(','))
+            ].join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `filtered_members_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showNotification(`Exported ${filteredMembers.length} members`, 'success', 'Export Complete');
+        }
+        
+        function printFilteredMembers() {
+            const table = document.getElementById('filteredMemberTable');
+            if (!table) return;
+            
+            const printWin = window.open('', '_blank');
+            printWin.document.write(`
+                <html>
+                <head>
+                    <title>Filtered Members - CFM</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                        th { background-color: #3498db; color: white; }
+                        h1 { color: #2c3e50; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Charity And Faith Mission - Filtered Members</h1>
+                    <p>Printed on: ${new Date().toLocaleString()}</p>
+                    ${table.outerHTML}
+                </body>
+                </html>
+            `);
+            printWin.document.close();
+            printWin.print();
+        }
+        
+        function emailFilteredMembers() {
+            const filteredCount = document.getElementById('filteredMemberTableBody').children.length;
+            const subject = encodeURIComponent('CFM Filtered Members List');
+            const body = encodeURIComponent(`Filtered Members Report\nTotal: ${filteredCount} members\n\nPlease see attached or download the filtered members list from the system.`);
+            window.open(`mailto:?subject=${subject}&body=${body}`);
         }
 
         function renderVisitors() {
@@ -7065,7 +7723,44 @@
             document.getElementById(`${folderId}-folder`).open = !document.getElementById(`${folderId}-folder`).open;
         }
 
-        function exportMembers() { exportData(members, 'members.csv'); }
+        function exportMembers() { 
+            if (members.length === 0) {
+                showNotification('No members to export', 'warning', 'Export');
+                return;
+            }
+            const headers = ['Full Names', 'Surname', 'RSA ID/Passport', 'Gender', 'Age', 'Home Address', 'Cellphone', 'Email', 'Branch', 'Ministries', 'Relative Contact', 'Year Joined Church', 'Year Born Again', 'Baptised', 'Cell Group', 'Has Minor Dependents', 'Dependents Details'];
+            const csvContent = [
+                headers.join(','),
+                ...members.map(m => [
+                    `"${m.fullNames || m.name || ''}"`,
+                    `"${m.surname || ''}"`,
+                    `"${m.rsaIdPassport || ''}"`,
+                    `"${m.gender || ''}"`,
+                    `"${m.age || ''}"`,
+                    `"${(m.homeAddress || m.address || '').replace(/"/g, '""')}"`,
+                    `"${m.cellphone || m.cell || ''}"`,
+                    `"${m.emailAddress || m.email || ''}"`,
+                    `"${m.branch || ''}"`,
+                    `"${Array.isArray(m.ministries) ? m.ministries.join('; ') : (m.ministries || '')}"`,
+                    `"${(m.relativeContact || '').replace(/"/g, '""')}"`,
+                    `"${m.yearJoinedChurch || m.joinDate || ''}"`,
+                    `"${m.yearBornAgain || ''}"`,
+                    `"${m.baptised || ''}"`,
+                    `"${m.cellGroup || ''}"`,
+                    `"${m.hasMinorDependents || ''}"`,
+                    `"${(m.dependentsDetails || '').replace(/"/g, '""')}"`
+                ].join(','))
+            ].join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `members_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showNotification(`Exported ${members.length} members`, 'success', 'Export Complete');
+        }
         function emailMembers() { emailData(members, 'Members List'); }
         function exportVisitors() { exportData(visitors, 'visitors.csv'); }
         function emailVisitors() { emailData(visitors, 'Visitors List'); }
@@ -7107,19 +7802,62 @@
             // Members
             document.getElementById('memberForm').addEventListener('submitValidated', () => {
                 const form = document.getElementById('memberForm');
+                
+                // Get selected ministries
+                const ministriesSelect = document.getElementById('ministries');
+                const selectedMinistries = Array.from(ministriesSelect.selectedOptions).map(opt => opt.value);
+                
+                // Get photo as base64 if uploaded
+                let photoData = '';
+                const photoFile = document.getElementById('photoUpload').files[0];
+                
                 const item = {
-                    name: document.getElementById('name').value,
+                    fullNames: document.getElementById('fullNames').value,
+                    surname: document.getElementById('surname').value,
+                    rsaIdPassport: document.getElementById('rsaIdPassport').value,
+                    gender: document.getElementById('gender').value,
+                    age: document.getElementById('age').value,
+                    homeAddress: document.getElementById('homeAddress').value,
+                    cellphone: document.getElementById('cellphone').value,
+                    emailAddress: document.getElementById('emailAddress').value,
+                    ministries: selectedMinistries,
+                    relativeContact: document.getElementById('relativeContact').value,
+                    yearJoinedChurch: document.getElementById('yearJoinedChurch').value,
+                    yearBornAgain: document.getElementById('yearBornAgain').value,
+                    baptised: document.getElementById('baptised').value,
+                    cellGroup: document.getElementById('cellGroup').value,
                     branch: document.getElementById('branch').value,
-                    email: document.getElementById('email').value,
-                    cell: document.getElementById('cell').value,
-                    address: document.getElementById('address').value,
-                    joinDate: document.getElementById('joinDate').value,
-                    role: document.getElementById('role').value
+                    hasMinorDependents: document.getElementById('hasMinorDependents').value,
+                    dependentsDetails: document.getElementById('dependentsDetails').value,
+                    disclaimerAccepted: document.getElementById('disclaimer').checked,
+                    // For backwards compatibility
+                    name: document.getElementById('fullNames').value + ' ' + document.getElementById('surname').value,
+                    cell: document.getElementById('cellphone').value,
+                    email: document.getElementById('emailAddress').value,
+                    address: document.getElementById('homeAddress').value,
+                    joinDate: document.getElementById('yearJoinedChurch').value
                 };
-                addData('members', item);
-                renderMembers();
-                form.reset();
-                showNotification('Member added!');
+                
+                // If photo was uploaded, read it
+                if (photoFile) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        item.photo = e.target.result;
+                        addData('members', item);
+                        renderMembers();
+                        form.reset();
+                        document.getElementById('photoPreview').innerHTML = '';
+                        document.getElementById('dependentsContainer').style.display = 'none';
+                        showNotification('Member added successfully!', 'success', 'Success');
+                    };
+                    reader.readAsDataURL(photoFile);
+                } else {
+                    addData('members', item);
+                    renderMembers();
+                    form.reset();
+                    document.getElementById('dependentsContainer').style.display = 'none';
+                    showNotification('Member added successfully!', 'success', 'Success');
+                }
             });
 
             // Visitors
@@ -7377,7 +8115,7 @@
             initDragDropUpload(
                 'membersDropZone', 'bulkCsv', 'membersFilePreview',
                 'membersProgress', 'membersProgressBar', 'membersStatus',
-                'members', ['name', 'email', 'cell', 'address', 'joinDate', 'role', 'branch']
+                'members', ['fullNames', 'surname', 'rsaIdPassport', 'gender', 'age', 'homeAddress', 'cellphone', 'emailAddress', 'ministries', 'relativeContact', 'yearJoinedChurch', 'yearBornAgain', 'baptised', 'cellGroup', 'branch']
             );
             
             initDragDropUpload(
