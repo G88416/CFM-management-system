@@ -6926,8 +6926,8 @@
                 return;
             }
             if (confirm('Are you sure you want to delete ALL members? This action cannot be undone!')) {
-                if (confirm('This will permanently remove ' + members.length + ' member(s). Type YES in your mind and click OK to confirm.')) {
-                    // Delete all members one by one
+                if (confirm('This will permanently remove ' + members.length + ' member(s). Click OK to proceed with deletion.')) {
+                    // Delete all members
                     const memberIds = members.map(m => m.id);
                     memberIds.forEach(id => {
                         deleteData('members', id);
@@ -6940,22 +6940,20 @@
         }
         
         // Toggle collapse/expand all member data
-        let membersCollapsed = false;
         function toggleMembersCollapse() {
             const folderContent = document.querySelector('#mdf-folder .folder-content');
             const collapseBtn = document.querySelector('.folder-actions .collapse-btn');
+            const isCollapsed = folderContent.classList.contains('members-collapsed');
             
-            if (membersCollapsed) {
+            if (isCollapsed) {
                 // Expand
                 folderContent.classList.remove('members-collapsed');
                 collapseBtn.innerHTML = '📁 Collapse All';
-                membersCollapsed = false;
                 showNotification('Members data expanded', 'info', 'Expanded');
             } else {
                 // Collapse
                 folderContent.classList.add('members-collapsed');
                 collapseBtn.innerHTML = '📂 Expand All';
-                membersCollapsed = true;
                 showNotification('Members data collapsed', 'info', 'Collapsed');
             }
         }
