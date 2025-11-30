@@ -1633,6 +1633,24 @@
             background-color: #e74c3c;
             color: white;
         }
+        .folder-actions .clear-btn {
+            background-color: #c0392b;
+            color: white;
+        }
+        .folder-actions .clear-btn:hover {
+            background-color: #a93226;
+        }
+        .folder-actions .collapse-btn {
+            background-color: #9b59b6;
+            color: white;
+        }
+        .folder-actions .collapse-btn:hover {
+            background-color: #8e44ad;
+        }
+        .members-collapsed .table-container,
+        .members-collapsed form.member-form-grid {
+            display: none;
+        }
         .transport-table input, .essentials-table input, .sunday-school-table input, .grocery-table input, .sound-media-table input, .stage-deco-table input, .guest-pastor-table input {
             width: 100px;
         }
@@ -2820,6 +2838,8 @@
                     </table>
                 </div>
                 <div class="folder-actions">
+                    <button class="collapse-btn" onclick="toggleMembersCollapse()">📁 Collapse All</button>
+                    <button class="clear-btn" onclick="clearAllMembers()">🗑️ Clear Members</button>
                     <button class="print-btn" onclick="printFolder('mdf')">Print</button>
                     <button class="export-btn" onclick="exportMembers()">Export</button>
                     <button class="email-btn" onclick="emailMembers()">Email</button>
@@ -6896,6 +6916,47 @@
                 deleteData('members', id);
                 renderMembers();
                 showNotification('Member deleted successfully', 'info', 'Deleted');
+            }
+        }
+        
+        // Clear all members function
+        function clearAllMembers() {
+            if (members.length === 0) {
+                showNotification('No members to clear', 'warning', 'No Members');
+                return;
+            }
+            if (confirm('Are you sure you want to delete ALL members? This action cannot be undone!')) {
+                if (confirm('This will permanently remove ' + members.length + ' member(s). Type YES in your mind and click OK to confirm.')) {
+                    // Delete all members one by one
+                    const memberIds = members.map(m => m.id);
+                    memberIds.forEach(id => {
+                        deleteData('members', id);
+                    });
+                    members = [];
+                    renderMembers();
+                    showNotification('All members have been cleared', 'success', 'Members Cleared');
+                }
+            }
+        }
+        
+        // Toggle collapse/expand all member data
+        let membersCollapsed = false;
+        function toggleMembersCollapse() {
+            const folderContent = document.querySelector('#mdf-folder .folder-content');
+            const collapseBtn = document.querySelector('.folder-actions .collapse-btn');
+            
+            if (membersCollapsed) {
+                // Expand
+                folderContent.classList.remove('members-collapsed');
+                collapseBtn.innerHTML = '📁 Collapse All';
+                membersCollapsed = false;
+                showNotification('Members data expanded', 'info', 'Expanded');
+            } else {
+                // Collapse
+                folderContent.classList.add('members-collapsed');
+                collapseBtn.innerHTML = '📂 Expand All';
+                membersCollapsed = true;
+                showNotification('Members data collapsed', 'info', 'Collapsed');
             }
         }
         
