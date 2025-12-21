@@ -15,6 +15,27 @@
     <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD&intent=capture"></script>
     <!-- AI Integration: Simple client-side AI simulation using fuzzy search and template generation (enhanced with Levenshtein distance for identification) -->
     <script src="https://cdn.jsdelivr.net/npm/fuzzysort@2.0.0/fuzzysort.min.js"></script> <!-- For fuzzy matching in searches/uploads -->
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD9YxZP4ErbIoYcvJWn3OwtsjNvMBKq1-s",
+            authDomain: "g-19systems.firebaseapp.com",
+            databaseURL: "https://g-19systems-default-rtdb.firebaseio.com",
+            projectId: "g-19systems",
+            storageBucket: "g-19systems.firebasestorage.app",
+            messagingSenderId: "561001502208",
+            appId: "1:561001502208:web:4954f39536d428db762ae5",
+            measurementId: "G-2GBP0QMP2N"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
     <style>
         :root {
             --primary-color: #2c3e50;
