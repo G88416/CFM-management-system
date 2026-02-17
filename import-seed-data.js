@@ -5,14 +5,12 @@ const seedData = require('./firestore-seed-data.json');
 // Option 1: Using service account key file
 const serviceAccount = require('./service-account-key.json');
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://g-19systems-default-rtdb.firebaseio.com"
+  credential: admin.credential.cert(serviceAccount)
 });
 
 // Option 2: Using application default credentials (uncomment if using this method)
 // admin.initializeApp({
-//   credential: admin.credential.applicationDefault(),
-//   databaseURL: "https://g-19systems-default-rtdb.firebaseio.com"
+//   credential: admin.credential.applicationDefault()
 // });
 
 const db = admin.firestore();
@@ -28,7 +26,7 @@ async function importSeedData() {
     
     for (const [collectionName, documents] of Object.entries(seedData)) {
       console.log(`📦 Importing collection: ${collectionName}`);
-      const batch = db.batch();
+      let batch = db.batch();
       let batchCount = 0;
       
       for (const [docId, docData] of Object.entries(documents)) {
@@ -45,6 +43,7 @@ async function importSeedData() {
         if (batchCount >= 500) {
           await batch.commit();
           console.log(`  ✓ Committed batch of ${batchCount} documents`);
+          batch = db.batch(); // Create new batch after commit
           batchCount = 0;
         }
       }
