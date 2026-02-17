@@ -1,0 +1,32 @@
+{
+  "name": "cfm-management-system",
+  "version": "1.0.0",
+  "description": "Charity And Faith Mission Management System - Firebase Backend",
+  "main": "import-seed-data.js",
+  "scripts": {
+    "import-data": "node import-seed-data.js",
+    "import-data-clear": "node import-seed-data.js --clear",
+    "deploy": "firebase deploy",
+    "deploy:rules": "firebase deploy --only firestore:rules,storage",
+    "deploy:indexes": "firebase deploy --only firestore:indexes",
+    "emulators": "firebase emulators:start",
+    "emulators:ui": "firebase emulators:start --import=./firebase-export --export-on-exit"
+  },
+  "keywords": [
+    "firebase",
+    "firestore",
+    "church-management",
+    "cfm"
+  ],
+  "author": "CFM Team",
+  "license": "MIT",
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  },
+  "devDependencies": {
+    "firebase-tools": "^13.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

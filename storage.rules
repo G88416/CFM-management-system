@@ -1,0 +1,130 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+             firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    function isBranchAdmin() {
+      return isAuthenticated() && 
+             firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role in ['admin', 'branchAdmin'];
+    }
+    
+    function isValidImageFile() {
+      return request.resource.contentType.matches('image/.*');
+    }
+    
+    function isValidDocumentFile() {
+      return request.resource.contentType in [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'text/csv'
+      ];
+    }
+    
+    function isValidFileSize(maxSizeMB) {
+      return request.resource.size < maxSizeMB * 1024 * 1024;
+    }
+    
+    // Member photos
+    match /members/{memberId}/photos/{photoId} {
+      allow read: if isAuthenticated();
+      allow write: if isBranchAdmin() && 
+                     isValidImageFile() && 
+                     isValidFileSize(5);
+      allow delete: if isAdmin();
+    }
+    
+    // Event photos and materials
+    match /events/{eventId}/photos/{photoId} {
+      allow read: if isAuthenticated();
+      allow write: if isBranchAdmin() && 
+                     isValidImageFile() && 
+                     isValidFileSize(10);
+      allow delete: if isAdmin();
+    }
+    
+    match /events/{eventId}/documents/{documentId} {
+      allow read: if isAuthenticated();
+      allow write: if isBranchAdmin() && 
+                     isValidDocumentFile() && 
+                     isValidFileSize(20);
+      allow delete: if isAdmin();
+    }
+    
+    // Conference reports and attachments
+    match /reports/conference/{reportId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isBranchAdmin() && 
+                     (isValidDocumentFile() || isValidImageFile()) && 
+                     isValidFileSize(50);
+      allow delete: if isAdmin();
+    }
+    
+    // Tithe receipts
+    match /tithes/{titheId}/receipts/{receiptId} {
+      allow read: if isAuthenticated();
+      allow write: if isBranchAdmin() && 
+                     (isValidImageFile() || request.resource.contentType == 'application/pdf') && 
+                     isValidFileSize(5);
+      allow delete: if isAdmin();
+    }
+    
+    // Import files (CSV, Excel, etc.)
+    match /imports/{importId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isBranchAdmin() && 
+                     isValidDocumentFile() && 
+                     isValidFileSize(25);
+      allow delete: if isAdmin();
+    }
+    
+    // Bulk uploads
+    match /bulk-uploads/{uploadId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isBranchAdmin() && 
+                     isValidDocumentFile() && 
+                     isValidFileSize(50);
+      allow delete: if isAdmin();
+    }
+    
+    // Backup files (admin only)
+    match /backups/{backupId} {
+      allow read, write: if isAdmin() && 
+                           isValidFileSize(100);
+    }
+    
+    // WhatsApp broadcast materials
+    match /whatsapp/{broadcastId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isBranchAdmin() && 
+                     (isValidImageFile() || isValidDocumentFile()) && 
+                     isValidFileSize(10);
+      allow delete: if isAdmin();
+    }
+    
+    // User profile pictures
+    match /users/{userId}/profile/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if (isAuthenticated() && request.auth.uid == userId) && 
+                     isValidImageFile() && 
+                     isValidFileSize(2);
+      allow delete: if request.auth.uid == userId || isAdmin();
+    }
+    
+    // Default deny all other paths
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
