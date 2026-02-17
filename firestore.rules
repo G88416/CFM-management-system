@@ -1,0 +1,188 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    function isBranchAdmin() {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'branchAdmin'];
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function validateMemberData() {
+      return request.resource.data.keys().hasAll(['name', 'email', 'phone', 'createdAt']) &&
+             request.resource.data.name is string &&
+             request.resource.data.email is string &&
+             request.resource.data.phone is string;
+    }
+    
+    function validateEventData() {
+      return request.resource.data.keys().hasAll(['title', 'date', 'createdAt']) &&
+             request.resource.data.title is string &&
+             (request.resource.data.date is string || request.resource.data.date is timestamp);
+    }
+    
+    // Users collection - stores user authentication and role data
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && isOwner(userId);
+      allow update: if isAdmin() || isOwner(userId);
+      allow delete: if isAdmin();
+    }
+    
+    // Members collection - church members data
+    match /members/{memberId} {
+      allow read: if isAuthenticated();
+      allow create: if isBranchAdmin() && validateMemberData();
+      allow update: if isBranchAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Visitors collection - visitor registration data
+    match /visitors/{visitorId} {
+      allow read: if isAuthenticated();
+      allow create: if isBranchAdmin();
+      allow update: if isBranchAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Events collection - church events
+    match /events/{eventId} {
+      allow read: if isAuthenticated();
+      allow create: if isBranchAdmin() && validateEventData();
+      allow update: if isBranchAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Tithes collection - donations and tithes
+    match /tithes/{titheId} {
+      allow read: if isAuthenticated();
+      allow create: if isBranchAdmin();
+      allow update: if isBranchAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Attendance collection - service attendance records
+    match /attendance/{attendanceId} {
+      allow read: if isAuthenticated();
+      allow create: if isBranchAdmin();
+      allow update: if isBranchAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Leadership collections
+    match /ministryLeaders/{leaderId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAdmin();
+    }
+    
+    match /cellLeaders/{leaderId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAdmin();
+    }
+    
+    match /elders/{elderId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAdmin();
+    }
+    
+    match /pastors/{pastorId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAdmin();
+    }
+    
+    match /branchCoordinators/{coordinatorId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Follow-ups collection
+    match /followUps/{followUpId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isBranchAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Reminders collection
+    match /reminders/{reminderId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isBranchAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // WhatsApp history
+    match /whatsappHistory/{historyId} {
+      allow read: if isAuthenticated();
+      allow create: if isBranchAdmin();
+      allow update, delete: if isAdmin();
+    }
+    
+    // Reports collections
+    match /conferenceReports/{reportId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isBranchAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    match /titheReports/{reportId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isBranchAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    match /visitorsReports/{reportId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isBranchAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Vault - secure notes (only accessible by admin)
+    match /vault/{vaultId} {
+      allow read, write: if isAdmin();
+    }
+    
+    // Saved imports
+    match /savedImports/{importId} {
+      allow read: if isAuthenticated();
+      allow create: if isBranchAdmin();
+      allow update, delete: if isAdmin();
+    }
+    
+    // Conference budgets
+    match /conferenceBudgets/{budgetId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isBranchAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Bible quiz scores
+    match /bibleQuizScores/{scoreId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isBranchAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Theme settings (user-specific)
+    match /userSettings/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+    
+    // System settings (admin only)
+    match /systemSettings/{settingId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+  }
+}
